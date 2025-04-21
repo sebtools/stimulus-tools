@@ -419,7 +419,7 @@ application.register('tablesort', class extends Stimulus.Controller {
 	}
 
 	_getColumnCells(columnIndex) {
-		const table = document.querySelector("tbody");
+		const table = this.element.querySelector("tbody");
 		return Array.from(table.rows).map(row => {
 			const cell = row.cells[columnIndex];
 			return { value: cell.dataset.tablesortVal, element: row };
