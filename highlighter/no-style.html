@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Highlighter Example</title>
+</head>
+<body>
+	<h1>Highlighter Example Page</h1>
+
+	<p>This is an example page to demonstrate the highlighter controller without a defined highlight style on the page.</p>
+
+	<div id="apple" data-controller="highlighter" data-highlighter-words="paragraph highlighted">
+		<p>
+			This is a paragraph that contains some words that can be highlighted.
+		</p>
+	</div>
+
+	<div>
+		<p>
+			This is a paragraph outside of the controller, so the words should not be highlighted, even if they are in a <span class="highlight">highlighted</span> class.
+		</p>
+	</div>
+
+	<form>
+		<input id="word" type="text" placeholder="Type words to highlight" />
+		<button type="button" onclick="document.getElementById('apple').highlighter.addWord(document.getElementById('word').value)">Add Word</button>
+	</form>
+
+	<script src="../js/stimulus.js" type="module"></script>
+	<script src="../js/app.js" type="module"></script>
+	<script src="js/controllers/highlighter_controller.js" type="module"></script>
+
+</body>
+</html>

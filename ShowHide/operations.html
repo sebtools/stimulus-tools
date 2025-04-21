@@ -1,0 +1,341 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		table {
+			margin-bottom: 1rem;
+			background-color: transparent;
+			border-collapse: collapse;
+			border:1px solid black;
+		}
+		table th, table td {
+			padding: 0.75rem;
+			vertical-align: top;
+			border:1px solid black;
+		}
+		table th {
+			text-align:left;
+		}
+		.check {
+			color:#008000;
+		}
+	</style>
+</head>
+<body>
+
+<!--
+<div data-controller="showhide" data-showhide-show-if-value="human">
+	<select data-showhide-target="input" data-action="change->showhide#toggle">
+		<option selected="selected" value=""></option>
+		<option value="human">human</option>
+		<option value="animal">animal</option>
+	</select>
+	<div data-showhide-target="output" hidden="">
+		an output if human
+	</div>
+</div>
+
+-->
+	  
+<div data-controller="showhide">
+	<div>
+		<input type="checkbox" name="options" id="options-apple" value="Apple"> <label for="options-apple">Apple</label>
+	</div>
+	<div>
+		<input type="checkbox" name="options" id="options-banana" value="Banana"> <label for="options-banana">Banana</label>
+	</div>
+	<div>
+		<input type="checkbox" name="options" id="options-cherry" value="Cherry"> <label for="options-cherry">Cherry</label>
+	</div>
+	<div>
+		<input type="checkbox" name="options" id="options-date" value="Date"> <label for="options-date">Date</label>
+	</div>
+	<div>
+		<input type="checkbox" name="options" id="options-elderberry" value="Elderberry"> <label for="options-elderberry">Elderberry</label>
+	</div>
+	<div>
+		<input type="checkbox" name="options" id="options-fig" value="Fig"> <label for="options-fig">Fig</label>
+	</div>
+
+	<br>
+
+	<table>
+		<tr>
+			<th>Criteria</th>
+			<th>Syntax</th>
+			<th>Result</th>
+		</tr>
+		<tr>
+			<td>
+				Any value at all selected.
+			</td>
+			<td>data-showhide-show="options"</td>
+			<td>
+				<div class="check" data-showhide-show="options">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Exactly: "Apple"
+			</td>
+			<td>data-showhide-show="options=Apple"</td>
+			<td>
+				<div class="check" data-showhide-show="options=Apple">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Exactly: "Apple" and "Banana" (and nothing else)
+			</td>
+			<td>data-showhide-show="options=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="options=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Includes all of: Apple, Banana
+			</td>
+			<td>data-showhide-show="options+=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="options+=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Doesn't Include: Apple
+			</td>
+			<td>data-showhide-show="options-=Apple"</td>
+			<td>
+				<div class="check" data-showhide-show="options-=Apple">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Doesn't Include any of: Apple, Banana
+			</td>
+			<td>data-showhide-show="options-=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="options-=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Doesn't Include any of: Apple, Banana
+			</td>
+			<td>data-showhide-show="options!|=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="options!|=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Any of: "Apple", "Banana", "Cherry"
+			</td>
+			<td>data-showhide-show="options|=Apple,Banana,Cherry"</td>
+			<td>
+				<div class="check" data-showhide-show="options|=Apple,Banana,Cherry">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Any value other than exactly: "Apple"
+			</td>
+			<td>data-showhide-show="options!=Apple"</td>
+			<td>
+				<div class="check" data-showhide-show="options!=Apple">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<!--
+		<tr>
+			<td>
+				Any value other than exactly: "Apple" and "Banana"
+			</td>
+			<td>data-showhide-show="options!=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="options!=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Everything except: "Apple" and "Banana"
+			</td>
+			<td>data-showhide-show="options!=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="options+!=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		-->
+	</table>
+
+
+	<select name="Fruit">
+		<option></option>
+		<option value="1">Apple</option>
+		<option value="2"> Banana</option>
+		<option value="3">Cherry</option>
+		<option value="4">Date</option>
+		<option value="5">Elderberry</option>
+		<option value="6">Fig</option>
+	</select>
+	<br>
+
+	<table>
+		<tr>
+			<th>Criteria</th>
+			<th>Syntax</th>
+			<th>Result</th>
+		</tr>
+		<tr>
+			<td>
+				Any value at all selected.
+			</td>
+			<td>data-showhide-show="Fruit"</td>
+			<td>
+				<div class="check" data-showhide-show="Fruit">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Exactly: "Apple"
+			</td>
+			<td>data-showhide-show="fruit=Apple"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit=Apple">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Exactly: "Apple" and "Banana" (and nothing else)
+			</td>
+			<td>data-showhide-show="fruit=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Includes all of: Apple, Banana
+			</td>
+			<td>data-showhide-show="fruit+=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit+=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Doesn't Include: Apple
+			</td>
+			<td>data-showhide-show="fruit-=Apple"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit-=Apple">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Doesn't Include any of: Apple, Banana
+			</td>
+			<td>data-showhide-show="fruit-=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit-=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Doesn't Include any of: Apple, Banana
+			</td>
+			<td>data-showhide-show="fruit!|=Apple,Banana"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit!|=Apple,Banana">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Any of: "Apple", "Banana", "Cherry"
+			</td>
+			<td>data-showhide-show="fruit|=Apple,Banana,Cherry"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit|=Apple,Banana,Cherry">
+					&check;
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Any value other than exactly: "Apple"
+			</td>
+			<td>data-showhide-show="fruit!=Apple"</td>
+			<td>
+				<div class="check" data-showhide-show="fruit!=Apple">
+					&check;
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<table>
+		<tr>
+			<th>Criteria</th>
+			<th>Syntax</th>
+			<th>Result</th>
+		</tr>
+		<tr>
+			<td>
+				Any value at all selected for either options or fruit.
+			</td>
+			<td>data-showhide-show="options&Fruit" data-showhide-join="or"</td>
+			<td>
+				<div class="check" data-showhide-show="options&Fruit" data-showhide-join="or">
+					&check;
+				</div>
+			</td>
+		</tr>
+	</table>
+
+</div>
+
+
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/showhide_controller.js" type="module"></script>
+
+</body>
+</html>

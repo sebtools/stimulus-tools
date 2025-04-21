@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Form Progress Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Form Progress Controller</h1>
+
+	<p>Form Progress Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for showing progress completing a form.</p>
+
+	<p>This was just put together for a presentation.</p>
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by the controller.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					The controller will set this to true any time it is updating the DOM.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>controller</td>
+				<td>
+					*
+				</td>
+				<td></td>
+				<td>formprogress</td>
+				<td>
+					This attribute provides the controller functionality.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">formprogress:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "formprogress:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>progressed</td>
+				<td>
+					<p>detail: (the progress object)</p>
+				</td>
+				<td>
+					Called any time that the controller updates the progress element.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>getProgress</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Returns the progress data (from the progress element).</p>
+				</td>
+			</tr>
+			<tr>
+				<td>setProgress</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Updates progress the progress element with the current progress of the form.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+</body>
+</html>

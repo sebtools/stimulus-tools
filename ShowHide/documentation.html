@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Show/Hide Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Show/Hide Controller</h1>
+
+	<p>Show/Hide Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for showing and hiding HTML elements based on the values of related form fields.</p>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					*
+				</td>
+				<td></td>
+				<td>showhide</td>
+				<td>
+					This attribute provides the Show/Hide functionality.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-showhide-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-showhide-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>hide</td>
+				<td>
+					*
+				</td>
+				<td></td>
+				<td>
+				</td>
+				<td>
+					The name of a form field to use to determine if the element should be hidden.<br>
+					If only one field is provided, the element will be hidden if the field is not empty.<br>
+					Otherwise, see the <a href="operations.html">Operations</a> section for more information.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="3">join</td>
+				<td rowspan="3">
+					*
+				</td>
+				<td rowspan="3">and</td>
+				<td>
+				</td>
+				<td>
+					If more than one field is provided, this attribute determines how the fields are joined.<br>
+					Valid values are "and" and "or".<br>
+					"and" means that all fields must be populated for the element to be shown.<br>
+					"or" <br>
+				</td>
+			</tr>
+			<tr>
+				<td>and</td>
+				<td>all fields must be populated for the element to be shown or hidden.</td>
+			</tr>
+			<tr>
+				<td>or</td>
+				<td>Only one field must be populated for the element to be shown or hidden.</td>
+			</tr>
+
+			<tr>
+				<td>show</td>
+				<td>
+					*
+				</td>
+				<td></td>
+				<td>
+				</td>
+				<td>
+					The name of a form field to use to determine if the element should be shown.<br>
+					If only one field is provided, the element will be shown if the field is not empty.<br>
+					Otherwise, see the <a href="operations.html">Operations</a> section for more information.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+	
+	<h2>Events</h2>
+
+	<h3><span class="prefix">showhide:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "showhide:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>acted</td>
+				<td>
+					<p>
+						element: (the target element)<br>
+						operation: (the operation that was performed)<br>
+						forceValue: (the value that was forced)
+					</p>
+				</td>
+				<td>
+					Called any time that the controller forces a checkbox to be checked or unchecked.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

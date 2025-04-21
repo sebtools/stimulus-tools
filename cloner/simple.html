@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cloner Controller Example</title>
+	<link rel="stylesheet" type="text/css" href="../tablesort/sort_table.css">
+</head>
+<body>
+
+	<h1>Cloner Controller</h1>
+
+	<p>This is a demo of the Cloner controller.</p>
+
+	<div
+		data-controller="cloner"
+		data-cloner-pattern="([a-zA-Z\d]+_)\d+"
+		data-cloner-copies="3"
+	>
+		<div data-cloner-target="source">
+			<input type="hidden" name="PartyAliasID_1" value="111">
+
+			<input type="text" name="AliasName_1" label="Alternate Name" value="Robert Smith">
+	
+			<input type="text" name="AliasFirstName_1" label="Alternate First Name" value="Robert">
+			<input type="text" name="AliasLastName_1" label="Alternate Last Name" value="Smith">
+			
+			<data data-cloner-clear="html">This text should only be on the first row</data>
+		</div>
+		<button type="button" data-cloner-target="button">Add Alternate Name</button>
+	</div>
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controller/cloner_controller.js" type="module"></script>
+
+</body>
+</html>

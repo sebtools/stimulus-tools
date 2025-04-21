@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+<body>
+
+<div>
+<form action="action.cfm" method="post" data-controller="eraser" data-eraser-clearhidden-on="submit">
+	<input type="hidden" name="id" value="1">
+	
+	<div>
+		<select name="species">
+			<option selected="selected" value=""></option>
+			<option value="human">human</option>
+			<option value="animal">animal</option>
+		</select>
+	</div>
+	
+	<div>
+		<select name="fruit" hidden>
+			<option value=""></option>
+			<option selected="selected" value="1">apple</option>
+			<option value="2">banana</option>
+			<option value="3">pear</option>
+		</select>
+	</div>
+	
+	<div hidden>
+		<input name="foo" value="bar" data-action>
+	</div>
+
+	<div>
+		<input type="submit" value="Submit">
+	</div>
+
+</form>
+</div>
+
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/eraser_controller.js"></script>
+
+</body>
+</html>

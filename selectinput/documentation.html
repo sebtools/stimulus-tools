@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>History Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Select Input Controller</h1>
+
+	<p>Select Input Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for allowing typing to search a "select" element.</p>
+
+	<h2>Targets</h2>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>input</td>
+				<td>
+					input<br>
+				</td>
+				<td>
+					The input element that will be used to search the select element.<br>
+					This target is optional. If it is not specified, then the controller will create an input element.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>select</td>
+				<td>
+					select<br>
+				</td>
+				<td>
+					The select element that will be searched.<br>
+					This target is required.
+				</td>
+			</tr>
+
+			<tr>
+				<td>datalist</td>
+				<td>
+					datalist<br>
+				</td>
+				<td>
+					The datalist element that will be used to show the options.<br>
+					This target is optional. If it is not specified, then the controller will create a datalist element.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>selectinput</td>
+				<td>
+					This attribute provides the controller functionality.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>placeholder</td>
+				<td>
+					select
+				</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					The placeholder text for the input element.<br>
+					Only used if data-selectinput-placeholder is not provided.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<p>All of these attributes are prefixed with "data-selectinput-" in the attribute name.</p>
+
+	<h3><span class="attprefix">data-selectinput-</span> Attributes</h3>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>placeholder</td>
+				<td>input</td>
+				<td></td>
+				<td>
+				</td>
+				<td>
+					The placeholder text for the input element.<br>
+					This attribute is optional.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+</body>
+</html>

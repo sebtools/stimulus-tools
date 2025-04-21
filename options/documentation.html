@@ -1,0 +1,455 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Options Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Options Controller</h1>
+
+	<p>Options Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for retreiving options data from elsewhere on the page.</p>
+
+	<h2 id="sources">Sources</h2>
+
+	<p>The source data can come from any of the following elements:</p>
+
+	<table class="inf">
+	<thead>
+		<tr>
+			<th>Source</th>
+			<th>Data</th>
+			<th>Note</th>
+		</tr>
+	</thead>
+	<tbody>
+		
+		<tr>
+			<td>table</td>
+			<td>td by row</td>
+			<td>Use the <code>data-options-colnum</code> attribute to specify a column number.</td>
+		</tr>
+
+		<tr>
+			<td>thead</td>
+			<td>th by column</td>
+			<td></td>
+		</tr>
+
+		<tr>
+			<td>ul</td>
+			<td rowspan="2">li</td>
+			<td rowspan="2"></td>
+		</tr>
+		<tr>
+			<td>ol</td>
+		</tr>
+
+		<tr>
+			<td>select</td>
+			<td rowspan="2">option</td>
+			<td rowspan="2"></td>
+		</tr>
+		<tr>
+			<td>datalist</td>
+		</tr>
+
+		<tr class="planned">
+			<td>dl</td>
+			<td>
+				label: dt<br>
+				value: dd<br>
+			</td>
+			<td></td>
+		</tr>
+
+		<tr class="planned">
+			<td>nav</td>
+			<td>
+				a<br>
+			</td>
+			<td>
+				The value is the href attribute.<br>
+				The label is the text content of the link.<br>
+			</td>
+		</tr>
+
+	</tbody>
+	</table>
+
+	<h2 id="sources">Targets</h2>
+
+	<p>Here is how the controller will output data to different target elements:</p>
+	<table class="inf">
+		<thead>
+			<tr>
+				<th>Source</th>
+				<th>Data</th>
+				<th>Note</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+			<tr class="planned">
+				<td>table</td>
+				<td>tr</td>
+				<td>
+					The controller will have the following columns:<br>
+					<ul>
+						<li>value</li>
+						<li>label</li>
+						<li>attributes</li>
+					</ul>
+				</td>
+			</tr>
+
+			<tr>
+				<td>ul</td>
+				<td rowspan="2">li</td>
+				<td rowspan="2"></td>
+			</tr>
+			<tr>
+				<td>ol</td>
+			</tr>
+	
+			<tr>
+				<td>select</td>
+				<td rowspan="2">option</td>
+				<td rowspan="2"></td>
+			</tr>
+			<tr>
+				<td>datalist</td>
+			</tr>
+	
+			<tr class="planned">
+				<td>dl</td>
+				<td>
+					label: dt<br>
+					value: dd<br>
+				</td>
+				<td></td>
+			</tr>
+	
+			<tr class="planned">
+				<td>nav</td>
+				<td>
+					a<br>
+				</td>
+				<td>
+					The value is the href attribute.<br>
+					The label is the text content of the link.<br>
+				</td>
+			</tr>
+	
+		</tbody>
+		</table>
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by the controller.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					table<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					The controller will set this to true any time it is updating the DOM.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					table<br>
+				</td>
+				<td></td>
+				<td>options</td>
+				<td>
+					This attribute (on either element) provides the controller functionality.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-options-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-tablesort-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>attributes</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The attributes to copy from the source elements to the target elements.<br>
+					Multiple attributes can be separated by a comma.<br>
+					A value of "*" will copy all attributes.<br>
+					Example: <code>data-special,style</code><br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>colnum</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(integer)
+				</td>
+				<td>
+					The column number to use for the source data if the source is a table.<br>
+					Example: <code>2</code><br>
+					Note: This is a 1-based index, so the first column is 1, not 0.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="3">distinct</td>
+				<td rowspan="3">
+					(root)<br>
+				</td>
+				<td rowspan="3">
+					true
+				</td>
+				<td>
+					(boolean)
+				</td>
+				<td>
+					Indicates whether to only include distinct values in the options list.<br>
+					Example: <code>true</code><br>
+				</td>
+			</tr>
+			<tr>
+				<td>true</td>
+				<td>
+					Only includes distinct values in the options list.
+				</td>
+			</tr>
+			<tr>
+				<td>false</td>
+				<td>
+					Includes all values in the options list.
+				</td>
+			</tr>
+
+			<tr>
+				<td>selector</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The selector for the individual elements holding the source data.<br>
+					<i>This should only be used in the event that the "data-options-source" attribute is insufficient.</i>
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="8">sort</td>
+				<td rowspan="8">
+					(root)<br>
+				</td>
+				<td rowspan="8">
+					(blank)
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					The order in which to sort the options.
+				</td>
+			</tr>
+			<tr>
+				<td>(blank)</td>
+				<td>
+					Sorts the options in the order found in the source data.
+				</td>
+			</tr>
+			<tr>
+				<td>label</td>
+				<td rowspan="2">
+					Sorts the options by label in ascending order.
+				</td>
+			</tr>
+			<tr>
+				<td>label asc</td>
+			</tr>
+			<tr>
+				<td>label desc</td>
+				<td>
+					Sorts the options by label in descending order.
+				</td>
+			</tr>
+			<tr>
+				<td>value</td>
+				<td rowspan="2">
+					Sorts the options by value in ascending order.
+				</td>
+			</tr>
+			<tr>
+				<td>value asc</td>
+			</tr>
+			<tr>
+				<td>value desc</td>
+				<td>
+					Sort the options by value in descending order.
+				</td>
+			</tr>
+
+			<tr>
+				<td>source</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The selector for the parent element holding the source data.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">options:</span> Events</h3>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr class="planned">
+				<td>fetched</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller fetches options data.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			
+			<tr>
+				<td>getOptions</td>
+				<td>(array)</td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>
+						Get the options data from the source element.<br>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

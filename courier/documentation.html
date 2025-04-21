@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Courier Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Courier Controller</h1>
+
+	<p>Courier is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for transmitting data between elements.</p>
+
+
+	<h2>Targets</h2>
+
+	<p>Indicated by data-courier-target attribute.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>source</td>
+				<td>
+					(any)<br>
+				</td>
+				<td>
+					The element from which to copy data.
+				</td>
+			</tr>
+
+			<tr>
+				<td>target</td>
+				<td>
+					(any)<br>
+				</td>
+				<td>
+					The element to which to copy data.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Attributes</h2>
+	
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>courier</td>
+				<td>
+					This attribute provides the Courier functionality.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					(any)<br>
+					input<br>
+				</td>
+				<td>courier#update</td>
+				<td>(string)</td>
+				<td>
+					
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-courier-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-courier-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td rowspan="2">event</td>
+				<td>
+					(source or target)<br>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td>
+					The name of an event to fire when the target element is changed.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">courier:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "courier:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>copied</td>
+				<td>
+					source: Element<br>
+					target: Element<br>
+				</td>
+				<td>
+					Called any time that the controller has copied data from the source to the target element.<br>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>transmit</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Updates the target from the source to the target.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

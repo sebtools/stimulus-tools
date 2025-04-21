@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="/SortTable/sort_table.css">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div style="width:800px;height:400px;">
+<canvas id="myChart" data-controller="chartjs">
+<table
+	data-chartjs-type="bar"
+>
+	<caption>Getting Started Example</caption>
+	<colgroup>
+	
+	</colgroup>
+	<thead>
+		<tr>
+			<th></th>
+			<th>Quarterly Sales</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>T-Shirts</td>
+			<td>52</td>
+			<td>14</td>
+		</tr>
+		<tr>
+			<td>Cardigans</td>
+			<td>10</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>Chiffons</td>
+			<td>36</td>
+			<td>12</td>
+		</tr>
+		<tr>
+			<td>Pants</td>
+			<td>10</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>Heels</td>
+			<td>18</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>Socks</td>
+			<td>40</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>Flats</td>
+			<td>20</td>
+			<td>18</td>
+		</tr>
+	</tbody>
+</table>
+</canvas>
+</div>
+
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/chartjs_controller.js"></script>
+
+</body>
+</html>

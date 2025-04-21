@@ -1,0 +1,263 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Eraser Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Eraser Controller</h1>
+
+	<p>Eraser Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for clearing out hidden form fields. This does *not* empty out fields of type="hidden", but rather other form fields that are hidden by either CSS or the "hidden" HTML attribute.</p>
+
+	<p>It can either clear fields as they are hidden or when the form is submitted.</p>
+
+	<p>The controller will define hidden fields as any field that has a "hidden" attribute of true or that has a "display" style of "none" or a "visibility" of "hidden". It does not define hidden based on the location of the element.</p>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="prefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					*
+				</td>
+				<td></td>
+				<td>eraser</td>
+				<td>
+					This attribute provides the eraser functionality.
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					form<br>
+				</td>
+				<td></td>
+				<td>eraser#clearHidden</td>
+				<td>
+					This may be set by the controller on the form element based on the data-eraser-clearhidden-on attribute.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="prefix">data-eraser-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-eraser-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td rowspan="2">clearhidden-on</td>
+				<td>*</td>
+				<td></td>
+				<td>
+					hide
+				</td>
+				<td>
+					Clears hidden elements as they are hidden.
+				</td>
+			</tr>
+			<tr>
+				<td>form</td>
+				<td></td>
+				<td>
+					submit
+				</td>
+				<td>
+					Clears hidden elements only when the form is submitted.
+				</td>
+			</tr>
+
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<h3><span class="prefix">eraser:</span> Events</h3>
+
+	<p>All of these events are prefixed by "eraser:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>cleared</td>
+				<td>
+					<p>target: (the element that is cleared)</p>
+				</td>
+				<td>
+					Called any time that the controller clears the value from an element.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>clearAll</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Clears all fields in the controller (whether hidden or not).</p>
+					<p>Calls "clearElement" for each field.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>clearElement</td>
+				<td></td>
+				<td>
+					<ul>
+						<li><b>element</b>: The element to clear</li>
+					</ul>
+				</td>
+				<td>event:cleared</td>
+				<td>
+					<p>Clears the given element (whether it is hidden or not).</p>
+				</td>
+			</tr>
+			<tr>
+				<td>clearHidden</td>
+				<td></td>
+				<td>
+				</td>
+				<td></td>
+				<td>
+					<p>Clears all of the hidden fields in the controller.</p>
+					<p>Calls "clearElement" for each hidden field.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>clearScope</td>
+				<td></td>
+				<td>
+					<ul>
+						<li><b>scope</b>: The element to clear</li>
+					</ul>
+				</td>
+				<td></td>
+				<td>
+					<p>Clears the given scope (element) and all of its children (whether hidden or not).</p>
+					<p>Calls "clearElement" for each field.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>getHiddenFields</td>
+				<td>array</td>
+				<td>
+					<ul>
+						<li><b>scope</b>: The element to search</li>
+					</ul>
+				</td>
+				<td></td>
+				<td>
+					<p>Returns an array of hidden form fields in the given scope.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>getScopeFields</td>
+				<td>array</td>
+				<td>
+					<ul>
+						<li><b>scope</b>: The element to search</li>
+					</ul>
+				</td>
+				<td></td>
+				<td>
+					<p>Returns an array of all form fields in the given scope.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>isElementVisible</td>
+				<td>boolean</td>
+				<td>
+					<ul>
+						<li><b>element</b>: The element to check</li>
+					</ul>
+				</td>
+				<td></td>
+				<td>
+					<p>Returns a boolean to indicate if the given element is visible.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+</body>
+</html>

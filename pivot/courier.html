@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pivot Table with Courier</title>
+	<link rel="stylesheet" href="pivot.css">
+</head>
+<body>
+
+	<h1>Pivot Table with Courier</h1>
+
+	<h2>Courier</h2>
+	<div data-controller="courier">
+		<p>
+			Group<br>
+			<select id="group" name="group" data-courier-path="#pivotTable" data-courier-attribute="data-pivottable-group">
+				<option value="Quarter,Category">Quarter,Category</option>
+				<option value="Quarter">Quarter</option>
+				<option value="Category">Category</option>
+			</select>
+		</p>
+		<p>
+			Sort<br>
+			<select id="sort" name="sort" data-courier-path="#pivotTable" data-courier-attribute="data-pivottable-sort">
+				<option value="Quarter">Quarter</option>
+				<option value="Category">Category</option>
+			</select>
+		</p>
+
+	</div>
+
+	<h2>Pivot Table</h2>
+	<div
+		id="pivotTable"
+		data-controller="pivottable"
+		data-pivottable-source="sourceTable"
+		data-pivottable-group="Quarter,Category"
+		data-pivottable-sort="Quarter"
+		data-pivottable-field="Sales"
+		data-pivottable-operation="sum"
+		data-pivottable-pivot="Subcategory"
+	>
+	</div>
+
+	<h2>Original Table</h2>
+	<table id="sourceTable">
+		<thead>
+			<tr>
+				<th>Category</th>
+				<th>Subcategory</th>
+				<th>Quarter</th>
+				<th>Sales</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr><td>Electronics</td><td>Phones</td><td>Q1</td><td>100</td></tr>
+			<tr><td>Electronics</td><td>Phones</td><td>Q2</td><td>120</td></tr>
+			<tr><td>Electronics</td><td>Phones</td><td>Q3</td><td>140</td></tr>
+			<tr><td>Electronics</td><td>Phones</td><td>Q4</td><td>130</td></tr>
+			<tr><td>Electronics</td><td>Laptops</td><td>Q1</td><td>80</td></tr>
+			<tr><td>Electronics</td><td>Laptops</td><td>Q2</td><td>90</td></tr>
+			<tr><td>Electronics</td><td>Laptops</td><td>Q3</td><td>100</td></tr>
+			<tr><td>Electronics</td><td>Laptops</td><td>Q4</td><td>110</td></tr>
+			<tr><td>Home Appliances</td><td>Fridges</td><td>Q1</td><td>50</td></tr>
+			<tr><td>Home Appliances</td><td>Fridges</td><td>Q2</td><td>70</td></tr>
+			<tr><td>Home Appliances</td><td>Fridges</td><td>Q3</td><td>90</td></tr>
+			<tr><td>Home Appliances</td><td>Fridges</td><td>Q4</td><td>100</td></tr>
+		</tbody>
+	</table>
+
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+	<script src="../courier/js/controllers/courier_controller.js"></script>
+	<script src="js/controllers/pivottable_controller.js"></script>
+
+</body>
+</html>

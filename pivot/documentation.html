@@ -1,0 +1,350 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Pivot Table Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Pivot Table Controller</h1>
+
+	<p>Pivot Table Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for creating a pivot table from an HTML table.</p>
+
+	<p><span class="planned">This is still in the experimental phase of development.</span></p>
+
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by Table Filter.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					(root element)<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					The controller will set this to true any time it is modifying the DOM of the root element or its children.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="3">aria-sort</td>
+				<td rowspan="3">th</td>
+				<td rowspan="3">ascending</td>
+				<td></td>
+				<td>
+					This attribute is added to the column header of the created table that is currently sorted.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>ascending</td>
+				<td>
+					Indicates that the column is sorted in ascending order.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>descending</td>
+				<td>
+					Indicates that the column is sorted in descending order.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>pivottable</td>
+				<td>
+					This attribute provides the Pivot Table functionality.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>value</td>
+				<td>td</td>
+				<td></td>
+				<td></td>
+				<td>
+					This attribute is added to each cell in the created table that holds the pivoted or aggregated data.<br>
+					It holds the unformatted value of the cell.<br>
+			</tr>
+			
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-pivottable-</span> Attributes</h3>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>source</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td>
+					The id of the table to use as the source for the pivot table.<br>
+					Note: This attribute is required for the controller to work properly.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="4">col</td>
+				<td rowspan="4">
+					th<br>
+					td<br>
+				</td>
+				<td rowspan="4">
+				</td>
+				<td>
+				</td>
+				<td>
+					This is added by the controller to each column header and cell in the table it creates.<br>
+					The controller does not use this attribute itself, instead it is available for use by external code.<br>
+					For example, you could use this attribute for styling the column header.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>aggregate</td>
+				<td>
+					This is added to columns that hold aggregated data.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>group</td>
+				<td>
+					This is added to columns that hold group data.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>value</td>
+				<td>
+					This is added to each column holding pivoted data.<br>
+				</td>
+
+			<tr>
+				<td>group</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td>
+					Comma separated list of columns to group by.<br>
+					Example: "column1,column2,column3"<br>
+					Note: This attribute is required for the controller to work properly.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>sort</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td>
+					The column to sort the pivot table by.<br>
+					Note: This attribute is required for the controller to work properly.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>field</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td>
+					The column holding the data to be aggregated.<br>
+					Note: This attribute is required for the controller to work properly.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>operation</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>sum</td>
+				<td>
+					sum<br>
+					<span class="planned">count</span><br>
+					<span class="planned">average</span><br>
+				</td>
+				<td>
+					The operation to perform on the data.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>pivot</td>
+				<td>
+					(root)<br>
+				</td>
+				<td></td>
+				<td></td>
+				<td>
+					The column to pivot the data on.<br>
+					Note: This attribute is required for the controller to work properly.<br>
+				</td>
+			</tr>
+
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">pivottable:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "pivottable:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>building</td>
+				<td>
+				</td>
+				<td>
+					Called as the controller is starting to build the pivot table.
+				</td>
+			</tr>
+			<tr>
+				<td>built</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller has finished building the pivot table.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>buildPivotTable (<span class="planned">rename</span>)</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					Called to build the pivot table.<br>
+					Note: This method is called automatically when the controller is initialized.<br>
+					You can call this method to rebuild the pivot table if needed.<br>
+					Though it is generally not needed to call this method directly as the controller will listen for changes to source table.<br>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

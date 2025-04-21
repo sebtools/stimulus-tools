@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+<body>
+
+<p><a href="next.html">Next</a></p>
+	  
+<div data-controller="history">
+	
+	<div><button data-action="history#back">Back</button></div>
+
+	<div><button data-action="history#forward">Forward</button></div>
+
+	<div><button data-action="history#go" data-history-goval="-2">Go Back 2</button></div>
+
+</div>
+
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/history_controller.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Force Check Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Force Check Controller</h1>
+
+	<p>Force Check Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for forcing a checkbox to stay checked.</p>
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by the controller.</p>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>forcecheck</td>
+				<td>
+					This attribute provides the controller functionality.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-forcecheck-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-forcecheck-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>alert</td>
+				<td>
+					(controller)<br>
+					input[type="checkbox"]<br>
+				</td>
+				<td>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					If this attribute is provided then the controller will alert the user when the checkbox is forced to stay checked or unchecked.<br>
+					The text of the alert will be the value of this attribute for the checkbox or (if not on the checkbox) the controller.<br>
+					If no value is provided for the any alert attribute then the controller will not alert the user.<br>
+					Note: This attribute is not required for the controller to work.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="3">force</td>
+				<td rowspan="3">
+					input[type="checkbox"]<br>
+				</td>
+				<td rowspan="3">
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					If the attribute is not provided or is not true or false then Force Check will take no action.
+				</td>
+			</tr>
+			<tr>
+				<td>true</td>
+				<td>
+					Force Check will force the checkbox to be checked.
+				</td>
+			</tr>
+			<tr>
+				<td>false</td>
+				<td>
+					Force Check will force the checkbox to be unchecked.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">forcecheck:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "forcecheck:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>forced</td>
+				<td>
+					<p>
+						target: (the target element)<br>
+						forceValue: (the value that was forced)
+					</p>
+				</td>
+				<td>
+					Called any time that the controller forces a checkbox to be checked or unchecked.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

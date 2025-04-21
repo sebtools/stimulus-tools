@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>History Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>History Controller</h1>
+
+	<p>History Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for navigating the browser history.</p>
+
+	<p>This was really just an early experiment in using Stimulus. Probably no real world value.</p>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					*
+				</td>
+				<td></td>
+				<td>history</td>
+				<td>
+					This attribute provides the history functionality.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="3">action</td>
+				<td rowspan="3">
+					*
+				</td>
+				<td rowspan="3"></td>
+				<td>history#back</td>
+				<td>
+					Takes the browser back to the previous page.<br>
+					Just like hitting the "Back" button in the browser.
+				</td>
+			</tr>
+			<tr>
+				<td>history#forward</td>
+				<td>
+					Takes the browser back to the next page.<br>
+					Just like hitting the "Forward" button in the browser.<br>
+					Only relevant if the browser has already gone back
+				</td>
+			</tr>
+			<tr>
+				<td>history#go</td>
+				<td>
+					Takes the browser to the point in history indicated by the data-history-goval attribute.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-history-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-history-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>goval</td>
+				<td>*</td>
+				<td></td>
+				<td>
+					(integer)
+				</td>
+				<td>
+					Indicates where in the browser history the user should be taken.<br>
+					Negative numbers are how far back. Positive number are how far forward.<br>
+				</td>
+			</tr>
+
+
+		</tbody>
+	</table>
+
+
+</body>
+</html>

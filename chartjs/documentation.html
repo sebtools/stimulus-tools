@@ -1,0 +1,340 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Chart.js Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Chart.js Controller</h1>
+
+	<p>Chart.js Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for interacting with <a href="https://www.chartjs.org/">Chart.js</a>.</p>
+
+	<p>it enables you to take an existing HTML table and either add a chart or replace the table on the page with a chart, using the data of that table.</p>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="prefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					table<br>
+					canvas<br>
+				</td>
+				<td></td>
+				<td>chartjs</td>
+				<td>
+					This attribute (on either element) provides the chart.js functionality.
+				</td>
+			</tr>
+			<tr>
+				<td>value</td>
+				<td>
+					td<br>
+				</td>
+				<td></td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The value to use for this cell, instead of the contents of the cell.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3><span class="prefix">data-chartjs-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-chartjs-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>type</td>
+				<td>
+					table<br>
+					canvas<br>
+				</td>
+				<td>bar</td>
+				<td>
+					bar<br>
+					line<br>
+					pie<br>
+					polarArea<br>
+					radar<br>
+				</td>
+				<td>
+					This indicates which type of chart to display.
+				</td>
+			</tr>
+
+			<tr>
+				<td>table</td>
+				<td>
+					canvas<br>
+				</td>
+				<td></td>
+				<td>
+					(any valid selector)
+				</td>
+				<td>
+					If data-controller is placed on the canvas element, this element will provide the selector for the table holding the data.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="5">canvas</td>
+				<td rowspan="5">
+					table<br>
+				</td>
+				<td rowspan="5">replace</td>
+				<td></td>
+				<td>
+					This can be provided as a selector to an existing canvas element on the page, or an indicator of how the controller should add the element to the page.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					(any valid selector)<br>
+				</td>
+				<td>
+					The selector for an existing canvas element on the page.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					before
+				</td>
+				<td>
+					<p>Will add the canvas element before the table.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					after
+				</td>
+				<td>
+					<p>Will add the canvas element after the table.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>replace</td>
+				<td>
+					The canvas element will replace the table on the page, hiding the table from display.<br>
+					The table will be the back-up in case canvas is not supported.
+				</td>
+			</tr>
+
+			<tr class="planned">
+				<td rowspan="3">data</td>
+				<td rowspan="3">
+					canvas<br>
+				</td>
+				<td rowspan="3"></td>
+				<td>
+					(JSON string)<br>
+				</td>
+				<td>
+					<p>You can pass data directly into the controller instead of using a table as the source of data, if you like.</p>
+					<p>If "data" is passed in, it supercedes the table.</p>
+					<p>Contra-indicated except for types of "bubble" and "scatter".</p>
+				</td>
+			</tr>
+			<tr class="planned">
+				<td>
+					(JSON string)<br>
+				</td>
+				<td>
+					a JSON representation of <a href="https://www.chartjs.org/docs/latest/general/data-structures.html">Chart.js Data structures</a>.
+				</td>
+			</tr>
+			<tr class="planned">
+				<td>
+					(URL)<br>
+				</td>
+				<td>
+					A URL that returns a JSON string as above.
+				</td>
+			</tr>
+
+			<tr>
+				<td>options</td>
+				<td>
+					canvas<br>
+					table<br>
+				</td>
+				<td></td>
+				<td>
+					(JSON string)<br>
+				</td>
+				<td>
+					This will be a JSON representation of all of the <a href="https://www.chartjs.org/docs/latest/general/options.html">Chart.js options</a>.<br>
+					The controller will just pass this data through to Chart.js, so any option supported by Chart.js is available here.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="2">type</td>
+				<td rowspan="2">
+					col<br>
+					th<br>
+				</td>
+				<td rowspan="2"></td>
+				<td>label</td>
+				<td>
+					<p>Only one "label" column can exist per Chart.js table.</p>
+					<p>This column represents the labels for the chart.</p>
+					<p>If none provided, controller will use the first column that isn't marked as "data".</p>
+				</td>
+			</tr>
+			<tr>
+				<td>data</td>
+				<td>
+					<p>At least one "data" column must exist.</p>
+					<p>Each "data" column represents data in the chart.</p>
+					<p>If none provided, controller will use each column that has only numeric data.</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>options</td>
+				<td>
+					col<br>
+					th<br>
+				</td>
+				<td></td>
+				<td>
+					(JSON string)<br>
+				</td>
+				<td>
+					This will be a JSON representation of options that will be supplied in the "data" key of the dataset for this column.
+				</td>
+			</tr>
+
+			<tr>
+				<td>ignore</td>
+				<td>
+					th<br>
+					tr<br>
+				</td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Any column or row with this attribute will be ignored by the chart.</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>value</td>
+				<td>
+					td<br>
+				</td>
+				<td></td>
+				<td>
+					(any string)<br>
+				</td>
+				<td>
+					If provided, the controller will use this for the value of the cell, instead of what is in the cell itself (or the data-value attribute).
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">chartjs:</span> Events</h3>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>connected</td>
+				<td>
+					<p>canvas: (the canvas element on which the chart is drawn)</p>
+					<p>table: (the table element from which data is drawn)</p>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+					<p>canvas: (the canvas element on which the chart is drawn)</p>
+					<p>table: (the table element from which data is drawn)</p>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>updated</td>
+				<td>
+					<p>canvas: (the canvas element on which the chart is drawn)</p>
+					<p>table: (the table element from which data is drawn)</p>
+				</td>
+				<td>
+					Called any time that the controller is updated.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>update</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Causes the chart to update from the data currently in the table.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

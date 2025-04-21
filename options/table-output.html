@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Select Filter: Simple</title>
+	<link rel="stylesheet" type="text/css" href="js/controllers/selectfilter.css">
+	<link rel="stylesheet" type="text/css" href="../tablesort/sort_table.css">
+</head>
+<body>
+
+	<br>
+
+	<h2>Source Values</h2>
+	<ul id="mylist">
+		<li data-value="1">One</li>
+		<li data-value="2">Two</li>
+		<li data-value="3">Three</li>
+		<li data-value="4">Four</li>
+		<li data-value="5">Five</li>
+		<li data-value="6">Six</li>
+		<li data-value="7" style="font-weight:bold;">Seven</li>
+		<li data-value="8"><b>Eight</b></li>
+		<li data-value="9" data-special="Innings">Nine</li>
+		<li data-value="10" data-info="Fingers">Ten</li>
+		<li data-value="11">Eleven</li>
+		<li data-value="12">Twelve</li>
+	</ul>
+
+	<h2>Drop Down of Source Values</h2>
+	<select
+		name="choice"
+		data-controller="options"
+		data-options-source="#mylist"
+	>
+	</select>
+
+
+	<h2>Table of Source Values</h2>
+	<table
+		data-controller="options"
+		data-options-source="#mylist"
+		data-options-attributes="*"
+	>
+	</table>
+
+	
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+	<script src="js/controllers/options_controller.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cloner Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Cloner Controller</h1>
+
+	<p>Cloner Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for copying HTML elements (and their children).</p>
+
+	<h2>Targets</h2>
+
+	<p>Indicated by data-cloner-target attribute.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>button</td>
+				<td>
+					input[type="button"]<br>
+					button
+				</td>
+				<td>
+					This is the element that will initiate the cloning. <br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>source</td>
+				<td>(any)</td>
+				<td>
+					This is the element that will be cloned. 
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by the controller.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					*<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					Controller will set this to true any time it is cloning an element.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>controller</td>
+				<td>
+					*
+				</td>
+				<td></td>
+				<td>cloner</td>
+				<td>
+					This attribute provides the cloner functionality.
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					*<br>
+				</td>
+				<td></td>
+				<td>cloner#clone</td>
+				<td>
+					Controller will automatically set this on elements with data-cloner-target="button".
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-cloner-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-cloner-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td rowspan="3">target</td>
+				<td rowspan="3">
+					*<br>
+				</td>
+				<td rowspan="3"></td>
+				<td></td>
+				<td>
+					This will indicate if this is the element that issues the cloning or the element being cloned.
+				</td>
+			</tr>
+			<tr>
+				<td>source</td>
+				<td>
+					This is the element that will be cloned.
+				</td>
+			</tr>
+			<tr>
+				<td>button</td>
+				<td>
+					This is the element that will initiate the cloning.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="3">action (<span class="planned">rename</span>)</td>
+				<td rowspan="3">
+					(root)<br>
+				</td>
+				<td rowspan="3">beforebegin</td>
+				<td></td>
+				<td>
+					This indicates where the cloned element will be inserted in the DOM.<br>
+					<!--Use the standard insertAdjacentHTML values:<br>-->
+				</td>
+			</tr>
+			<tr>
+				<td>beforebegin</td>
+				<td>
+					Inserts the cloned element before the source element.
+				</td>
+			</tr>
+			<tr>
+				<td>afterend</td>
+				<td>
+					Inserts the cloned element after the source element.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="6">clear</td>
+				<td rowspan="6">
+					(any)<br>
+				</td>
+				<td rowspan="6"></td>
+				<td></td>
+				<td>
+					If present, indicates what value should be cleared from the cloned element.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>hide</td>
+				<td>
+					Hides the element that is being cloned.<br>
+					This is useful if you want to hide the element after it has been cloned.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>html</td>
+				<td>
+					Clears the inner HTML of the element that is being cloned.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>remove</td>
+				<td>
+					Removes the element that is being cloned.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>text</td>
+				<td>
+					Clears the inner text of the element that is being cloned.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>value</td>
+				<td>
+					Clears the value of the element that is being cloned.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>pattern</td>
+				<td>
+					(root)<br>
+				</td>
+				<td></td>
+				<td>(regex)</td>
+				<td>
+					The pattern to use to find a numeric that should be replaced by the number of like elements that are on the page.<br>
+					Use a regex to find the number.<br>
+					This will allow you to have multiple form fields that will each have a different name.<br>
+					For example, if you have a field named "AliasName_1" and another named "AliasName_2", you can use the pattern "([a-zA-Z\d]+_)\d+" to find the number.<br>
+					Then, when the controller clones the element, it will replace the number with the next number in the sequence.<br>
+					For example, if you have 3 elements on the page, the controller will replace the number with 4.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>reset</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>true</td>
+				<td>(boolean)</td>
+				<td>
+					Indicates if the form fields in the inserted element should be reset to their default values.<br>
+					When set to true, the controller will reset the form fields to their default values.<br>
+					When set to false, the controller will not reset the form fields.<br>
+					This is useful if you want to keep the values that are already in the form fields.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>singlify</td>
+				<td>
+					(root)<br>
+				</td>
+				<td></td>
+				<td>(Selector)</td>
+				<td>
+					A selector to indicate all of the elements that should exist no more than one in the cloned instance.<br>
+					Use a comma-delimited to list to limit more than one selector.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">cloner:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "cloner:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>cloned</td>
+				<td>
+				</td>
+				<td>
+					Called after the controller has cloned the element.<br>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>clone</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					Clones the source target<br>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+</body>
+</html>

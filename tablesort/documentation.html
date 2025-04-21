@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Table Sort Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Table Sort Controller</h1>
+
+	<p>Table Sort Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for sorting HTML table.</p>
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by Table Sort.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					table<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					Table Sort will set this to true any time it is sorting the table.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>aria-sort</td>
+				<td>
+					th<br>
+				</td>
+				<td></td>
+				<td>
+					ascending<br>
+					descending
+				</td>
+				<td>
+					The controller will set this value on any column it sorts.<br>
+					It will reverse the sort based on this value of any column that is clicked.<br>
+					You can use the value in your CSS to indicate the sort.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>role</td>
+				<td>
+					th<br>
+				</td>
+				<td></td>
+				<td>button</td>
+				<td>
+					Table Sort will add role="button" to any th that is used for sorting.<br>
+					(that doesn't have data-tablesort-type="none")
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					table<br>
+				</td>
+				<td></td>
+				<td>tablesort</td>
+				<td>
+					This attribute (on either element) provides the tablesort functionality.
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					th<br>
+				</td>
+				<td>click->tablesort#sort</td>
+				<td>(string)</td>
+				<td>
+					Table Sort will add this action to each th (unless it is non-sorting) that doesn't already have a data-action attribute.<br>
+					This is what tells Stimulus to take action, but you need not add this yourself unless you want to change the way it works for some reason.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>value</td>
+				<td>
+					td<br>
+				</td>
+				<td></td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The value to use for this cell, instead of the contents of the cell.
+				</td>
+			</tr>
+			
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-tablesort-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-tablesort-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td rowspan="2">type</td>
+				<td rowspan="2">
+					th<br>
+				</td>
+				<td rowspan="2"></td>
+				<td>
+					Date<br>
+					Number<br>
+					String<br>
+				</td>
+				<td>
+					Indicates the type of data stored in the column. If not provided, the controller will search through the data to determine this.
+				</td>
+			</tr>
+			<tr>
+				<td>none</td>
+				<td>Disables sorting on this column.</td>
+			</tr>
+
+			<tr>
+				<td>val</td>
+				<td>
+					td<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The value to use for this cell, instead of the data-value attribute or the contents of the cell.
+				</td>
+			</tr>
+
+			<tr>
+				<td rowspan="3">auto-head</td>
+				<td rowspan="3">
+					table<br>
+				</td>
+				<td rowspan="3">
+					false
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					Ignored if the table has a thead.
+				</td>
+			</tr>
+			<tr>
+				<td>true</td>
+				<td>The controller will put the first row in a thead if the table has no thead.</td>
+			</tr>
+			<tr>
+				<td>false</td>
+				<td>The controller will throw an exception if the table has no thead.</td>
+			</tr>
+
+			<tr>
+				<td>rows-to-check</td>
+				<td>
+					table<br>
+				</td>
+				<td>
+					200
+				</td>
+				<td>
+					(integer)
+				</td>
+				<td>
+					This indicates how many rows to search in order to calculate the data type of the column if it isn't provided.
+				</td>
+			</tr>
+
+			<tr>
+				<td>options</td>
+				<td>
+					table<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(JSON String)
+				</td>
+				<td>
+					Allows you to set any data-tablesort attribute on the table element in JSON format (using camelCase instead of dash-case for variable names).
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">tablesort:</span> Events</h3>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>sorted</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller sorts the table.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>sortByIndex</td>
+				<td></td>
+				<td>
+					index: (integer) The index of the column that you want to sort.
+				</td>
+				<td></td>
+				<td>
+					<p>Sort the column indicated.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>sortByName</td>
+				<td></td>
+				<td>
+					<p>name: (string) The text of the th for the column that you want to sort.</p>
+				</td>
+				<td></td>
+				<td>
+					<p>Sort the column indicated.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

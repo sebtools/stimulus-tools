@@ -1,0 +1,349 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Table Filter Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Highlighter Controller</h1>
+
+	<p>Highlighter Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for highlighting words.</p>
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by Table Filter.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					Highlighter will set this to true any time it is applying highlighting.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>highlighter</td>
+				<td>
+					This attribute provides the highlighter functionality.<br>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-highlighter-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-highlighter-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>class</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>highlight
+				</td>
+				<td>
+				</td>
+				<td>
+					The class to add to the highlighted words.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>color</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>yellow
+				</td>
+				<td>
+				</td>
+				<td>
+					The color to use for the highlighted words.<br>
+					Only used if no style is applied to the highlight class.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>words</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td>
+					The words to highlight. Space-delimited.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">highlighter:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "highlighter:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>highlighted</td>
+				<td>
+					<p>target: (the element in which words are highlighted).</p>
+					<p>words: (the words that were highlighted).</p>
+				</td>
+				<td>
+					Called any time that the controller highlights words.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			
+			<tr>
+				<td>getHighlightClass</td>
+				<td>(string)</td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>
+						Get the class that will be applied to highlighted words.<br>
+						This will be the value of the "data-highlighter-class" attribute.<br>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>getHighlightColor</td>
+				<td>(string)</td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>
+						Get the color that will be applied to highlighted words if no styles are set for the class.<br>
+						This will be the value of the "data-highlighter-color" attribute.<br>
+					</p>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>addWord</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>
+						Add a word to the list of words to be highlighted.<br>
+						This will add the word to the "data-highlighter-words" attribute.<br>
+						If the attribute is not set, it will create it.<br>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>getWordsArray</td>
+				<td>(array)</td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>
+						Get the words that will be highlighted.<br>
+						This will be the value of the "data-highlighter-words" attribute.<br>
+						If the attribute is not set, it will return an empty array.<br>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>getWordsString</td>
+				<td>(string)</td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>
+						Get the words that will be highlighted.<br>
+						This will be the value of the "data-highlighter-words" attribute.<br>
+						If the attribute is not set, it will return an empty string.<br>
+						Words are space-delimited.<br>
+						Example: "word1 word2 word3"<br>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>highlightWords</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Highlights the words in the data-highlighter-words attribute.</p>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>setHighlightClass</td>
+				<td></td>
+				<td>className&nbsp;(string)</td>
+				<td></td>
+				<td>
+					<p>
+						Set the class that will be applied to highlighted words.<br>
+						This will set the value of the "data-highlighter-class" attribute.<br>
+					</p>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>setHighlightColor</td>
+				<td></td>
+				<td>color&nbsp;(string)</td>
+				<td></td>
+				<td>
+					<p>
+						Set the color that will be applied to highlighted words if no style is applied to the highlight class externally.<br>
+						This will set the value of the "data-highlighter-color" attribute.<br>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>setWordsArray</td>
+				<td></td>
+				<td>words (array)</td>
+				<td></td>
+				<td>
+					<p>
+						Set the words that will be highlighted.<br>
+						This will set the value of the "data-highlighter-words" attribute.<br>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>setWordsString</td>
+				<td></td>
+				<td>words (string)</td>
+				<td></td>
+				<td>
+					<p>
+						Set the words that will be highlighted.<br>
+						This will set the value of the "data-highlighter-words" attribute.<br>
+						Words are space-delimited.<br>
+						Example: "word1 word2 word3"<br>
+					</p>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+</body>
+</html>

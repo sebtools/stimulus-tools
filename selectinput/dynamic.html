@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Select Input: Dynamic</title>
+	<script src="dynamic.js"></script>
+</head>
+<body>
+
+	<form action="post.cfm" method="post">
+		<div>
+			<select name="choice" data-controller="selectinput" data-selectinput-placeholder="Choose an option...">
+				<option value="1">All</option>
+				<option value="2">Shoe</option>
+				<option value="3">Twine</option>
+				<option value="4">Thread</option>
+				<option value="5">Rope</option>
+				<option value="6">Yarn</option>
+				<option value="7">Nylon</option>
+				<option value="8">Rainbow</option>
+				<option value="9">Cord</option>
+			</select>
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+
+	<form id="addOptionForm">
+		<input type="text" id="newOptionText" placeholder="New option text">
+		<input type="text" id="newOptionValue" placeholder="New option value">
+		<button type="button" onclick="addOption()">Add Option</button>
+	</form>
+
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+	<script src="js/controllers/selectinput_controller.js"></script>
+
+</body>
+</html>

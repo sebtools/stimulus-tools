@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Radio Toggle Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Radio Toggle Controller</h1>
+
+	<p>Radio Toggle Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller to allow a user to toggle a radio button on or off, so that nothing is selected.</p>
+
+	
+	<h2>Targets</h2>
+
+	<p>Indicated by data-{{name}}-target attribute.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>radio</td>
+				<td>
+					input[type="target"]<br>
+				</td>
+				<td>
+					This indicates a radio button that should be toggled on or off.<br>
+					The "data-action" attribute will be added to this element.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by the controller.</p>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>radiotoggle</td>
+				<td>
+					This attribute provides the controller functionality.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					(input[type="radio"])<br>
+				</td>
+				<td></td>
+				<td>click->radiotoggle#toggle</td>
+				<td>
+					This value will be used to trigger the controller when the radio button is clicked.<br>
+					It is automatically added to any radio button with a "data-radiotoggle-target" attribute of "radio".<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-radiotoggle-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-radiotoggle-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>target</td>
+				<td>
+					input[type="target"]<br>
+				</td>
+				<td>
+				</td>
+				<td>
+					radio<br>
+				</td>
+				<td>
+					This indicates a radio button that should be toggled on or off.<br>
+					The "data-action" attribute will be added to this element.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">radiotoggle:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "faker:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>toggled</td>
+				<td>
+					target: (the element that is cleared)<br>
+					checked: (indicates if the radio button is checked or not)<br>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>toggle</td>
+				<td></td>
+				<td>(event)</td>
+				<td></td>
+				<td>
+					Toggled the radio button on or off.<br>
+					Called when the radio button is clicked.<br>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

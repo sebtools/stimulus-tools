@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Check All</title>
+</head>
+<body>
+
+	<h1>Check All</h1>
+
+	<p>This is a demo of the Check All controller.</p>
+
+	<div data-controller="checkall" data-checkall-target="container">
+		<button data-action="checkall#checkAll">Check All</button><br>
+		<button data-action="checkall#uncheckAll">Uncheck All</button><br>
+
+		<input type="checkbox" id="all" data-checkall-target="all" value="1"> <label for="all">All</label><br>
+
+		<br>Checkable Items:</b><br>
+
+		<input type="checkbox" id="check_1"  data-checkall-target="checkbox"  value="1"> <label  for="check_1">Item  1</label><br>
+		<input type="checkbox" id="check_2"  data-checkall-target="checkbox"  value="2"> <label  for="check_2">Item  2</label><br>
+		<input type="checkbox" id="check_3"  data-checkall-target="checkbox"  value="3"> <label  for="check_3">Item  3</label><br>
+		<input type="checkbox" id="check_4"  data-checkall-target="checkbox"  value="4"> <label  for="check_4">Item  4</label><br>
+		<input type="checkbox" id="check_5"  data-checkall-target="checkbox"  value="5"> <label  for="check_5">Item  5</label><br>
+		<input type="checkbox" id="check_6"  data-checkall-target="checkbox"  value="6"> <label  for="check_6">Item  6</label><br>
+		<input type="checkbox" id="check_7"  data-checkall-target="checkbox"  value="7"> <label  for="check_7">Item  7</label><br>
+		<input type="checkbox" id="check_8"  data-checkall-target="checkbox"  value="8"> <label  for="check_8">Item  8</label><br>
+		<input type="checkbox" id="check_9"  data-checkall-target="checkbox"  value="9"> <label  for="check_9">Item  9</label><br>
+		<input type="checkbox" id="check_10" data-checkall-target="checkbox" value="10"> <label for="check_10">Item 10</label><br>
+
+	</div>
+	
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+	<script src="js/controllers/checkall_controller.js" type="module"></script>
+
+</body>
+</html>

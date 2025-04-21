@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+<body>
+
+<!--
+<div data-controller="showhide" data-showhide-show-if-value="human">
+	<select data-showhide-target="input" data-action="change->showhide#toggle">
+		<option selected="selected" value=""></option>
+		<option value="human">human</option>
+		<option value="animal">animal</option>
+	</select>
+	<div data-showhide-target="output" hidden="">
+		an output if human
+	</div>
+</div>
+
+-->
+	  
+<div data-controller="showhide">
+	
+	<select name="bob">
+		<option selected="selected" value=""></option>
+		<option value="human">human</option>
+		<option value="animal">animal</option>
+	</select>
+	<div hidden data-showhide-show="bob=human">
+		an output if human
+	</div>
+
+	<div>
+		<input type="radio" name="isit" id="isit-1" value="1"><label for="isit-1">Yes</label><br>
+		<input type="radio" name="isit" id="isit-0" value="0"><label for="isit-0">No</label>
+	</div>
+	
+	<select name="fruit">
+		<option selected="selected" value=""></option>
+		<option value="1">apple</option>
+		<option value="2">banana</option>
+		<option value="3">pear</option>
+	</select>
+
+	<div hidden data-showhide-show="bob=human&fruit=apple">
+		an output if human and apple
+	</div>
+	<div hidden data-showhide-show="bob=human&fruit">
+		an output if human and any fruit
+	</div>
+
+	<div data-showhide-show="isit=1">
+		an output if it is
+	</div>
+</div>
+
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/showhide_controller.js"></script>
+
+</body>
+</html>

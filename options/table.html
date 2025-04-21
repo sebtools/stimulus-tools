@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Select Filter: Simple</title>
+	<link rel="stylesheet" type="text/css" href="js/controllers/selectfilter.css">
+	<link rel="stylesheet" type="text/css" href="../tablesort/sort_table.css">
+</head>
+<body>
+
+	<div>
+		Months<br>
+		<select
+			name="choice1"
+			placeholder="choose"
+			data-controller="options"
+			data-options-source="table#ed"
+			data-options-colnum="2"
+			data-options-sort="value"
+		>
+		</select>
+	</div>
+
+	<div>
+		Units<br>
+		<select
+			name="choice2"
+			placeholder="choose"
+			data-controller="options"
+			data-options-source="table#ed"
+			data-options-colnum="4"
+			data-options-sort="value"
+		>
+		</select>
+	</div>
+	
+	<br>
+
+	<div>
+		Columns<br>
+		<ul
+			data-controller="options"
+			data-options-source="table#ed thead"
+		></ul>
+	</div>
+
+	<div>
+		<table id="ed">
+			<caption>Sample Table Filter</caption>
+			<thead>
+				<tr>
+					<th>Year</th>
+					<th>Month</th>
+					<th>Sales</th>
+					<th>Units</th>
+					<th>Top Sales Rep</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>2022</td>
+					<td data-value="10">October</td>
+					<td>$150,000</td>
+					<td data-value="15000000">15M</td>
+					<td data-value="Herbert, Frank">Frank Herbert</td>
+				</tr>
+				<tr>
+					<td>2023</td>
+					<td data-value="09">September</td>
+					<td>$87,000</td>
+					<td data-value="4000000">4M</td>
+					<td data-value="Asimov, Isaac">Isaac Asimov</td>
+				</tr>
+				<tr>
+					<td>2021</td>
+					<td data-value="05">May</td>
+					<td>$1,321,000</td>
+					<td data-value="41000000">41M</td>
+					<td data-value="Le Guin, Ursula K.">Ursula K. Le Guin</td>
+				</tr>
+				<tr>
+					<td>2020</td>
+					<td data-value="04">April</td>
+					<td>$710,000</td>
+					<td data-value="8000">8K</td>
+					<td data-value="Shelley, Mary">Mary Shelley</td>
+				</tr>
+				<tr>
+					<td>2014</td>
+					<td data-value="05">May</td>
+					<td>$1,100,000</td>
+					<td data-value="12000">12K</td>
+					<td data-value="Wells, H.G.">H.G. Wells</td>
+				</tr>
+				<tr>
+					<td>2018</td>
+					<td data-value="06">June</td>
+					<td>$12,100,000</td>
+					<td data-value="7000000">7M</td>
+					<td data-value="Weiland, K.M.">K.M. Weiland</td>
+				</tr>
+				<tr>
+					<td>2016</td>
+					<td data-value="03">March</td>
+					<td>$1,500,000</td>
+					<td data-value="5600000">5.6M</td>
+					<td data-value="Gaiman, Neil">Neil Gaiman</td>
+				</tr>
+				<tr>
+					<td>2021</td>
+					<td data-value="12">December</td>
+					<td>$450,000</td>
+					<td data-value="25000">25K</td>
+					<td data-value="Pratchett, Terry">Terry Pratchett</td>
+				</tr>
+				<tr>
+					<td>2015</td>
+					<td data-value="01">January</td>
+					<td>$7,800,000</td>
+					<td data-value="10000000">10M</td>
+					<td data-value="Rowling, J.K.">J.K. Rowling</td>
+				</tr>
+				<tr>
+					<td>2013</td>
+					<td data-value="06">June</td>
+					<td>$3,200,000</td>
+					<td data-value="2500000">2.5M</td>
+					<td data-value="Bradbury, Ray">Ray Bradbury</td>
+				</tr>
+				<tr>
+					<td>2024</td>
+					<td data-value="05">May</td>
+					<td>$2,750,000</td>
+					<td data-value="6750000">6.75M</td>
+					<td data-value="Clarke, Arthur C.">Arthur C. Clarke</td>
+				</tr>
+				<tr>
+					<td>2012</td>
+					<td data-value="07">July</td>
+					<td>$920,000</td>
+					<td data-value="30000">30K</td>
+					<td data-value="Doyle, Arthur Conan">Arthur Conan Doyle</td>
+				</tr>
+				<tr>
+					<td>2025</td>
+					<td data-value="11">November</td>
+					<td>$4,850,000</td>
+					<td data-value="9200000">9.2M</td>
+					<td data-value="Le Guin, Ursula K.">Ursula K. Le Guin</td>
+				</tr>
+				<tr>
+					<td>2019</td>
+					<td data-value="02">February</td>
+					<td>$680,000</td>
+					<td data-value="18000">18K</td>
+					<td data-value="Dick, Philip K.">Philip K. Dick</td>
+				</tr>
+				<tr>
+					<td>2017</td>
+					<td data-value="10">October</td>
+					<td>$8,500,000</td>
+					<td data-value="11500000">11.5M</td>
+					<td data-value="Christie, Agatha">Agatha Christie</td>
+				</tr>
+				<tr>
+					<td>2010</td>
+					<td data-value="08">August</td>
+					<td>$2,200,000</td>
+					<td data-value="5400000">5.4M</td>
+					<td data-value="Vonnegut, Kurt">Kurt Vonnegut</td>
+				</tr>
+				<tr>
+					<td>2026</td>
+					<td data-value="09">September</td>
+					<td>$5,750,000</td>
+					<td data-value="12300000">12.3M</td>
+					<td data-value="Huxley, Aldous">Aldous Huxley</td>
+				</tr>
+				<tr>
+					<td>2011</td>
+					<td data-value="04">April</td>
+					<td>$1,900,000</td>
+					<td data-value="3250000">3.25M</td>
+					<td data-value="Orwell, George">George Orwell</td>
+				</tr>
+				<tr>
+					<td>2027</td>
+					<td data-value="06">June</td>
+					<td>$7,300,000</td>
+					<td data-value="15400000">15.4M</td>
+					<td data-value="Shelley, Mary">Mary Shelley</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+	<script src="js/controllers/options_controller.js"></script>
+
+</body>
+</html>

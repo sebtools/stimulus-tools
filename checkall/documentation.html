@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Check All Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Check All Controller</h1>
+
+	<p>Check All Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for checking and unchecking a set of checkboxes.</p>
+
+	<h2>Targets</h2>
+
+	<p>Indicated by data-checkall-target attribute.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>all</td>
+				<td>
+					input[type="checkbox"]<br>
+				</td>
+				<td>
+					The checkbox that will check or uncheck all of the other checkboxes.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>checkbox</td>
+				<td>input[type="checkbox"]<br></td>
+				<td>
+					The checkboxes that will be checked or unchecked when the "all" checkbox is checked or unchecked.<br>
+					<!---This target is optional. If it is not specified, then all checkboxes in the same container as the "all" checkbox will be checked or unchecked.<br>--->
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by Table Filter.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					(root element)<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					The controller will set this to true any time it is checking or unchecking the checkboxes.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>checkall</td>
+				<td>
+					This attribute provides the checkall functionality.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					(any)<br>
+					input[type="checkbox"]<br>
+				</td>
+				<td>change->checkall#toggleAll</td>
+				<td>(string)</td>
+				<td>
+					Check All will add this to any "all" target that doesn't have an action.<br>
+					This is what tells Stimulus to take action, but you need not add this yourself unless you want to change the way it works for some reason.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">checkall:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "checkall:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>toggling</td>
+				<td>
+				</td>
+				<td>
+					Called before that the controller is about to check or uncheck the checkboxes.<br>
+				</td>
+			</tr>
+			<tr>
+				<td>toggled</td>
+				<td>
+				</td>
+				<td>
+					Called after the controller is has to checked or unchecked the checkboxes.<br>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>toggleAll</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Toggles all "checkbox" targets to match the checked state of the "all" target.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>checkAll</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Checks the "All" target and all "checkbox" targets.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>uncheckAll</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Unchecks the "All" target and all "checkbox" targets.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

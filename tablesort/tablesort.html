@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="sort_table.css">
+</head>
+<body>
+
+
+
+<table id="fred" data-controller="tablesort">
+	<caption>Sample Table Sort</caption>
+	<thead>
+	<tr>
+		<th data-tablesort-type="number" aria-sort="ascending">Row</th>
+		<th>Thing</th>
+		<th data-tablesort-type="non">Dates</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>1</td>
+		<td>Shoe</td>
+		<td>9/11/2001</td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td><b>Twine</b></td>
+		<td>12/7/1941</td>
+	</tr>
+	<tr>
+		<td>3</td>
+		<td><a href="http://www.example.com/">Thread</a></td>
+		<td>1/20/2008</td>
+	</tr>
+	<tr>
+		<td>4</td>
+		<td>Rope</td>
+		<td>9/17/1862</td>
+	</tr>
+	<tr>
+		<td>5</td>
+		<td>Yarn</td>
+		<td>8/6/1945</td>
+	</tr>
+	<tr>
+		<td data-tablesort-val="6">Six</td>
+		<td>Nylon</td>
+		<td>7/4/1776</td>
+	</tr>
+	<tr>
+		<td><data value="7">Seven</data></td>
+		<td data-tablesort-val="Rainbow">(Rainbow)</td>
+		<td>8/4/1989</td>
+	</tr>
+	</tbody>
+</table>
+
+<button onclick="document.getElementById('fred')['tablesort'].sortByIndex(0);">Sort Row</button>
+<button onclick="document.getElementById('fred')['tablesort'].sortByName('Thing');">Sort Things</button>
+
+
+
+<table data-controller="tablesort">
+	<thead>
+		<tr>
+			<td colspan="3">personal</td>
+			<td colspan="5">hardware</td>
+			<td colspan="4">software</td>
+		</tr>
+		<tr>
+			<th>job title</th>
+			<th>name</th>
+			<th>company</th>
+			<th>processor</th>
+			<th>ram</th>
+			<th>graphics card</th>
+			<th>screen width</th>
+			<th>screen height</th>
+			<th>platform</th>
+			<th>browser</th>
+			<th>browser version</th>
+			<th>language</th>
+		</tr>
+	</thead>
+	<tbody>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Boss</td><td>Stan the Man</td><td>Monsters Inc</td><td>AMD</td><td>2</td><td>Nvidia</td><td>1920</td><td>981</td><td>Win32</td><td>IE</td><td>11</td><td>en-US</td></tr>
+<tr><td>Slave</td><td>Bridget Jones</td><td>The Hand</td><td>i7</td><td>8gb</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Firefox</td><td>54</td><td>sv-SE</td></tr>
+<tr><td>HR</td><td>Bruce Wayne</td><td>League of Shadows</td><td>i5</td><td>?</td><td>GeForce</td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+<tr><td>Programmer</td><td>Bilbo Baggins</td><td>Brotherhood of Evil Mutants</td><td>i3</td><td>4 gigabyte</td><td></td><td>1920</td><td>1080</td><td>Linux x86_64</td><td>Opera</td><td>46</td><td>sv</td></tr>
+
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/tablesort_controller.js"></script>
+
+<!--
+ToDo: Tests
+-Should not sort tfoot
+-Should sort strings without regard to capitalization
+-Should sort dates correctly.
+-Should sort numbers correctly.
+-Should sort tables created by JavaScript.
+
+-Support for sorting by keyboard keys?
+-->
+
+<!--
+	https://www.kryogenix.org/code/browser/sorttable/
+		https://www.kryogenix.org/code/browser/aqlists/
+	https://plainenglish.io/blog/easy-table-sorting-with-javascript-370d8d97cad8
+	https://github.com/bobbykjack/sort-table-js/blob/8210606904ffc234aaa18e09cedb05158bd56489/sort-table.js
+	https://www.geeksforgeeks.org/how-to-sort-rows-in-a-table-using-javascript/
+	https://www.jqueryscript.net/blog/best-table-sort.html
+	https://www.cssscript.com/fast-html-table-sorting/
+		https://www.cssscript.com/demo/fast-html-table-sorting/
+	https://www.cssscript.com/html-table-sortable/
+		https://www.cssscript.com/demo/html-table-sortable/
+-->
+
+</body>
+</html>

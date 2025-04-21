@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Faker Controller Example</title>
+	<link rel="stylesheet" type="text/css" href="../tablesort/sort_table.css">
+</head>
+<body>
+
+	<h1>Faker Controller</h1>
+
+	<p>This is a demo of the Faker controller.</p>
+
+	<!--
+	<p>Click the button below to generate fake data.</p>
+	<button data-action="faker#generate">Generate</button>
+	-->
+
+	<div data-controller="faker">
+		<p>First Name: <input type="text" data-faker-value="person.firstName" placeholder="First Name" readonly></p>
+		<p>Last Name: <input type="text" data-faker-value="person.lastName" placeholder="Last Name" readonly></p>
+		<p>Email: <input type="text" data-faker-value="internet.email" placeholder="Email" readonly></p>
+		<p>Phone: <input type="text" data-faker-value="phone.number" placeholder="Phone" readonly></p>
+		<input type="text" data-faker-attribute="placeholder=>phone.number;data-mistletoe=>internet.email" readonly>
+		<table data-controller="faker">
+			<colgroup>
+				<col span="1" style="width: 50%;">
+				<col span="1" style="width: 50%;">
+			</colgroup>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Number</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-faker-records="50">
+					<td data-faker-html="person.fullName"></td>
+					<td data-faker-html="internet.email"></td>
+					<td data-faker-html="number.bigInt"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/faker_controller.js" type="module"></script>
+
+</body>
+</html>
