@@ -6,7 +6,7 @@ const { faker } = await import('https://esm.sh/@faker-js/faker');
  * It will also allow you to use Faker.js methods in your HTML using data attributes.
  * For example, you can use data-faker-html="person.fullName" to set the innerHTML of the element to a random name.
  * 
- /
+ */
 
 application.register('faker', class extends Stimulus.Controller {
 
