@@ -261,7 +261,6 @@ application.register('courier', class extends Stimulus.Controller {
 		//Get value from value attribute, data-value attribute or innerHTML
 		//let value = source.value || source.dataset.value || source.innerHTML;
 		let value = this.getValue(source);
-		console.log("Value: ", value);
 
 		//If the source element has a data-courier-attribute attribute, use that as the attribute name to set the value on the target element.
 		if ( source.dataset.courierAttribute ) {
