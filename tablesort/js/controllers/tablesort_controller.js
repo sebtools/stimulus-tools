@@ -245,10 +245,36 @@ application.register('tablesort', class extends Stimulus.Controller {
 
 	sortByIndex(colIndex) {
 
+		this._fixMissingData(colIndex);
+
 		this.runWaitingCode(
 			() =>  this._sortByIndex(colIndex)
 		);
 
+	}
+
+	_fixMissingData(colIndex) {
+		const rows = this.element.querySelectorAll('tbody tr');
+		const cells = Array.from(rows)
+			.map(row => row.cells[colIndex])
+			.filter(cell => cell.dataset.tablesortVal === "" && cell.innerHTML.trim() !== "");
+		//const cells = this.element.querySelectorAll('td[data-tablesort-val=""]');
+		for ( const cell of cells ) {
+			//if ( cell.innerHTML.trim() !== "" ) {
+				this.setUpValue(cell);
+			//}
+		}
+
+		//If no cells had value, then we need to assign a type to the column.
+		const th = this.element.querySelectorAll('th')[colIndex];
+		if (
+			th.dataset.tablesortType == ""
+			&&
+			cells.length == rows.length
+		) {
+			th.dataset.tablesortType = this.guesColType(colIndex);
+		}
+		
 	}
 
 	_sortByIndex(colIndex) {
@@ -319,7 +345,6 @@ application.register('tablesort', class extends Stimulus.Controller {
 			var th = ths[ii];
 			//th.dataset.tablesortType = "string";
 			th.dataset.tablesortType = this.guesColType(ii);// Attempt to determine type by data.
-			
 		}
 
 		//Add missing actions
@@ -349,6 +374,7 @@ application.register('tablesort', class extends Stimulus.Controller {
 		// Set up MutationObserver to detect changes in table cells
 		const observer = new MutationObserver((mutationsList) => {
 			for ( const mutation of mutationsList ) {
+				//console.log(mutation);
 				if ( mutation.type === 'attributes' || mutation.type === 'childList' ) {
 					//Prevent infinite loop
 					if ( mutation.attributeName === 'data-tablesort-val' ) {
@@ -365,7 +391,8 @@ application.register('tablesort', class extends Stimulus.Controller {
 			this.setUpValue(td);
 			
 			//Make sure changes to values update the attribute
-			observer.observe(td, { attributes: true, childList: true, subtree: false });
+			observer.observe(td, { attributes: false, childList: true, characterData: true, subtree: true });
+			observer.observe(td, { attributes: true, attributeFilter: ['data-value'], childList: false, subtree: false });
 		}
 
 		// Add event listener to detect changes in table cells
