@@ -134,12 +134,15 @@ application.register('faker', class extends Stimulus.Controller {
 	}
 
 	_getFakeValue(key) {
+		const [name, ...argsParts] = key.split(':');
+		const qs = argsParts.length ? argsParts.join(':') : undefined;
+		const args = this.queryStringToObject(qs);
 		
 		if ( key ) {
-			let fakerMethod = this._getFakerMethod( key );
+			let fakerMethod = this._getFakerMethod( name );
 
 			if ( typeof fakerMethod === 'function' ) {
-				return fakerMethod();
+				return fakerMethod(args);
 			} else {
 				console.error(`Faker method is not a function: ${key}`);
 			}
@@ -174,6 +177,16 @@ application.register('faker', class extends Stimulus.Controller {
 
 	}
 
+	queryStringToObject(queryString) {
+		const params = new URLSearchParams(queryString);
+		const result = {};
+		for ( const [key, value] of params.entries() ) {
+		  result[key] = value;
+		}
+
+		return result;
+	  }
+
 	_setAttributes(elem, value) {
 		const aAttributes = value.split(';');
 		
@@ -207,7 +220,7 @@ application.register('faker', class extends Stimulus.Controller {
 			})
 		};
 		
-		// If the content is changed, we need to rehighlight the words
+		// If the content is changed, we need to recreate the data.
 		this.mutationObserver.atts.observe(
 			this.element,
 			{
