@@ -40,19 +40,21 @@ application.register('{{name}}', class extends Stimulus.Controller {
 
 	}
 
-	//Label uses data-label attribute, then data-name, then textContent
+	//Label uses data-label attribute, then textContent, then name
 	getLabel(elem) {
 		
 		if ( elem.hasAttribute(`data-$(this.identifier)-label`) ) {
 			return elem.getAttribute("data-$(this.identifier)-label").trim();
 		} else if ( elem.hasAttribute("data-label") ) {
 			return elem.getAttribute("data-label").trim();
+		} else if ( elem.textContent.trim().length > 0 ) {
+			return elem.textContent.trim();
 		} else if ( elem.hasAttribute(`data-$(this.identifier)-name`) ) {
 			return elem.getAttribute("data-$(this.identifier)-name").trim();
 		} else if ( elem.hasAttribute("data-name") ) {
 			return elem.getAttribute("data-name").trim();
 		} else {
-			return elem.textContent.trim();
+			return "(Unknown)";
 		}
 	}
 
