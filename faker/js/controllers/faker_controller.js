@@ -6,15 +6,7 @@ const { faker } = await import('https://esm.sh/@faker-js/faker');
  * It will also allow you to use Faker.js methods in your HTML using data attributes.
  * For example, you can use data-faker-html="person.fullName" to set the innerHTML of the element to a random name.
  * 
- ToDo:
- - document Attributes: data-faker-html, data-faker-value, data-faker-text, data-faker-attribute
- + data-faker-records: to create copies of the elements.
- - Document data-faker-records (and data-faker-recordset) attributes.
- -- Should this be in the parent element or the child element?
- - Document data-faker-attributes
- - Support passing arguments to faker methods in data-faker-html, data-faker-value, data-faker-text, data-faker-attribute attributes.
- - Mutation Observer to watch for changes to faker attributes and update the element.
-*/
+ /
 
 application.register('faker', class extends Stimulus.Controller {
 
@@ -37,6 +29,8 @@ application.register('faker', class extends Stimulus.Controller {
 		this._createRecords();
 		this._loadData();
 
+		this._setMutationObservers();
+
 		this.dispatch("connected");
 
 	}
@@ -54,6 +48,9 @@ application.register('faker', class extends Stimulus.Controller {
 
 	_cloneElement(elem) {
 		const clone = elem.cloneNode(true); // true means deep clone (including child elements)
+
+		this.loadElements(clone,true);
+
 		elem.parentNode.insertBefore(clone, elem.nextSibling); // insert clone after original
 	}
 
@@ -67,62 +64,81 @@ application.register('faker', class extends Stimulus.Controller {
 		//Get all elements with a data-faker-recordset attribute.
 		const recordset = this.element.querySelectorAll('[data-faker-recordset]');
 		
-		recordset.forEach(elem => {
+		if ( recordset.length > 0 ) {
+			const elem = recordset[0];
 
 			// Add enough elements to get to the records count.
-			while ( document.querySelectorAll(`[data-faker-recordset="${elem.getAttribute('data-faker-recordset')}"]`).length < elem.dataset.fakerRecords ) {
-				this._cloneElement(elem)
+			while ( document.querySelectorAll(`[data-faker-recordset="${elem.getAttribute('data-faker-recordset')}"]`).length < parseInt(elem.dataset.fakerRecords, 10) ) {
+				this._cloneElement(elem);
 			}
 
 			//Remove enough elements to get to the records count.
-			/*
-			while( document.querySelectorAll(`[data-faker-recordset="${elem.getAttribute('data-faker-recordset')}"]`).length < elem.dataset.fakerRecords ) {
+			while( document.querySelectorAll(`[data-faker-recordset="${elem.getAttribute('data-faker-recordset')}"]`).length > parseInt(elem.dataset.fakerRecords, 10) ) {
 				const elements = document.querySelectorAll(`[data-faker-recordset="${elem.getAttribute('data-faker-recordset')}"]`);
-				if ( elements.length > elem.dataset.fakerRecords ) {
+				if ( elements.length > parseInt(elem.dataset.fakerRecords,10) ) {
 					const lastElement = elements[elements.length - 1];
 					lastElement.parentNode.removeChild(lastElement);
 				}
 			}
-			*/
-
-		});
+		}
 
 	}
 
 	_loadData() {
 
+		this.loadElements(this.element,false)
+
+	}
+
+	loadElements(root,force=false) {
 		const attributeList = ["data-faker-html", "data-faker-value", "data-faker-text", "data-faker-attribute"];
 		const selector = attributeList.map(attr => `[${attr}]`).join(',');
 
-		const elements = Array.from(this.element.querySelectorAll(selector));
+		const elements = Array.from(root.querySelectorAll(selector));
 		
 		elements.forEach(elem => {
-			// Make sure element does not have a data-faker-loaded attribute of false
-			if ( elem.dataset.fakerLoaded === "false" ) {
-				return;
-			}
-			
-			//If element has a data-faker-html attribute, we will use that to set the innerHTML of the element.
-			if ( elem.dataset.fakerHtml && !elem.innerHTML.length ) {
-				this._applyData(elem, "innerHTML", elem.dataset.fakerHtml);
-			}
-
-			//If element has a data-faker-text attribute, we will use that to set the innerText of the element.
-			if ( elem.dataset.fakerText && !elem.innerText.length ) {
-				this._applyData(elem, "innerText", elem.dataset.fakerText);
-			}
-
-			//If element has a data-faker-value attribute, we will use that to set the value of the element.
-			if ( elem.dataset.fakerValue && !elem.value.length ) {
-				this._applyData(elem, "value", elem.dataset.fakerValue);
-			}
-		
-			//If element has a data-faker-value attribute, we will use that to set the value of the element.
-			if ( elem.dataset.fakerAttribute ) {
-				this._setAttributes(elem, elem.dataset.fakerAttribute);
-			}
-				
+			this.loadElement(elem,force);
 		});
+
+	}
+
+	loadElement(elem,force=false) {
+		// Make sure element does not have a data-faker-loaded attribute of false
+		if ( elem.dataset.fakerLoaded === "false" && !force ) {
+			return;
+		}
+
+		//If element has a data-faker-html attribute, we will use that to set the innerHTML of the element.
+		if (
+			elem.dataset.fakerHtml
+			&&
+			( force || !elem.innerHTML.length)
+		) {
+			this._applyData(elem, "innerHTML", elem.dataset.fakerHtml);
+		}
+
+		//If element has a data-faker-text attribute, we will use that to set the innerText of the element.
+		if (
+			elem.dataset.fakerText
+			&&
+			( force || !elem.innerText.length )
+		) {
+			this._applyData(elem, "innerText", elem.dataset.fakerText);
+		}
+
+		//If element has a data-faker-value attribute, we will use that to set the value of the element.
+		if (
+			elem.dataset.fakerValue
+			&&
+			( force || !elem.value.length )
+		) {
+			this._applyData(elem, "value", elem.dataset.fakerValue);
+		}
+	
+		//If element has a data-faker-value attribute, we will use that to set the value of the element.
+		if ( elem.dataset.fakerAttribute ) {
+			this._setAttributes(elem, elem.dataset.fakerAttribute,force);
+		}
 
 	}
 
@@ -187,7 +203,7 @@ application.register('faker', class extends Stimulus.Controller {
 		return result;
 	  }
 
-	_setAttributes(elem, value) {
+	_setAttributes(elem, value,force=false) {
 		const aAttributes = value.split(';');
 		
 		aAttributes.forEach(attr => {
@@ -197,37 +213,52 @@ application.register('faker', class extends Stimulus.Controller {
 			const key = valueParts.join(':');
 			
 			//If the attribute is missing or empty, set the attribute of the element to the value.
-			if ( !elem.hasAttribute(attribute) ) {
+			if ( force || !elem.hasAttribute(attribute) ) {
 				elem.setAttribute(attribute, this._getFakeValue(key));
 			}
 		});
 	}
 
-	_setMutationObserver() {
+	_setMutationObservers() {
 
-		this.mutationObservers = {
-			records: new MutationObserver(() => {
-				this._createRecords();
-			}),
-			atts: new MutationObserver(() => {
+		this.mutationObservers = {};
 
-					mutations.forEach(mutation => {
-						console.log(`Attribute '${mutation.attributeName}' changed on`, mutation.target);
-						console.log(`Old value: ${mutation.oldValue}`);
-						console.log(`New value: ${mutation.target.getAttribute(mutation.attributeName)}`);
-					});
+		this.mutationObservers.records = new MutationObserver(() => {
+			//console.log("Records changed");
+			this._createRecords();
+		})
+		this.mutationObservers.atts = new MutationObserver((mutations) => {
 
-			})
-		};
+				mutations.forEach(mutation => {
+					//console.log("Mutation detected: ", mutation);
+					if (!['data-faker-html', 'data-faker-text', 'data-faker-value', 'data-faker-attribute'].includes(mutation.attributeName)) {
+						return;
+					}
+					console.log(`Attribute '${mutation.attributeName}' changed on`, mutation.target);
+					console.log(`Old value: ${mutation.oldValue}`);
+					console.log(`New value: ${mutation.target.getAttribute(mutation.attributeName)}`);
+				});
+
+		})
 		
 		// If the content is changed, we need to recreate the data.
-		this.mutationObserver.atts.observe(
+		this.mutationObservers.atts.observe(
 			this.element,
 			{
 				childList: true,
 				subtree: true,
 				attributes: true,
 				attributeFilter: ['data-faker-html', 'data-faker-text', 'data-faker-value', 'data-faker-attribute']
+			}
+		);
+
+		this.mutationObservers.records.observe(
+			this.element,
+			{
+				childList: true,
+				subtree: true,
+				attributes: true,
+				attributeFilter: ['data-faker-records']
 			}
 		);
 
