@@ -5,7 +5,6 @@ It can also be used to set up a datalist element with options from a data source
 It can be used to set up a datalist element with options from a data source.
 
 ToDo:
-- Add support for multiple targets with the same controller
 - Use dt/dd as value/label for dl/dt/dd
 */
 
@@ -97,6 +96,7 @@ application.register('options', class extends Stimulus.Controller {
 		let sourceSelector = this.element.getAttribute("data-options-source");
 		if ( sourceSelector ) {
 			let oSource = document.querySelector(this.element.getAttribute("data-options-source"));
+			const filter = this.element.getAttribute("data-options-filter") || "";
 
 			// If the source element is not found, log an error and return null
 			if ( !oSource ) {
@@ -107,15 +107,15 @@ application.register('options', class extends Stimulus.Controller {
 			// Get the selector for the child element based on the tag name of the source element
 			switch ( oSource.tagName ) {
 				case "SELECT":
-					return `${sourceSelector} option`;
+					return `${sourceSelector} option${filter}`;
 				case "UL":
-					return `${sourceSelector} li`;
+					return `${sourceSelector} li${filter}`;
 				case "OL":
-					return `${sourceSelector} li`;
+					return `${sourceSelector} li${filter}`;
 				case "DL":
-					return `${sourceSelector} dt`;
+					return `${sourceSelector} dt${filter}`;
 				case "DT":
-					return `${sourceSelector} dd`;
+					return `${sourceSelector} dd${filter}`;
 				case "TABLE":
 
 					//Throw an error if data-options-colnum is not set as an integer
@@ -130,9 +130,9 @@ application.register('options', class extends Stimulus.Controller {
 						return null;
 					}
 					//"table#ed tr td:nth-child(4)";
-					return sourceSelector + " tbody tr td:nth-child(" + this.element.getAttribute("data-options-colnum") + ")";
+					return sourceSelector + " tbody tr td:nth-child(" + this.element.getAttribute("data-options-colnum") + ")" + filter;
 				case "THEAD":
-					return `${sourceSelector} th`;
+					return `${sourceSelector} th${filter}`;
 				default:
 					console.error(`Unable to determine select tag name: ${oSource.tagName}. Please add data-options-selector to the element.`);
 					return null;

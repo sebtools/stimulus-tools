@@ -28,7 +28,9 @@
 		<tr>
 			<td>table</td>
 			<td>td by row</td>
-			<td>Use the <code>data-options-colnum</code> attribute to specify a column number.</td>
+			<td>
+				Use the <code>data-options-colnum</code> attribute to specify a column number.
+			</td>
 		</tr>
 
 		<tr>
@@ -91,7 +93,7 @@
 		</thead>
 		<tbody>
 			
-			<tr class="planned">
+			<tr>
 				<td>table</td>
 				<td>tr</td>
 				<td>
@@ -101,6 +103,7 @@
 						<li>label</li>
 						<li>attributes</li>
 					</ul>
+					Note: This output is infomrational only and would ne be expected to be used in production.<br>
 				</td>
 			</tr>
 
@@ -200,7 +203,7 @@
 			<tr>
 				<td>controller</td>
 				<td>
-					table<br>
+					(see "Targets" above)<br>
 				</td>
 				<td></td>
 				<td>options</td>
@@ -227,6 +230,40 @@
 			</tr>
 		</thead>
 		<tbody>
+
+			<tr>
+				<td>source</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The selector for the parent element holding the source data.
+				</td>
+			</tr>
+
+			<tr>
+				<td>filter</td>
+				<td>
+					(root)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(string)
+				</td>
+				<td>
+					The selector to apply to each item in the source element.<br>
+					Only the items that match this selector will be included in the options list.<br>
+					Example: <code>[data-value]</code> (get only elements with a "data-value" attribute).<br>
+				</td>
+			</tr>
 
 			<tr>
 				<td>attributes</td>
@@ -307,7 +344,7 @@
 				</td>
 				<td>
 					The selector for the individual elements holding the source data.<br>
-					<i>This should only be used in the event that the "data-options-source" attribute is insufficient.</i>
+					<i>This should only be used in the event that the "<code>data-options-source</code>" and "<code>data-options-filter</code>" attributes are insufficient.</i>
 				</td>
 			</tr>
 
@@ -360,22 +397,6 @@
 				<td>value desc</td>
 				<td>
 					Sort the options by value in descending order.
-				</td>
-			</tr>
-
-			<tr>
-				<td>source</td>
-				<td>
-					(root)<br>
-				</td>
-				<td>
-					
-				</td>
-				<td>
-					(string)
-				</td>
-				<td>
-					The selector for the parent element holding the source data.
 				</td>
 			</tr>
 
