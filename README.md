@@ -52,8 +52,3 @@ MIT License
 ---
 
 Made with ❤️ using [Stimulus](https://stimulus.hotwired.dev/)
-```
-
----
-
-Let me know if you want badges, screenshots, or usage examples added!
