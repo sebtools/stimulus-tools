@@ -104,39 +104,13 @@ application.register('options', class extends Stimulus.Controller {
 				return null;
 			}
 
-			// Get the selector for the child element based on the tag name of the source element
-			switch ( oSource.tagName ) {
-				case "SELECT":
-					return `${sourceSelector} option${filter}`;
-				case "UL":
-					return `${sourceSelector} li${filter}`;
-				case "OL":
-					return `${sourceSelector} li${filter}`;
-				case "DL":
-					return `${sourceSelector} dt${filter}`;
-				case "DT":
-					return `${sourceSelector} dd${filter}`;
-				case "TABLE":
-
-					//Throw an error if data-options-colnum is not set as an integer
-					if (
-						!(
-							this.element.hasAttribute("data-options-colnum")
-							&&
-							!isNaN(this.element.getAttribute("data-options-colnum"))
-						)
-					) {
-						console.error(`If data-options-colnum is not set as an integer for selector: ${sourceSelector}`);
-						return null;
-					}
-					//"table#ed tr td:nth-child(4)";
-					return sourceSelector + " tbody tr td:nth-child(" + this.element.getAttribute("data-options-colnum") + ")" + filter;
-				case "THEAD":
-					return `${sourceSelector} th${filter}`;
-				default:
-					console.error(`Unable to determine select tag name: ${oSource.tagName}. Please add data-options-selector to the element.`);
-					return null;
+			const elementSelector = this._getElementSelector(oSource);
+			if ( !elementSelector ) {
+				console.warn(`Unable to determine element selector for source: ${sourceSelector}`);
+				return null;
 			}
+
+			return `${sourceSelector} ${elementSelector}${filter}`;
 		}
 	}
 
@@ -317,6 +291,43 @@ application.register('options', class extends Stimulus.Controller {
 		}
 
 		return aArray;
+	}
+
+	_getElementSelector(source) {
+		
+		// Get the selector for the child element based on the tag name of the source element
+		switch ( source.tagName ) {
+			case "SELECT":
+				return "option";
+			case "UL":
+				return "li";
+			case "OL":
+				return "li";
+			case "DL":
+				return "dt";
+			case "DT":
+				return "dd";
+			case "TABLE":
+
+				//Throw an error if data-options-colnum is not set as an integer
+				if (
+					!(
+						this.element.hasAttribute("data-options-colnum")
+						&&
+						!isNaN(this.element.getAttribute("data-options-colnum"))
+					)
+				) {
+					console.error(`If data-options-colnum is not set as an integer for selector: ${sourceSelector}`);
+					return null;
+				}
+				//"table#ed tr td:nth-child(4)";
+				return "tbody tr td:nth-child(" + this.element.getAttribute("data-options-colnum") + ")";
+			case "THEAD":
+				return "th";
+			default:
+				console.error(`Unable to determine select tag name: ${oSource.tagName}. Please add data-options-selector to the element.`);
+				return null;
+		}
 	}
 
 	_getLabel(obj) {
