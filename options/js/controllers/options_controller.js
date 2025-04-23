@@ -358,21 +358,50 @@ application.register('options', class extends Stimulus.Controller {
 		const aSortInfo = this.element.getAttribute("data-options-sort").split(" ") || [];
 		const sSortBy = aSortInfo[0] || "label";
 		const sSortOrder = aSortInfo[1] || "asc";
-		
-		// Sort the array based on the specified property and order
-		aArray.sort((a, b) => {
-			let aValue = a[sSortBy] || a.label;
-			let bValue = b[sSortBy] || b.label;
-
-			if (sSortOrder === "asc") {
-				return aValue.localeCompare(bValue);
-			} else {
-				return bValue.localeCompare(aValue);
+	
+		const detectType = (val) => {
+			if (val == null || val === "") return null;
+			if (!isNaN(Number(val))) return "number";
+			if (!isNaN(Date.parse(val))) return "date";
+			return "string";
+		};
+	
+		// Detect consistent type
+		let detectedType = null;
+		for (const item of aArray) {
+			const val = item[sSortBy] ?? item.label;
+			const type = detectType(val);
+			if (!type) continue;
+			if (!detectedType) {
+				detectedType = type;
+			} else if (detectedType !== type) {
+				detectedType = "string";
+				break;
 			}
+		}
+		const type = detectedType || "string";
+	
+		// Pre-process items with converted values
+		const enrichedArray = aArray.map(item => {
+			const raw = item[sSortBy] ?? item.label;
+			let converted;
+			if (type === "number") converted = Number(raw);
+			else if (type === "date") converted = new Date(raw);
+			else converted = String(raw);
+			return { original: item, sortVal: converted };
 		});
-
-		return aArray;
+	
+		// Sort using pre-converted values
+		enrichedArray.sort((a, b) => {
+			if (a.sortVal < b.sortVal) return sSortOrder === "asc" ? -1 : 1;
+			if (a.sortVal > b.sortVal) return sSortOrder === "asc" ? 1 : -1;
+			return 0;
+		});
+	
+		// Return the original objects in sorted order
+		return enrichedArray.map(item => item.original);
 	}
+
 
 	_setMutationObserver() {
 
