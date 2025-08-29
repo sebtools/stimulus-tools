@@ -97,6 +97,31 @@
 				</td>
 			</tr>
 
+			<tr>
+				<td rowspan="3">keep</td>
+				<td rowspan="3">(any)</td>
+				<td rowspan="3"></td>
+				<td>
+					
+				</td>
+				<td>
+					Determines if fields in this element (or its children) should be kept when hidden. This attribute may be placed on any element, and the controller will check the element and its children to see if it is set to "true". If so, the element will not be cleared when hidden.
+				</td>
+			</tr>
+			<tr>
+				<td>true</td>
+				<td>
+					The element (and its children) will not be cleared when hidden.
+				</td>
+			</tr>
+			<tr>
+				<td>false</td>
+				<td>
+					The element (and its children) will be cleared when hidden.<br>
+					This attribute can be used to override a parent element that has keep="true".<br>
+				</td>
+			</tr>
+
 
 		</tbody>
 	</table>

@@ -10,6 +10,9 @@ application.register('eraser', class extends Stimulus.Controller {
 		
 		this.config();
 
+		//Attaching controller to object so we can call methods on it.
+		this.element[this.identifier] = this;
+
 		this.dispatch("connected");
 
 	}
@@ -89,6 +92,11 @@ application.register('eraser', class extends Stimulus.Controller {
 
 	//I clear the given element
 	clearElement(element) {
+
+		if ( this.isKeepElement(element) ) {
+			return;
+		}
+
 		switch( element.tagName.toLowerCase() ) {
 			case "input":
 				switch ( element.type ) {
@@ -199,6 +207,20 @@ application.register('eraser', class extends Stimulus.Controller {
 		}
 
 		return true;
+	}
+
+	isKeepElement(element) {
+		let obj = element;
+
+		// Climb the tree looking for a data-eraser-keep attribute
+		while ( obj ) {
+			if ( obj.hasAttribute("data-eraser-keep") ) {
+				return obj.getAttribute("data-eraser-keep") === "true";
+			}
+			obj = obj.parentElement;
+		}
+
+		return false;
 	}
 
 });
