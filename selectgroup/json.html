@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Select Group: Shortest</title>
+</head>
+<body>
+
+<div
+	data-controller="selectgroup"
+	data-selectgroup-parents='[
+		{"name":"nation","label":"Nation","placeholder":"Select a Nation"},
+		{"name":"city","label":"City","placeholder":"Select a City"}
+	]'
+	data-selectgroup-label="Location"
+>
+	<div>
+		<label for="location">Location</label>
+		<select id="location" name="location">
+			<option value="">Choose a Location</option>
+			<option data-selectgroup-parents="Canada:Vancouver" data-label="Stanley Park">
+				Canada: Vancouver: Stanley Park
+			</option>
+			<option>Canada: Toronto: CN Tower</option>
+			<option>Canada: Montreal: Mount Royal</option>
+			<option data-selectgroup-parents="USA:Chicago" data-selectgroup-label="Millennium Park 3">
+				USA: Chicago: Millennium Park
+			</option>
+			<option
+				data-selectgroup-nation="USA"
+				data-selectgroup-city="New York"
+			>
+				Central Park
+			</option>
+			<option>USA: San Francisco: Golden Gate Park</option>
+			<option>Australia: Sydney: Bondi Beach</option>
+			<option selected="selected">Australia: Melbourne: Royal Botanic Gardens</option>
+			<option>UK: London: Hyde Park</option>
+			<option>UK: Edinburgh: Arthur's Seat</option>
+		</select>
+	</div>
+</div>
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/selectgroup_controller.js"></script>
+
+</body>
+</html>

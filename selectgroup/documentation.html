@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Select Group Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Select Group Controller</h1>
+
+	<p>Select Group Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for creating related select boxes.</p>
+
+	<p>Select Group can create parent select boxes from the child select box so that the child will work alone if the JavaScript fails.</p>
+
+	<h2>Targets</h2>
+
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td></td>
+				<td>
+					select<br>
+				</td>
+				<td>
+					The select from which to create parent selects.
+				</td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td>label</td>
+				<td>
+					The label for the select.<br>
+					Optional
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by Table Filter.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					The controller will set this to true any time it is taking action.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)<br>
+				</td>
+				<td></td>
+				<td>selectgroup</td>
+				<td>
+					This attribute provides the related selects functionality.<br>
+					It should be placed on a container element that contains the select to be enhanced.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					select<br>
+				</td>
+				<td>selectgroup#onParentChange</td>
+				<td>(string)</td>
+				<td>
+					The controller will add this to any select that it creates.<br>
+					This is what tells Stimulus to take action, but you need not add this yourself unless you want to change the way it works for some reason.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>label</td>
+				<td>
+					option<br>
+				</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					Sets a default value for data-selectgroup-label.<br>
+					(see below)<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-selectgroup-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-selectgroup-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>delimiter</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>
+					:
+				</td>
+				<td>
+					(any string)
+				</td>
+				<td>
+					This indicates the delimiter used to separate the different levels of the hierarchy.<br>
+					This could be used in the disply of the options or 
+				</td>
+			</tr>
+
+			<tr>
+				<td>label</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(any string)
+				</td>
+				<td>
+					The label of the final select box.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>parents</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(see description)
+				</td>
+				<td>
+					This is a list of the parent levels in the hierarchy, separated by the delimiter.<br>
+					Alternately, you can use a JSON array, with keys for "name:, :label", and "placeholder" if you want more control.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>label</td>
+				<td>
+					option<br>
+				</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					If provided, this will be used as the display for the option instead of the default display text once the related selects are created.<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>parents</td>
+				<td>
+					option<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(see description)
+				</td>
+				<td>
+					This is a list of the parent levels in the hierarchy, separated by the delimiter.<br>
+					Alternately, you can use a JSON object with a key for each parent level and the value for that parent.<br>
+					This ultimately just sets values in the data-selectgroup attributes (see below).<br>
+				</td>
+			</tr>
+
+			<tr>
+				<td>(parent name)</td>
+				<td>
+					option<br>
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					(see description)
+				</td>
+				<td>
+					For each parent level, you can set the value for that parent directly using a data attribute named for the parent.<br>
+					For example, if you have a parent named "Nation", you can set the value for that parent using data-selectgroup-nation="USA".<br>
+					This ultimately just sets values in the data-selectgroup-parents attribute (see above).<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+</body>
+</html>
