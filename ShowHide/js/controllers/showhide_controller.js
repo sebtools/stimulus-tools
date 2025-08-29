@@ -139,6 +139,9 @@ application.register('showhide', class extends Stimulus.Controller {
 
 		this.config();
 
+		//Attaching controller to object so we can call methods on it.
+		this.element[this.identifier] = this;
+
 		this.dispatch("connected");
 
 	}
