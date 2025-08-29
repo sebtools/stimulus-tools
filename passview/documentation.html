@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Pass View Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Pass View Controller</h1>
+
+	<p>Pass View Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for showing the password in a password field.</p>
+
+	<h2>Targets</h2>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>button</td>
+				<td>
+					button<br>
+				</td>
+				<td>
+					The button to show and hide the password.<br>
+					The controller creates this.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Attributes</h2>
+
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by Table Filter.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-pressed</td>
+				<td>
+					button<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					The controller will set this attribute on the button to indicate whether the button is pressed.<br>
+					It will have the opposite value to the visibility of the password text.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					input[type="password"]<br>
+				</td>
+				<td></td>
+				<td>passview</td>
+				<td>
+					This attribute provides the functionality.<br>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-passview-</span> Value Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-tablefilter-" and suffixed with "-value" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>path</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td>
+					The path to the folder holding the "css" and "img" folders.<br>
+					This is only needed if the CSS and images are not in the default location relative to the controller JS file.
+				</td>
+			</tr>
+
+			<tr>
+				<td>icon-open</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>
+					eye.svg
+				</td>
+				<td>
+				</td>
+				<td>
+					The icon to use for the "show password" button when the password is hidden.<br>
+					This is inside a folder called "img" relative to the "path" attribute.
+				</td>
+			</tr>
+
+			<tr>
+				<td>icon-closed</td>
+				<td>
+					(controller)<br>
+				</td>
+				<td>
+					eye-slash.svg
+				</td>
+				<td>
+				</td>
+				<td>
+					The icon to use for the "show password" button when the password is visiable.<br>
+					This is inside a folder called "img" relative to the "path" attribute.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">passview:</span> Events</h3>
+
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
+
+	<p>All of these events are prefixed by "passview:".</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is initialized.
+				</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td>
+				</td>
+				<td>
+					Called any time that the controller is disconnected.
+				</td>
+			</tr>
+			<tr>
+				<td>toggled</td>
+				<td>
+					<p>target: (the table that is filtered)</p>
+					<p>visible: (boolean - true if the password is visible)</p>
+				</td>
+				<td>
+					Called any time that the password visibility is toggled.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>While it is recommended to use the controller via the attributes listed above, the following methods can be called directly if needed.</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>toggle</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Toggles the visibility of the password.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>
