@@ -172,6 +172,26 @@
 			</tr>
 
 			<tr>
+				<td rowspan="2">initial</td>
+				<td rowspan="2">
+					table<br>
+				</td>
+				<td rowspan="2">
+					false<br>
+				</td>
+				<td>
+					(boolean)
+				</td>
+				<td>
+					Indicates whether the controller should be sort the table when it is connected.
+				</td>
+			</tr>
+			<tr>
+				<td>true</td>
+				<td>The controller will sort the table when it is connected, using the first column with an aria-sort attribute.</td>
+			</tr>
+
+			<tr>
 				<td>val</td>
 				<td>
 					td<br>
@@ -300,6 +320,16 @@
 			<th>Description</th>
 		</thead>
 		<tbody>
+			<tr>
+				<td>resort</td>
+				<td></td>
+				<td>
+				</td>
+				<td></td>
+				<td>
+					<p>Re-runs the sort on the table using the sort from the first column with an aria-sort attribute.</p>
+				</td>
+			</tr>
 			<tr>
 				<td>sortByIndex</td>
 				<td></td>

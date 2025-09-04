@@ -51,7 +51,7 @@ const oSortTable = {
 			result = td.getAttribute("data-value");
 		} else if ( datas.length == 1 ) {
 			result = datas[0].value;
-		} else if ( td.textContent.length == 0 && inputs.length == 1 ) {
+		} else if ( td.textContent.trim().length == 0 && inputs.length == 1 ) {
 			if ( inputs[0].type == "checkbox" || inputs[0].type == "radio" ) {
 				result = inputs[0].checked ? "1" : "0";
 			} else {
@@ -134,6 +134,8 @@ application.register('tablesort', class extends Stimulus.Controller {
 			() =>  this.setUp()
 		);
 
+		this.element.addEventListener("change", (e) => this.onChange(e));
+
 		this.dispatch("connected");
 
 	}
@@ -178,6 +180,10 @@ application.register('tablesort', class extends Stimulus.Controller {
 		// Set up column types
 		this.setUpColTypes();
 
+		if ( this.element.getAttribute("data-tablesort-initial") === "true" ) {
+			this.resort();
+		}
+		
 	}
 
 	runWaitingCode(func) {
@@ -218,12 +224,26 @@ application.register('tablesort', class extends Stimulus.Controller {
 
 	}
 
+	resort() {
+		// Find column with aria-sort
+		var ths = this.element.querySelectorAll('th[aria-sort]');
+
+		if ( ths.length ) {
+			var colIndex = this._getElemChildNum(ths[0]);
+			ths[0].setAttribute("aria-sort",this._getSortDir(colIndex));// Reverse direction so we followign code will reverse again to maintain direction
+			this.sortByIndex(colIndex);
+		}
+	}
+
 	sort(event) {
 
-		// Get the column number being sorted
-		var colIndex = this._getElemChildNum(event.currentTarget);
-
-		this.sortByIndex(colIndex);
+		if ( event ) {
+			// Get the column number being sorted
+			var colIndex = this._getElemChildNum(event.currentTarget);
+			this.sortByIndex(colIndex);
+		} else {
+			this.resort();
+		}
 
 		this.dispatch("sorted");
 
@@ -374,7 +394,6 @@ application.register('tablesort', class extends Stimulus.Controller {
 		// Set up MutationObserver to detect changes in table cells
 		const observer = new MutationObserver((mutationsList) => {
 			for ( const mutation of mutationsList ) {
-				//console.log(mutation);
 				if ( mutation.type === 'attributes' || mutation.type === 'childList' ) {
 					//Prevent infinite loop
 					if ( mutation.attributeName === 'data-tablesort-val' ) {
@@ -397,7 +416,6 @@ application.register('tablesort', class extends Stimulus.Controller {
 
 		// Add event listener to detect changes in table cells
 		this.element.querySelector('tbody').addEventListener('input', (event) => {
-			console.log(event.target.tagName);
 			if ( event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' ) {
 				if ( event.target.parentNode.tagName === 'TD' ) {
 					this.setUpValue(event.target.parentNode);
@@ -405,6 +423,35 @@ application.register('tablesort', class extends Stimulus.Controller {
 			}
 		});
 
+		// Set up MutationObserver to detect changes in table rows
+		const rowObserver = new MutationObserver((mutationsList) => {
+			let shouldUpdate = false;
+			for ( const mutation of mutationsList ) {
+				if ( mutation.type === 'childList' && (mutation.addedNodes.length || mutation.removedNodes.length) ) {
+					shouldUpdate = true;
+				}
+			}
+			if ( shouldUpdate ) {
+				this.setUpValues();
+			}
+		});
+
+		// Observe changes in the tbody element
+		rowObserver.observe(this.element.querySelector('tbody'), { childList: true });
+
+	}
+
+	onChange(e) {
+		if (
+			e.target
+			&&
+			( e.target.type === "checkbox" || e.target.type === "radio" )
+		) {
+			const td = e.target.closest('td');
+			this.setUpValue(td);
+			this.resort();
+		}
+		
 	}
 
 	setUpValue(td) {
@@ -446,11 +493,26 @@ application.register('tablesort', class extends Stimulus.Controller {
 	}
 
 	_getColumnCells(columnIndex) {
-		const table = this.element.querySelector("tbody");
-		return Array.from(table.rows).map(row => {
-			const cell = row.cells[columnIndex];
-			return { value: cell.dataset.tablesortVal, element: row };
-		});
+		var aResult = [];
+		var table = this.element.getElementsByTagName("tbody")[0];
+
+		// Loop through each row of the table
+		for ( var i = 0; i < table.rows.length; i++ ) {
+
+			// Get the cell in the current row and specified column index
+			var cell = table.rows[i].cells[columnIndex];
+
+			// Add the value and cell to the array
+			aResult.push(
+				{
+					"value":cell.dataset.tablesortVal,
+					"element":cell.parentNode
+				}
+			);
+
+		}
+
+		return aResult;
 	}
 
 	// I get the number of child the given element is of its parent.
