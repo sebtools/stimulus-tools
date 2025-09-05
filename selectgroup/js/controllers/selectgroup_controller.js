@@ -5,7 +5,7 @@ application.register('selectgroup', class extends Stimulus.Controller {
 	}
 
 	connect() {
-		
+
 		this.config();
 
 		this.dispatch("connected");
@@ -14,7 +14,8 @@ application.register('selectgroup', class extends Stimulus.Controller {
 
 	config() {
 
-		this.setFinalSelect();	
+		this.setFinalSelect();
+		this._package();	
 		this._setOptionsAtts();
 		this._addParentSelects();
 		this._populateSelects();
@@ -64,8 +65,13 @@ application.register('selectgroup', class extends Stimulus.Controller {
 		options.forEach(option => {
 			// Check if option matches all filter conditions
 			const matches = Object.entries(filter).every(([key, value]) => {
-			const attrValue = option.dataset[`selectgroup${this._capitalize(key)}`];
-				return attrValue === value;
+				const attr = `data-selectgroup-${key.toLowerCase()}`;
+				if ( !option.hasAttribute(attr) ) {
+					return false;
+				}
+				const attrValue = option.dataset[`selectgroupParent${this._capitalize(key)}`];
+				if ( !attrValue ) return false;
+				return attrValue.trim().toLowerCase() === value.trim().toLowerCase();
 			});
 
 			if (!matches) return;
@@ -77,7 +83,7 @@ application.register('selectgroup', class extends Stimulus.Controller {
 				val = option.dataset.selectgroupLabel || option.textContent.trim();
 			} else {
 				//val = option.dataset[`selectgroupParent${this._capitalize(parent)}`];
-				val = option.getAttribute(`data-selectgroup-parent-${parent.toLowerCase()}`);
+				val = option.getAttribute(`data-selectgroup-${parent.toLowerCase()}`);
 			}
 
 			if (val) valuesSet.add(val);
@@ -114,6 +120,28 @@ application.register('selectgroup', class extends Stimulus.Controller {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 
+	_package() {
+
+		if ( this.element.querySelector("[data-selectgroup-package]") ) {
+			// Already packaged, do nothing
+			return;
+		}
+
+		let ii = 0;
+		// Create the wrapper div
+		const wrapper = document.createElement("div")
+		wrapper.setAttribute("data-selectgroup-package", "true")
+
+		// Move all current children of this.element into the wrapper
+		while ( this.element.firstChild ) {
+			wrapper.appendChild(this.element.firstChild)
+		}
+
+		// Add the wrapper back into this.element
+		this.element.appendChild(wrapper);
+
+		return wrapper
+	}
 
 	setFinalSelect() {
 		const selects = Array.from(this.element.querySelectorAll("select"));
@@ -136,19 +164,18 @@ application.register('selectgroup', class extends Stimulus.Controller {
 	_addParentSelects() {
 		// Get the parent definitions
 		const parents = this.getParentsArray();
-		const children = Array.from(this.element.children);
+		const children = this.element.querySelectorAll('[data-selectgroup-package="true"]:has([data-selectgroup-final])');
 		let beforeObject = this.element.firstChild;
 
 		this.busy(true);
 
 		// Create a select for each parent
 		parents.forEach((parent, pp) => {
-			
-			children.forEach((child, ee) => {
+
+			children.forEach((child, cc) => {
 				const clone = child.cloneNode(true);
 				const options = clone.querySelectorAll('option');
 				options.forEach(option => option.remove());
-
 
 				const elements = clone.querySelectorAll('*');
 				// Handle each element in the clone
@@ -188,6 +215,16 @@ application.register('selectgroup', class extends Stimulus.Controller {
 			this.busy(false);
 			
 		});
+
+		//Once all parent selects are added, if gating is enabled, hide all packages (selects and associated code) except the first
+		if ( this.element.getAttribute("data-selectgroup-gated") === "true" ) {
+			 const packages = this.element.querySelectorAll('[data-selectgroup-package]');
+
+			// Hide all except the first
+			packages.forEach((pkg, index) => {
+				pkg.hidden = (index > 0);
+			})
+		}
 
 		// Set the parent of the final select to the final parent.
 		const finalSelect = this.getFinalSelect();
@@ -315,29 +352,40 @@ application.register('selectgroup', class extends Stimulus.Controller {
 
 		select.disabled = true;
 
+		this._updateSelectVisibility(select);
+
 		// Determine filter from previous parent selections
 		const filter = {};
+		let filterValue = "";
 		if ( select.dataset.selectgroupParent ) {
 			const parentSelect = this.element.querySelector(`select[data-selectgroup-name="${select.dataset.selectgroupParent}"]`);
 			// Only filter if a value is selected
 			if ( parentSelect.selectedIndex ) {
 				filter[select.dataset.selectgroupParent] = parentSelect.value;
+				filterValue = parentSelect.value;
 			}
 		}
 
+
 		// Get distinct values for this parent
 		const parentName = select.dataset.selectgroupName || "";
-		const values = this.getValuesForParent(parentName, filter);
 
 		if ( select.dataset.selectgroupFinal === "true" ) {
 			
 			// Loop over all of the options in select
-			const options = Array.from(select.options);
-			options.forEach(option => {
+			const options_actual = Array.from(select.options);
+			options_actual.forEach(option => {
+				const attr = `data-selectgroup-${select.dataset.selectgroupParent.toLowerCase()}`;
+				let optionValue = "";
+				if ( option.hasAttribute(attr) ) {
+					optionValue = option.getAttribute(attr);
+				}
+				
+				// Determine if we should hide this option
 				const hideOption = (
 					option.value !== ""// Keep placeholder visible
 					&& 
-					!values.includes(option.dataset.selectgroupLabel || option.textContent.trim())
+					( optionValue.trim() !== filterValue.trim() )
 				);
 				option.hidden = hideOption;
 				option.textContent = option.dataset.selectgroupLabel || option.dataset.Label || option.textContent.trim();
@@ -349,6 +397,7 @@ application.register('selectgroup', class extends Stimulus.Controller {
 		} else {
 			select.innerHTML = "";
 			
+			const values = this.getValuesForParent(parentName, filter);
 
 			const opt = document.createElement("option");
 			opt.value = "";
@@ -358,21 +407,20 @@ application.register('selectgroup', class extends Stimulus.Controller {
 			const selectedOption = finalSelect.options[finalSelect.selectedIndex];
 
 			// Add options
-			values.forEach(value => {
+			values.forEach(val => {
 				const opt = document.createElement("option");
-				opt.value = value;
-				opt.textContent = value;
+				opt.value = val;
+				opt.textContent = val;
 				
 				// If this value matches the selected option in the final select, mark it as selected
-				if ( selectedOption && selectedOption.dataset[`selectgroupParent${this._capitalize(parentName)}`] === value ) {
+				if ( selectedOption && selectedOption.dataset[`selectgroupParent${this._capitalize(parentName)}`] === val ) {
 					opt.selected = true;
 				}
 
 				select.appendChild(opt);
 			});
 
-	}
-
+		}
 
 		select.disabled = false;
 
@@ -388,12 +436,12 @@ application.register('selectgroup', class extends Stimulus.Controller {
 			// Split the option text by the delimiter and take the last item
 			const parts = option.textContent.split(delimiter).map(p => p.trim());
 
-			if ( !option.dataset.selectgroupOriginal ) {
+			if ( !option.hasAttribute("data-selectgroup-original") ) {
 				option.dataset.selectgroupOriginal = option.textContent.trim();
 			}
 
 			// Set the data-selectgroup-label attribute if not already set
-			if ( !option.dataset.selectgroupLabel ) {
+			if ( !option.hasAttribute("data-selectgroup-label") ) {
 				
 				const label = parts[parts.length - 1] || option.textContent.trim();
 				// Set the data-selectgroup-label attribute
@@ -402,7 +450,7 @@ application.register('selectgroup', class extends Stimulus.Controller {
 			}
 			
 			// Set the data-selectgroup-parents attribute if not already set
-			if ( !option.dataset.selectgroupParents ) {
+			if ( !option.hasAttribute("data-selectgroup-parents") ) {
 				if ( parts.length < 2 ) {
 					// If there's only one part, set parents to an empty string
 					option.dataset.selectgroupParents = "";
@@ -424,10 +472,10 @@ application.register('selectgroup', class extends Stimulus.Controller {
 				//We're using data-selectgroup-{parentName} and data-selectgroup-parent-{parentName} in case we need a parent name that conflicts with another attribute
 				const attr = `data-selectgroup-${parentName.toLowerCase()}`;
 				const attrp = `data-selectgroup-parent-${parentName.toLowerCase()}`;
-				if ( !option.getAttribute(attr) ) {
+				if ( !option.hasAttribute(attr) ) {
 					option.setAttribute(attr,oParents[parentName]);
 				}
-				if ( !option.getAttribute(attrp) ) {
+				if ( !option.hasAttribute(attrp) ) {
 					if ( parentName === "label" || parentName === "parents" ) {
 						option.setAttribute(attrp,oParents[parentName]);
 					} else {
@@ -458,6 +506,28 @@ application.register('selectgroup', class extends Stimulus.Controller {
 
 		return result;
 	}
+
+	_updateSelectVisibility(select) {
+		const parentName = select.getAttribute("data-selectgroup-parent");
+
+		if ( !parentName ) return; // Nothing to do if no parent
+
+		if ( ! (this.element.getAttribute("data-selectgroup-gated") === "true") ) {
+			return; // Only update visibility if gating is enabled
+		}
+		
+		// Find the parent select
+		const parent = this.element.querySelector(
+			`select[data-selectgroup-name="${parentName}"]`
+		);
+
+		if ( parent ) {
+			const hasSelection = parent.value !== "";
+			const pkg = select.closest("[data-selectgroup-package]");// Find the package container
+			pkg.hidden = !hasSelection;
+		}
+	}
+
 
 	isLikelyJSON(str) {
 		if (typeof str !== "string") return false;
