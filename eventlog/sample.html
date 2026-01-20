@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>EventLog Sample</title>
+    <link rel="stylesheet" href="../theme.css" />
+    <link rel="stylesheet" href="../eventlog.css" />
+</head>
+<body>
+    <h1>EventLog Sample</h1>
+
+    <p>Simple demo showing the <code>eventlog</code> controller listening for events on <code>document</code>.</p>
+
+    <ul>
+        <li><a href="documentation.html">Documentation</a></li>
+        <li><a href="index.html">Index</a></li>
+    </ul>
+
+    <div style="margin-top:20px; display:flex; gap:20px; align-items:flex-start;">
+        <div>
+            <h2>Controls</h2>
+            <button id="btn-add">Dispatch record:ui:added</button>
+            <button id="btn-update">Dispatch record:ui:update</button>
+            <button id="btn-delete">Dispatch record:ui:delete</button>
+            <button id="btn-clear">Clear Log</button>
+        </div>
+
+        <div style="flex:1">
+            <h2>Event Log</h2>
+            <div data-controller="eventlog" data-eventlog-events="record:ui:added record:ui:update record:ui:deleted" style="min-height:200px; border:1px solid #ddd; padding:10px; background:white;"></div>
+        </div>
+    </div>
+
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+    <script type="module" src="js/controllers/eventlog_controller.js"></script>
+    <script>
+        function emit(name, detail) {
+            document.dispatchEvent(new CustomEvent(name, { detail }))
+        }
+
+        document.getElementById('btn-add').addEventListener('click', () => emit('record:ui:added', { id: 'item_123', record: { name: 'New Item' } }));
+        document.getElementById('btn-update').addEventListener('click', () => emit('record:ui:update', { id: 'item_123', record: { name: 'Updated' } }));
+        document.getElementById('btn-delete').addEventListener('click', () => emit('record:ui:deleted', { id: 'item_123' }));
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            const el = document.querySelector('[data-controller="eventlog"]');
+            const ctrl = window.application.getControllerForElementAndIdentifier(el, 'eventlog');
+            if (ctrl) ctrl.clear();
+        });
+    </script>
+</body>
+</html>

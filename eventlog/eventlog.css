@@ -1,0 +1,113 @@
+/* Event Log Styling */
+.eventlog-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.eventlog {
+    height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    background: #f8f9fa;
+}
+
+.event-entry {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-left: 3px solid #007acc;
+    background: white;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.event-entry strong {
+    color: #333;
+}
+
+.event-entry small {
+    display: block;
+    margin-top: 4px;
+    background: #f1f3f4;
+    padding: 4px;
+    border-radius: 2px;
+    font-family: 'Courier New', monospace;
+    white-space: pre;
+    font-size: 11px;
+}
+
+/* Event type color coding */
+.event-record {
+    border-left-color: #28a745;
+}
+
+.event-user {
+    border-left-color: #28a745;
+}
+
+.event-system {
+    border-left-color: #dc3545;
+}
+
+.event-notification {
+    border-left-color: #ffc107;
+}
+
+.event-data {
+    border-left-color: #17a2b8;
+}
+
+/* TDD warning boxes */
+.tdd-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.tdd-warning strong {
+    color: #856404;
+}
+
+/* Controls styling */
+.controls {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #e9ecef;
+    border-radius: 4px;
+}
+
+.controls button {
+    background: #007acc;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background: #005fa3;
+}
+
+.controls button.trigger-sort {
+    background: #28a745;
+}
+
+.controls button.trigger-sort:hover {
+    background: #218838;
+}
+
+.controls button.danger {
+    background: #dc3545;
+}
+
+.controls button.danger:hover {
+    background: #c82333;
+}

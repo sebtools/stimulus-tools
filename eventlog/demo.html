@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Log Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+
+        .controls-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .eventlog-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button-group {
+            margin-bottom: 20px;
+        }
+
+        .button-group h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #005a9f;
+        }
+
+        button.danger {
+            background: #dc3545;
+        }
+
+        button.danger:hover {
+            background: #c82333;
+        }
+
+        button.success {
+            background: #28a745;
+        }
+
+        button.success:hover {
+            background: #218838;
+        }
+
+        button.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        button.warning:hover {
+            background: #e0a800;
+        }
+
+        .eventlog {
+            height: 500px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        .event-entry {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-left: 3px solid #007acc;
+            background: white;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .event-entry strong {
+            color: #333;
+        }
+
+        .event-entry small {
+            display: block;
+            margin-top: 4px;
+            background: #f1f3f4;
+            padding: 4px;
+            border-radius: 2px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+        }
+
+        .event-user {
+            border-left-color: #28a745;
+        }
+
+        .event-system {
+            border-left-color: #dc3545;
+        }
+
+        .event-notification {
+            border-left-color: #ffc107;
+        }
+
+        .event-data {
+            border-left-color: #17a2b8;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Log Demo</h1>
+    
+    <div class="demo-container">
+        <div class="controls-section">
+            <h2>Event Controls</h2>
+            
+            <div class="button-group">
+                <h3>User Actions</h3>
+                <button onclick="emitEvent('user:login', {userId: 123, username: 'john_doe', timestamp: new Date().toISOString()})">
+                    User Login
+                </button>
+                <button onclick="emitEvent('user:logout', {userId: 123, sessionDuration: '2h 15m'})">
+                    User Logout  
+                </button>
+                <button onclick="emitEvent('user:profile_update', {userId: 123, fields: ['email', 'phone'], newEmail: 'john@example.com'})">
+                    Profile Update
+                </button>
+            </div>
+
+            <div class="button-group">
+                <h3>System Events</h3>
+                <button class="danger" onclick="emitEvent('system:error', {code: 'E001', message: 'Database connection failed', severity: 'high'})">
+                    System Error
+                </button>
+                <button class="success" onclick="emitEvent('system:backup_complete', {size: '2.3GB', duration: '45s', files: 1247})">
+                    Backup Complete
+                </button>
+                <button class="warning" onclick="emitEvent('system:maintenance', {type: 'scheduled', startTime: new Date().toISOString(), estimatedDuration: '30 minutes'})">
+                    Maintenance Mode
+                </button>
+            </div>
+
+            <div class="button-group">
+                <h3>Notifications</h3>
+                <button onclick="emitEvent('notification:push', {type: 'email', recipient: 'user@example.com', subject: 'Welcome to our service!'})">
+                    Send Notification
+                </button>
+                <button onclick="emitEvent('notification:read', {notificationId: 'n_' + Date.now(), userId: 123})">
+                    Mark as Read
+                </button>
+            </div>
+
+            <div class="button-group">
+                <h3>Data Operations</h3>
+                <button onclick="emitEvent('data:create', {table: 'users', recordId: Date.now(), data: {name: 'Jane Smith', role: 'admin'}})">
+                    Create Record
+                </button>
+                <button onclick="emitEvent('data:update', {table: 'users', recordId: 456, changes: {lastLogin: new Date().toISOString()}})">
+                    Update Record
+                </button>
+                <button class="danger" onclick="emitEvent('data:delete', {table: 'users', recordId: 789, permanent: true})">
+                    Delete Record
+                </button>
+            </div>
+
+            <div class="button-group">
+                <h3>Custom Event</h3>
+                <div class="form-group">
+                    <label for="eventName">Event Name:</label>
+                    <input type="text" id="eventName" placeholder="e.g., custom:my_event" value="custom:test">
+                </div>
+                <div class="form-group">
+                    <label for="eventData">Event Data (JSON):</label>
+                    <textarea id="eventData" placeholder='{"key": "value"}'>{
+  "message": "Hello World",
+  "timestamp": "2024-01-01T00:00:00Z",
+  "priority": "normal"
+}</textarea>
+                </div>
+                <button onclick="emitCustomEvent()">Send Custom Event</button>
+            </div>
+
+            <div class="button-group">
+                <button class="danger" onclick="clearLog()">Clear Event Log</button>
+            </div>
+        </div>
+
+        <div class="eventlog-section">
+            <h2>Event Log</h2>
+            <div 
+                class="eventlog" 
+                data-controller="eventlog" 
+                data-eventlog-events="user:login user:logout user:profile_update system:error system:backup_complete system:maintenance notification:push notification:read data:create data:update data:delete system:ready">
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+	<script type="module" src="js/controllers/eventlog_controller.js"></script>
+    <script>
+        function emitEvent(eventName, detail) {
+            const event = new CustomEvent(eventName, { 
+                detail: detail || {},
+                bubbles: true 
+            });
+            document.dispatchEvent(event);
+        }
+
+        function emitCustomEvent() {
+            const eventName = document.getElementById('eventName').value.trim();
+            const eventDataText = document.getElementById('eventData').value.trim();
+            
+            if (!eventName) {
+                alert('Please enter an event name');
+                return;
+            }
+
+            let eventData = {};
+            try {
+                eventData = eventDataText ? JSON.parse(eventDataText) : {};
+            } catch (e) {
+                alert('Invalid JSON in event data: ' + e.message);
+                return;
+            }
+
+            emitEvent(eventName, eventData);
+        }
+
+        function clearLog() {
+            const eventlogElement = document.querySelector('[data-controller="eventlog"]');
+            const controller = window.application.getControllerForElementAndIdentifier(eventlogElement, 'eventlog');
+            if (controller) {
+                controller.clear();
+            }
+        }
+
+        // Emit a welcome event when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                emitEvent('system:ready', {
+                    message: 'Event log demo loaded successfully',
+                    timestamp: new Date().toISOString(),
+                    version: '1.0.0'
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>

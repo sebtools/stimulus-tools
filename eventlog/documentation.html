@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>EventLog Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>EventLog Controller</h1>
+
+	<p>
+		The EventLog Controller is a small debugging utility that listens for custom events and renders a readable log of the last events (with pretty-printed JSON details).
+		It's handy for development and inspecting events emitted by other controllers.
+	</p>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>These are standard <code>data-</code> attributes (no controller-specific prefix).</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					any element
+				</td>
+				<td></td>
+				<td>eventlog</td>
+				<td>
+					Add <code>data-controller="eventlog"</code> to enable the EventLog controller on an element.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-eventlog-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-eventlog-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>events</td>
+				<td>element with controller</td>
+				<td></td>
+				<td>space-separated event names</td>
+				<td>
+					A space-separated list of event names that the controller should listen for on <code>document</code>. For example: <code>data-eventlog-events="record:ui:added record:ui:update"</code>.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th>Arguments</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>addEventListener</td>
+				<td>eventName (string)</td>
+				<td>Adds an event name to the <code>data-eventlog-events</code> list (if not present) and starts listening for it on <code>document</code>.</td>
+			</tr>
+			<tr>
+				<td>clear</td>
+				<td>none</td>
+				<td>Clear the log contents and reset the internal event counter.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Notes</h2>
+
+	<p>The controller listens on <code>document</code> so it will see events dispatched from anywhere in the page. The event names are matched exactly — include the full namespaced event string (for example <code>record:ui:added</code>).</p>
+
+</body>
+</html>
