@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../theme.css">
+	<link rel="stylesheet" type="text/css" href="twilight.css">
+	<title>Themer</title>
+</head>
+<body>
+
+	<section>
+		<div data-controller="themer" style="float:right;">
+		</div>
+	</section>
+
+	<section>
+		<h2>Form Example</h2>
+		<form>
+		<label>
+			Name:
+			<input type="text" name="name">
+		</label>
+		<label>
+			Email:
+			<input type="email" name="email">
+		</label>
+		<fieldset>
+			<legend>Options</legend>
+			<label><input type="checkbox" name="subscribe"> Subscribe</label>
+			<label><input type="radio" name="plan" value="basic"> Basic</label>
+			<label><input type="radio" name="plan" value="premium"> Premium</label>
+		</fieldset>
+		<label>
+			Select a fruit:
+			<select>
+			<option>Apple</option>
+			<option>Banana</option>
+			<option>Cherry</option>
+			</select>
+		</label>
+		<button type="submit">Submit</button>
+		</form>
+	</section>
+
+	<section>
+		<h2>Table Example</h2>
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>Age</th>  
+				<th>Country</th>
+			</tr>
+			<tr>
+				<td>Harry Depp</td>
+				<td>28</td>
+				<td>Britain</td>
+			</tr>
+			<tr>
+				<td>John Smith</td>
+				<td>35</td>
+				<td>USA</td>
+			</tr>
+			<tr>
+				<td>Ram Krishna</td>
+				<td>19</td>
+				<td>Nepal</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Text Example</h2>
+		<p>This is a sample paragraph to demonstrate the theming capabilities of this example. The colors, fonts, and other styles should change based on the selected theme.</p>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+		<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+	</section>
+
+	<section>
+		<h2>Dialog Example</h2>
+		<dialog open>
+			<p>This is a themed dialog.</p>
+			<button onclick="this.closest('dialog').close()">Close</button>
+		</dialog>
+	</section>
+
+	<section>
+		<h2>Code Example</h2>
+		<pre><code>console.log("Hello, World!");</code></pre>
+	</section>
+
+
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+	<script src="js/controllers/themer_controller.js"></script>
+
+</body>
+</html>

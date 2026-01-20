@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Themer Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Themer Controller</h1>
+
+	<p>Themer Controller is a Stimulus controller that discovers CSS themes declared using
+	<code>[data-theme="name"]</code> rules and creates a simple UI to switch between them.
+	It persists the selected theme to <code>localStorage</code> and dispatches events when the theme changes.</p>
+
+	<h2>Usage</h2>
+
+	<p>Attach the controller to any container element in your page. By default the controller will
+	scan stylesheets for rules matching <code>[data-theme="..."]</code>, create a button for each theme
+	and place them inside the controller element. Example:</p>
+
+	<pre><code>&lt;div data-controller="themer"&gt;
+	&lt;/div&gt;</code></pre>
+
+	<p>The controller will add buttons with <code>data-theme="&lt;name&gt;"</code> and
+	a <code>data-action</code> wired to <code>themer#set</code>. When a theme button is clicked the
+	controller sets the <code>data-theme</code> attribute on the nearest ancestor element that already
+	has a <code>data-theme</code> or falls back to &lt;html&gt;.</p>
+
+	<h2>Themes (CSS)</h2>
+
+	<p>Define themes using attribute selectors. Each theme can expose a human-friendly label using a
+	custom property named <code>--theme-label</code>. Example:</p>
+
+	<pre><code>[data-theme="light"] {
+	--bg: #fff;
+	--fg: #111;
+	--theme-label: "Light";
+	}
+
+	[data-theme="dark"] {
+	--bg: #111;
+	--fg: #fff;
+	--theme-label: "Dark";
+	}
+
+	/* Use the variables in your site styles, e.g. */
+	body { background: var(--bg); color: var(--fg); }
+	</code></pre>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="prefix">data-</span> Attributes</h3>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					(any)
+				</td>
+				<td></td>
+				<td>themer</td>
+				<td>
+					Attach this controller to a container that will hold the theme buttons.
+				</td>
+			</tr>
+			<tr>
+				<td>action</td>
+				<td>button</td>
+				<td>click->themer#set</td>
+				<td>(string)</td>
+				<td>
+					Buttons created by the controller use this action to call the <code>set</code> method.
+				</td>
+			</tr>
+			<tr>
+				<td>data-theme</td>
+				<td>button</td>
+				<td></td>
+				<td>(theme name)</td>
+				<td>
+					Buttons include this attribute; when clicked the controller applies the value to the
+					nearest theme element (or &lt;html&gt;). Themes are discovered by searching stylesheets
+					for <code>[data-theme="name"]</code> rules.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3>Targets</h3>
+
+	<p>The controller creates elements with the following target:</p>
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>buttondiv</td>
+				<td>div (container around each button)</td>
+				<td>Wrapper inserted around each generated button. The wrapper receives
+				<code>aria-current="true"</code> when its button matches the active theme.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Events</h2>
+
+	<h3><span class="prefix">themer:</span> Events</h3>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>initialized</td>
+				<td></td>
+				<td>Dispatched from <code>initialize()</code> when the controller instance is created.</td>
+			</tr>
+			<tr>
+				<td>connected</td>
+				<td></td>
+				<td>Dispatched when the controller is connected to the DOM.</td>
+			</tr>
+			<tr>
+				<td>disconnected</td>
+				<td></td>
+				<td>Dispatched when the controller is disconnected from the DOM.</td>
+			</tr>
+			<tr>
+				<td>theme-changed</td>
+				<td>
+					<p>theme: (string) the name of the newly applied theme</p>
+					<p>element: (Element) the element that received the <code>data-theme</code> attribute</p>
+				</td>
+				<td>Fired whenever the active theme is changed via the controller's UI or API.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>These methods are available on the controller instance (for example by referencing
+	<code>document.querySelector('[data-controller="themer"]').themer</code>).</p>
+
+	<table class="evts">
+		<thead>
+			<th>Method</th>
+			<th>Returns</th>
+			<th>Arguments</th>
+			<th>Event(s)</th>
+			<th>Description</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>set</td>
+				<td></td>
+				<td>event: (Event) click event from a generated button</td>
+				<td>theme-changed</td>
+				<td>Handler for button clicks; reads the button's <code>data-theme</code> and applies it.</td>
+			</tr>
+
+			<tr>
+				<td>setTheme</td>
+				<td></td>
+				<td>theme: (string), element: (Element, optional)</td>
+				<td>theme-changed</td>
+				<td>Apply a theme programmatically. Sets the <code>data-theme</code> attribute on the nearest
+				theme element (or provided element) and stores the choice in <code>localStorage</code>.</td>
+			</tr>
+
+			<tr>
+				<td>setThemeFromStorage</td>
+				<td></td>
+				<td>element: (Element, optional)</td>
+				<td>theme-changed</td>
+				<td>Reads the remembered theme from <code>localStorage</code> (key: <code>theme</code>) and applies it.</td>
+			</tr>
+
+			<tr>
+				<td>getCurrentTheme</td>
+				<td>string</td>
+				<td>element: (Element, optional)</td>
+				<td></td>
+				<td>Returns the currently applied theme (from the nearest theme element) or the default.</td>
+			</tr>
+
+			<tr>
+				<td>getDefaultTheme</td>
+				<td>string</td>
+				<td></td>
+				<td></td>
+				<td>Returns the default theme based on <code>prefers-color-scheme</code> ("dark" or "light").</td>
+			</tr>
+
+			<tr>
+				<td>getThemes</td>
+				<td>Array&lt;{name,label}&gt;</td>
+				<td></td>
+				<td></td>
+				<td>Scans loaded stylesheets for <code>[data-theme="name"]</code> rules and returns discovered themes
+				with labels (from <code>--theme-label</code> if present).</td>
+			</tr>
+
+			<tr>
+				<td>getThemeLabel / getThemeVariable / getThemeElement</td>
+				<td></td>
+				<td>(see code)</td>
+				<td></td>
+				<td>Utility methods to read theme-related information from stylesheets and find the element
+				that currently holds a theme.</td>
+			</tr>
+
+			<tr>
+				<td>updateActiveButtonDiv</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>Updates generated button wrappers to reflect the active theme by setting
+				<code>aria-current="true"</code> on the matching wrapper.</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Persistence</h2>
+
+	<p>The controller uses <code>localStorage</code> with the key <code>theme</code> to remember the last selected theme.
+	Calling <code>setThemeFromStorage()</code> will reapply that value to the provided element (or the controller's element).</p>
+
+	<h2>Notes</h2>
+
+	<ul>
+		<li>The controller ignores cross-origin stylesheets when scanning for theme rules.</li>
+		<li>
+			If no theme is applied, the controller falls back to a default determined by
+			<code>prefers-color-scheme</code>.
+		</li>
+		<li>
+			Buttons and wrappers are generated automatically.
+			You can also create your own buttons using <code>data-theme</code> and <code>data-action="themer#set"</code> if you prefer.
+		</li>
+	</ul>
+
+</body>
+</html>

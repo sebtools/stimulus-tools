@@ -1,0 +1,6 @@
+[data-theme="twilight"] {
+  --theme-label: "Twilight";  /* human-readable label */
+  --color-bg: #2c2c3e;       /* deep bluish-purple background */
+  --color-text: #e0d6f3;     /* soft light text */
+  --color-primary: #9c8fff;  /* accent color for buttons, borders, etc. */
+}
