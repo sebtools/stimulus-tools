@@ -1,0 +1,459 @@
+/* =======================================================
+  Themes
+   ======================================================= */
+:root, [data-theme="light"] {
+  --font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Courier New", monospace;
+
+  --radius: 0.4rem;
+  --spacing: 1rem;
+
+  /* Default theme = light */
+  --color-bg: #ffffff;
+  --color-text: #222222;
+  --color-muted: #777777;
+  --color-mutedbg: #eeeeee;
+  --color-primary: #060607;
+  --color-accent: #ff6347;
+  --color-border: #cccccc;
+  --color-warning: #ffcc00;
+  --color-error: #ff3300;
+}
+
+[data-theme="light"] {
+  --theme-label: "Light Mode";
+}
+
+/* Dark */
+[data-theme="dark"] {
+  --theme-label: "Dark Mode";
+  --color-bg: #1a1a1a;
+  --color-text: #eeeeee;
+  --color-muted: #aaaaaa;
+  --color-primary: #4da6ff;
+  --color-accent: #ff8c66;
+  --color-border: #444444;
+}
+
+/* Solarized */
+[data-theme="solarized"] {
+  --theme-label: "Solarized";
+  --color-bg: #fdf6e3;
+  --color-text: #657b83;
+  --color-muted: #93a1a1;
+  --color-mutedbg: white;
+  --color-primary: #268bd2;
+  --color-accent: #d33682;
+  --color-border: #eee8d5;
+}
+
+/* Nord */
+[data-theme="nord"] {
+  --theme-label: "Nord";
+  --color-bg: #2e3440;
+  --color-text: #d8dee9;
+  --color-muted: #81a1c1;
+  --color-primary: #88c0d0;
+  --color-accent: #bf616a;
+  --color-border: #4c566a;
+}
+
+/* Dracula */
+[data-theme="dracula"] {
+  --theme-label: "Dracula";
+  --color-bg: #282a36;
+  --color-text: #f8f8f2;
+  --color-muted: #6272a4;
+  --color-primary: #bd93f9;
+  --color-accent: #ff79c6;
+  --color-border: #44475a;
+}
+
+/* High Contrast */
+[data-theme="contrast"],
+[data-theme="high-contrast"] {
+  --theme-label: "High Contrast";
+  --color-bg: #ffffff;
+  --color-text: #black;
+  --color-muted: #bbbbbb;
+  --color-primary: black; /* yellow */
+  --color-accent: #ff0000;  /* red */
+  --color-border: black;
+}
+
+/* Forest */
+[data-theme="forest"] {
+  --theme-label: "Forest";
+  --color-bg: #f4f9f4;
+  --color-text: #2c3e2c;
+  --color-muted: #7f8c7f;
+  --color-primary: #2e8b57;
+  --color-accent: #8b4513;
+  --color-border: #c9d8c9;
+}
+
+
+
+
+
+/* =======================================================
+   Base Element Styles
+   ======================================================= */
+html, body {
+  height: 100%;           /* full height */
+  margin: 0;              /* reset default margins */
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  margin: 0;
+  padding: var(--spacing);
+  transition: background 0.3s, color 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-top: var(--spacing);
+  margin-bottom: calc(var(--spacing) / 2);
+}
+
+p {
+  margin-bottom: var(--spacing);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Monospace for code elements */
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+pre,
+code {
+  background: var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+}
+pre {
+  padding: 0.75rem;
+  overflow-x: auto; /* scroll if too wide */
+}
+code {
+  padding: 0.1rem 0.3rem;
+}
+
+/* Buttons */
+button, a[role="button"], .btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+button:hover, .btn:hover {
+  background: var(--color-accent);
+}
+
+/* Forms */
+input, textarea, select {
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  font-family: inherit;
+  font-size: 1rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: border-color 0.2s;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+/* Default: labels are block (stack above inputs) */
+label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+/* Fix alignment of the input itself */
+input[type="checkbox"],
+input[type="radio"] {
+  vertical-align: middle;
+  margin-right: 0.25rem; /* small spacing between box and text */
+}
+
+/* Special case: labels that contain only checkbox/radio inputs */
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]),
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+  display: inline-block;
+  margin-right: 1rem; /* optional spacing between options */
+  font-weight: normal;
+  vertical-align: middle
+}
+
+fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  margin: var(--spacing) 0;
+}
+legend {
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+
+
+/* Tables */
+table {
+  /*width: 100%;*/
+  border-collapse: collapse;
+  margin-bottom: var(--spacing);
+}
+th, td {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem;
+  text-align: left;
+}
+thead tr:first-child td, th {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+blockquote {
+  margin: var(--spacing) 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--color-primary);
+  background: var(--color-border);
+  color: var(--color-text);
+  font-style: italic;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--spacing) 0;
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+mark {
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0.1rem 0.2rem;
+  border-radius: var(--radius);
+}
+
+ul, ol {
+  margin: var(--spacing) 0 var(--spacing) var(--spacing);
+  padding-left: 1.5rem;
+}
+
+dl {
+  margin: var(--spacing) 0;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin: 0 0 0.5rem 1rem;
+}
+
+nav, [role="navigation"] {
+  display: flex;
+  gap: 1rem;
+  margin: var(--spacing) 0;
+  padding: 0.5rem 1rem;
+  background: var(--color-border);
+  border-radius: var(--radius);
+}
+
+nav a, [role="navigation"] a {
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius);
+  transition: background 0.2s, color 0.2s;
+}
+
+nav a:hover, [role="navigation"] a:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+nav a.active, [role="navigation"] a.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* ARIA attributes */
+
+th[aria-sort="ascending" i]::after {
+	 content: "\25b2";
+	 font-size: 0.7em;
+	 padding-left: 3px;
+	 line-height: 0.7em;
+ }
+ 
+ th[aria-sort="descending" i]::after {
+	 content: "\25bc";
+	 font-size: 0.7em;
+	 padding-left: 3px;
+	 line-height: 0.7em;
+ }
+
+ /* Anything "busy" should fade out */
+ [aria-busy="true" i] {
+	opacity: 0.2;
+	cursor: wait;
+ }
+
+ [aria-expanded="true" i]::after {
+  content: "▾"; /* down arrow */
+  padding-left: 0.3em;
+}
+[aria-expanded="false" i]::after {
+  content: "▸"; /* right arrow */
+  padding-left: 0.3em;
+}
+
+[aria-current="page" i],
+[aria-current="true" i] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+[aria-disabled="true" i],
+:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+[aria-invalid="true" i] {
+  border-color: var(--color-accent);
+  color: var(--color-error);
+  background: #ffe6e6; /* light red hint */
+}
+
+[required] {
+  border-color: var(--color-accent);
+}
+[required]::after {
+  content: " *";
+  color: var(--color-accent);
+}
+[readonly] {
+  background: var(--color-border);
+  color: var(--color-muted);
+}
+[hidden] {
+  display: none !important;
+}
+
+
+
+dialog {
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  max-width: 90%;
+  width: 30rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
+}
+
+dialog::backdrop {
+  background: rgba(0,0,0,0.4);
+}
+
+dialog[open] {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+@media (max-width: 600px) {
+  dialog {
+    width: 95%;
+    height: auto;
+    max-height: 90vh;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+/* =======================================================
+   Utility Classes
+   ======================================================= */
+.theme-card, [data-theme-card] {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s;
+  margin-bottom: var(--spacing);
+}
+
+
+/* =======================================================
+   Tooltips
+	(using data-theme-tooltip attribute)
+	Very much experimental
+	See:
+		https://css-tricks.com/the-little-triangle-in-the-tooltip/
+		https://css-tricks.com/perfect-tooltips-with-css-clipping-and-masking/
+   ======================================================= */
+[data-theme-tooltip] {
+  position: relative; /* establishes local positioning context */
+  cursor: help;
+  display: inline-block; /* ensures pseudo-element aligns with text */
+}
+
+/* Tooltip text appears on hover/focus */
+[data-theme-tooltip]::after {
+  content: attr(data-theme-tooltip);
+  display: inline-block;
+  margin-left: 0.5rem; /* space from the element */
+  padding: 0.2rem 0.4rem;
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+  vertical-align: middle; /* align nicely with text */
+}
+
+/* Show tooltip on hover/focus */
+[data-theme-tooltip]:hover::after,
+[data-theme-tooltip]:focus::after {
+  opacity: 1;
+}
