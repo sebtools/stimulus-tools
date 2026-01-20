@@ -32,6 +32,7 @@ table td {
 }
 
 
+/* ARIA attributes */
 th[aria-sort="ascending" i]::after {
 	 content: "\25b2";
 	 font-size: 0.7em;
@@ -51,3 +52,52 @@ th[aria-sort="ascending" i]::after {
 	opacity: 0.2;
 	cursor: wait;
  }
+
+ [aria-expanded="true" i]::after {
+  content: "▾"; /* down arrow */
+  padding-left: 0.3em;
+}
+[aria-expanded="false" i]::after {
+  content: "▸"; /* right arrow */
+  padding-left: 0.3em;
+}
+
+[aria-current="page" i],
+[aria-current="true" i] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+[aria-disabled="true" i],
+:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+[aria-invalid="true" i] {
+  border-color: var(--color-accent);
+  background: #ffe6e6; /* light red hint */
+}
+
+[required] {
+  border-color: var(--color-accent);
+}
+[required]::after {
+  content: " *";
+  color: var(--color-accent);
+}
+[readonly] {
+  background: var(--color-border);
+  color: var(--color-muted);
+}
+[hidden] {
+  display: none !important;
+}
+
+
+
+/* Zebra striping */
+tbody tr:nth-of-type(odd) {
+	background-color: rgba(0,0,0,0.02);
+}
