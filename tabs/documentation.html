@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Tabs Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+
+	<h1>Tabs Controller</h1>
+
+	<p>The <strong>Tabs</strong> controller provides accessible tabbed UI behavior using ARIA roles.
+	It wires up click and keyboard navigation (left/right arrows) for elements with
+	<code>role="tablist"</code>, <code>role="tab"</code>, and <code>role="tabpanel"</code>.</p>
+
+	<h2>Attributes</h2>
+
+	<h3>HTML / ARIA attributes</h3>
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>role="tablist"</td>
+				<td>container</td>
+				<td>Wraps the tab buttons.</td>
+			</tr>
+			<tr>
+				<td>role="tab"</td>
+				<td>button, element</td>
+				<td>Represents a selectable tab. The controller expects tab elements to live directly under the tablist (top-level).</td>
+			</tr>
+			<tr>
+				<td>aria-selected</td>
+				<td>role="tab"</td>
+				<td>Set to <code>true</code> on the active tab. The controller will update this attribute when tabs are selected.</td>
+			</tr>
+			<tr>
+				<td>aria-controls</td>
+				<td>role="tab"</td>
+				<td>References the id of the panel (<code>role="tabpanel"</code>) that the tab controls.</td>
+			</tr>
+			<tr>
+				<td>role="tabpanel"</td>
+				<td>panel</td>
+				<td>Content panel associated with a tab. Panels that are not active should include the <code>hidden</code> attribute.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>*</td>
+				<td></td>
+				<td>tabs</td>
+				<td>Attach the tabs behavior.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-tabs</span> Attributes</h3>
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>all</td>
+				<td>role="tab"</td>
+				<td>false</td>
+				<td>true | (absent)</td>
+				<td>If the selected tab has <code>data-tabs-all="true"</code> the controller will show all panels instead of only the one referenced by <code>aria-controls</code>.</td>
+			</tr>
+			<tr>
+				<td>name / data-name</td>
+				<td>role="tab"</td>
+				<td></td>
+				<td>string</td>
+				<td>Optional name used when calling methods such as <code>selectTab(name)</code>. If not present the tab's textContent is used.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+	<p>You can call these methods on the element's controller instance (the controller attaches itself to the element):</p>
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th>Arguments</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>selectTab(tab)</td>
+				<td>element or name</td>
+				<td>Selects the given tab (either the DOM element, or the tab's name as set via <code>data-tabs-name</code>/<code>data-name</code> or the tab text).</td>
+			</tr>
+			<tr>
+				<td>showSelectedPanel()</td>
+				<td></td>
+				<td>Updates panels visibility based on the currently selected tab.</td>
+			</tr>
+			<tr>
+				<td>getTabButton(name)</td>
+				<td>name</td>
+				<td>Returns the tab element matching the provided name.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Accessibility notes</h2>
+	<ul>
+		<li>Ensure <code>aria-controls</code> on each tab references a valid panel id.</li>
+		<li>Set <code>aria-selected="true"</code> on the initially-active tab.</li>
+		<li>Panels that are not active should include the <code>hidden</code> attribute so assistive tech will ignore them.</li>
+	</ul>
+
+</body>
+</html>

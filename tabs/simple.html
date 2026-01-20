@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Tabs Controller Example</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+    <link rel="stylesheet" type="text/css" href="tabs.css">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+
+	<h1>Tabs Controller</h1>
+
+	<p>Demo showing a simple tabs implementation. Use left/right arrow keys to navigate between tabs.</p>
+
+	<div data-controller="tabs">
+		<div role="tablist" aria-label="Sample Tabs">
+			<button role="tab" aria-selected="true" aria-controls="panel-a">Alpha</button>
+			<button role="tab" aria-selected="false" aria-controls="panel-b">Beta</button>
+			<button role="tab" aria-selected="false" aria-controls="panel-c">Gamma</button>
+		</div>
+
+		<div id="panel-a" role="tabpanel">
+			<p>This is the Alpha panel.</p>
+		</div>
+
+		<div id="panel-b" role="tabpanel" hidden>
+			<p>This is the Beta panel.</p>
+		</div>
+
+		<div id="panel-c" role="tabpanel" hidden>
+			<p>This is the Gamma panel.</p>
+		</div>
+	</div>
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/tabs_controller.js" type="module"></script>
+
+</body>
+</html>
