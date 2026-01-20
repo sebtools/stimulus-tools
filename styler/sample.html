@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Styler Sample</title>
+    <link rel="stylesheet" href="../theme.css" />
+</head>
+<body>
+    <h1>Styler Sample</h1>
+
+    <ul>
+        <li><a href="documentation.html">Documentation</a></li>
+        <li><a href="index.html">Index</a></li>
+    </ul>
+
+    <h2>Select example</h2>
+    <div data-controller="styler">
+        <select data-styler-target="source">
+            <option data-styles="color: black; background: white;">Default</option>
+            <option data-styles="color: white; background: black;">Inverted</option>
+            <option data-styles="color: red;">Red text</option>
+        </select>
+
+        <div data-styler-target="target" style="padding:10px; margin-top:10px;">
+            This text will be styled based on the selection.
+        </div>
+    </div>
+
+    <h2>Radio example</h2>
+    <div data-controller="styler">
+        <div data-styler-target="source">
+            <label><input type="radio" name="style" data-styles="color: green;" /> Green</label>
+            <label><input type="radio" name="style" data-styles="color: purple;" /> Purple</label>
+            <label><input type="radio" name="style" data-styles="font-weight: bold;" /> Bold</label>
+        </div>
+
+        <div data-styler-target="target" style="padding:10px; margin-top:10px;">
+            This text will be styled based on radio selection.
+        </div>
+    </div>
+
+    <h2>Custom properties example</h2>
+    <style>
+        .custom-prop-box {
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 4px;
+            background: var(--bg, #f8f9fa);
+            color: var(--accent, #333);
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+    </style>
+
+    <div data-controller="styler">
+        <select data-styler-target="source">
+            <option data-styles="--accent: #0b5fff; --bg: #eef4ff;">Blue Accent</option>
+            <option data-styles="--accent: #ff5722; --bg: #fff2ed;">Orange Accent</option>
+            <option data-styles="--accent: #0e7d0e; --bg: #eef9ee;">Green Accent</option>
+        </select>
+
+        <div data-styler-target="target" class="custom-prop-box">
+            This box demonstrates CSS custom properties applied by the styler.
+        </div>
+    </div>
+
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+    <script type="module" src="js/controllers/styler_controller.js"></script>
+    <script type="module" src="../dialog/js/controllers/dialog_controller.js"></script>
+
+    <dialog data-controller="dialog" data-dialog-template="" id="styler-preview-dialog">
+        <div class="dialog__content">
+            <div id="stylerPreviewContent">Preview will appear here.</div>
+            <button data-action="dialog#close">Close</button>
+        </div>
+    </dialog>
+
+    <script>
+        // Listen for styler changes and show a preview in the dialog
+        document.addEventListener('styler:changed', (event) => {
+            const { styles, target } = event.detail;
+            const preview = document.getElementById('stylerPreviewContent');
+            preview.textContent = 'Preview:';
+            preview.style.cssText = styles || '';
+
+            // Get dialog controller and open
+            const dialogEl = document.getElementById('styler-preview-dialog');
+            const dialogCtrl = window.application.getControllerForElementAndIdentifier(dialogEl, 'dialog');
+            if (dialogCtrl) {
+                dialogCtrl.open();
+            } else {
+                // Fallback: use native dialog show
+                if (dialogEl.showModal) dialogEl.showModal(); else dialogEl.show();
+            }
+        });
+    </script>
+</body>
+</html>

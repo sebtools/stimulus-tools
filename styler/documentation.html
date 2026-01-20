@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Styler Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Styler Controller</h1>
+
+	<p>The Styler Controller keeps a target element's inline styles in sync with a source control (select or radio inputs). It reads a <code>data-styles</code> attribute from the selected option or checked radio and applies those rules to the target element's <code>style</code> attribute while removing previously applied rules managed by the controller.</p>
+
+	<p>Keep in mind that while any styles can be impacted with styler, the recommended approach would be to use it only to change custom property values and have other code drive off of those custom property values.</p>
+
+	<h2>Targets</h2>
+
+	<p>Indicated by <code>data-styler-target</code> or the Stimulus targets API.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>source</td>
+				<td>select or a container with radio inputs</td>
+				<td>The control used to choose styles. For a &lt;select&gt; the selected option's <code>data-styles</code> is read. For radio groups, the checked radio's <code>data-styles</code> is used.</td>
+			</tr>
+			<tr>
+				<td>target</td>
+				<td>any element</td>
+				<td>The element whose inline <code>style</code> attribute will be modified.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>These are standard <code>data-</code> attributes used by the controller (no controller-specific prefix).</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					any element
+				</td>
+				<td></td>
+				<td>styler</td>
+				<td>
+					Add <code>data-controller="styler"</code> to enable the controller on an element.
+				</td>
+			</tr>
+
+			<tr>
+				<td>styles</td>
+				<td>
+					option<br>
+					input[type="radio"]<br>
+					target element (see <code>data-styler-target</code>)
+				</td>
+				<td></td>
+				<td>(CSS rules string)</td>
+				<td>
+					Holds CSS rules such as <code>color: red; background: yellow;</code>. Placed on source controls (option or radio) to define the styles to apply, and written to the target element's <code>data-styles</code> to trigger the update.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-styler-</span> Attributes</h3>
+
+	<p>Attributes using the controller prefix are typically used for Stimulus targets and controller-specific configuration.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>target</td>
+				<td>
+					any element
+				</td>
+				<td></td>
+				<td>source<br>target</td>
+				<td>
+					Declare Stimulus targets using <code>data-styler-target="source"</code> and <code>data-styler-target="target"</code>. The <code>source</code> is the control that supplies the styles (a &lt;select&gt; or radio group). The <code>target</code> is the element whose inline <code>style</code> will be updated.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><code>updateFromSource()</code></td>
+				<td>Reads the selected option or checked radio's <code>data-styles</code> and writes it to the target's <code>data-styles</code>.</td>
+			</tr>
+			<tr>
+				<td><code>applyTargetStyles(oldStyles, newStyles)</code></td>
+				<td>Removes the CSS properties found in <code>oldStyles</code> from the inline style and appends the rules from <code>newStyles</code>.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Notes</h2>
+
+	<ul>
+		<li>The controller updates inline styles; if your app uses CSS classes or external stylesheets you may prefer a different approach.</li>
+		<li>The controller relies on a simple parsing strategy: it splits style strings on <code>;</code> and treats the left side of each rule as the property to remove when updating.</li>
+		<li>If multiple controllers or code paths update the same inline <code>style</code>, mixing approaches could lead to unexpected results; prefer keeping the styler's rules isolated or prefixed in your styling strategy.</li>
+	</ul>
+
+	<h3>Using CSS custom properties</h3>
+
+	<p>In many cases it's convenient for the <code>styler</code> to set CSS custom properties (variables) on the target and let your stylesheet consume them. This keeps the actual style rules in CSS while the controller only sets data values such as <code>--accent: #ff0000;</code>.</p>
+
+	<p>Example: set <code>data-styles="--accent: #ff0000; --bg: #fff0f0;"</code> and in your stylesheet use <code>color: var(--accent)</code> or <code>background: var(--bg)</code>. The controller will write the variables into the element's inline style, which makes them available to descendant rule lookups.</p>
+
+</body>
+</html>
