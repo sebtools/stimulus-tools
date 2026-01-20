@@ -1,0 +1,97 @@
+/* Generic demo panels */
+.demo-section,
+.table-section,
+.records-section,
+.eventlog-section,
+.info-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+}
+
+.info-box { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+
+/* Record container */
+[data-record-id], .record, .demo-record {
+    border: 1px solid #ddd;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    background: #fff;
+}
+
+[data-record-id][data-record-dirty="unsent"] {
+    border-color: orange;
+    background-color: #fff8dc;
+}
+
+[data-record-id][data-record-dirty="sent"] {
+    border-color: blue;
+    background-color: #e6f3ff;
+}
+
+/* Field grouping */
+.field, .field-group { margin: 10px 0; }
+
+.field label, .field-group label { display: inline-block; width: 100px; font-weight: bold; }
+
+.field input, .field select, .field textarea {
+    width: 200px;
+    padding: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.field[data-record-dirty="unsent"] { background-color: #fff3cd; }
+.field[data-record-dirty="sent"] { background-color: #cce5ff; }
+
+/* Actions and buttons */
+.actions { margin-top: 15px; }
+.actions button { margin-right: 10px; padding: 8px 15px; border: none; border-radius: 3px; cursor: pointer; }
+.btn-save { background-color: #28a745; color: white; }
+.btn-delete { background-color: #dc3545; color: white; }
+.btn-add { background-color: #007bff; color: white; }
+.btn-load, .simulate-btn { background-color: #6c757d; color: white; }
+
+.template-section { margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 5px; }
+
+/* Event log */
+.event-log, .eventlog {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.event-log h4 { margin: 0 0 10px 0; }
+.event-entry { font-size: 12px; margin: 5px 0; padding: 5px; border-radius: 3px; }
+.event-ui { background-color: #e1f5fe; }
+.event-data { background-color: #e8f5e8; }
+.event-universal { background-color: #f3e5f5; }
+.event-error { background-color: #ffebee; }
+
+/* Demo section basic */
+.demo-section { margin: 30px 0; padding: 20px; border: 2px solid #e9ecef; border-radius: 10px; }
+.demo-section h3 { margin-top: 0; color: #495057; }
+
+/* Table helpers used by table demos */
+.record-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.record-table th, .record-table td { border: 1px solid #dee2e6; padding: 8px; text-align: left; vertical-align: top; }
+.record-table th { background-color: #f8f9fa; font-weight: bold; color: #495057; }
+.record-table tbody tr:hover { background-color: #f8f9fa; }
+.record-table tbody tr[data-record-id=""] { opacity: 0.8; background-color: #fff3cd; }
+
+/* Small utilities */
+.record-id-display, .record-id { font-family: 'Courier New', monospace; background-color: #e9ecef; padding: 4px 8px; border-radius: 4px; font-size: 12px; color: #6c757d; display: inline-block; }
+.hidden { display: none !important; }
+.center { text-align: center; }

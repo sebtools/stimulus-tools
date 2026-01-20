@@ -1,0 +1,536 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Record Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>Record Controller</h1>
+
+	<p>The Record Controller is a <a href="https://stimulus.hotwired.dev/">Stimulus</a> controller for managing records via events for integration with data layers.</p>
+
+	<p>
+		The Record Controller allows you to manage collections of record-like elements in the DOM. It tracks changes to fields marked with <code>data-record-field</code>, supports creating new records from templates, and broadcasts add/update/delete events to facilitate integration with external data layers. It can also update the DOM based on events it listens for that can be dispatched from your application code.
+	</p>
+
+	<h2>Record Hierarchy</h2>
+
+	<p>The Record Controller can handle zero or more tables and records. So it is useful to explore the hierarchy of record elements.</p>
+
+	<ul>
+		<li>
+			<strong>Channel</strong>
+			<ul>
+				<li>Attribute indicators: <code>data-record-channel</code></li>
+				<li>You can have multiple channels on a page, each managing its own set of records.</li>
+				<li>This provides a "channel" key in outgoing events.</li>
+				<li>Each controller uses only one channel but multiple controllers can listen to the same channel.</li>
+			</ul>
+		</li>
+		<li><strong>Table</strong>
+			<ul>
+				<li>Attribute indicator: <code>data-record-table</code></li>
+				<li>Used to scope events and data operations.</li>
+				<li>This can be the same as the Controller element if only one table is in use.</li>
+				<li>This provides a "table" key in outgoing events. It may map to an actual table or be used in whatever way your receiving code requires.</li>
+			</ul>
+		</li>
+		<li><strong>Record</strong>
+		<ul>
+			<li>Attribute indicator: <code>data-record-id</code></li>
+			<li>New records use an empty string <code>data-record-id=""</code> and will be assigned an ID when added.</li>
+			<li>This can be the same as the Table element if only one record is in use.</li>
+			<li>This provides an "id" key in outgoing events.</li>
+		</ul>
+		<li><strong>Field</strong>: An input or display element within a record, indicated by the <code>data-record-field</code> attribute. Represents a single field in the record.
+			<ul>
+				<li>Attribute indicator: <code>data-record-field</code></li>
+				<li>Each element provides a key in the outgoing data with a name matching the data-record-field attribute value.</li>
+				<li>
+					Values are read in this order (using the first available):
+					<ul>
+						<li><code>data-record-value</code> attribute</li>
+						<li><code>data-value</code> attribute</li>
+						<li><code>value</code> property (for inputs)</li>
+						<li><code>textContent</code> (for display elements)</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ul>
+
+	<h2>Targets</h2>
+
+	<p>Indicated by <code>data-record-target</code> attribute.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Target</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>save</td>
+				<td>
+					button, input[type="button"], input[type="submit"]<br>
+				</td>
+				<td>
+					Optional save control target. Elements can be wired to <code>record#save</code> to perform an explicit save for a record.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Attributes</h2>
+
+	<h3><span class="attprefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>controller</td>
+				<td>
+					any
+				</td>
+				<td></td>
+				<td>record
+				</td>
+				<td>
+					Attach the Record Controller to a container element.
+				</td>
+			</tr>
+
+			<tr>
+				<td>action</td>
+				<td>
+					any
+				</td>
+				<td></td>
+				<td>record#save, record#delete, record#add
+				</td>
+				<td>
+					Standard Stimulus actions that can be used to invoke controller methods from markup.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h3><span class="attprefix">data-record-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-record-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>channel</td>
+				<td>
+					(container)
+				</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					A logical channel name for the controller. Used in dispatched events to scope data operations.
+				</td>
+			</tr>
+
+			<tr>
+				<td>table</td>
+				<td>
+					(container or record element)
+				</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					A logical table/namespace name for the records. Used in dispatched events to scope data operations.
+				</td>
+			</tr>
+
+			<tr>
+				<td>id</td>
+				<td>
+					(root record element)
+				</td>
+				<td>''</td>
+				<td>(string)</td>
+				<td>
+					The record identifier. New records use an empty string <code>data-record-id=""</code> and will be assigned an ID when added.
+				</td>
+			</tr>
+
+			<tr>
+				<td>field</td>
+				<td>
+					any
+				</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					The name of the field.<br>
+					This will be the key in the collected record data object.
+				</td>
+			</tr>
+
+			<tr>
+				<td>debounce</td>
+				<td>
+					(controller/container)
+				</td>
+				<td>300</td>
+				<td>(integer ms)</td>
+				<td>
+					Milliseconds to debounce automatic saves when debouncing is used. Default is 300ms.
+				</td>
+			</tr>
+
+			<tr>
+				<td>value</td>
+				<td>
+					field elements
+				</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					The controller reads values in this order: <code>data-record-value</code>, <code>data-value</code>, the element's <code>value</code> property, then <code>textContent</code>.
+				</td>
+			</tr>
+
+			<tr>
+				<td>ignore</td>
+				<td>
+					field elements
+				</td>
+				<td></td>
+				<td>true, in, out</td>
+				<td>
+					Controls whether a field is ignored for incoming updates (<code>in</code>), outgoing events (<code>out</code>), or completely (<code>true</code>).
+				</td>
+			</tr>
+
+			<tr>
+				<td>auto-add</td>
+				<td>
+					(controller/container)
+				</td>
+				<td>false</td>
+				<td>true</td>
+				<td>
+					If present (or set to "true"), the controller will ensure an empty record is maintained for adding new records.
+				</td>
+			</tr>
+
+			<tr>
+				<td>template</td>
+				<td>
+					(controller/container)
+				</td>
+				<td></td>
+				<td>(selector)</td>
+				<td>
+					A selector to find a template element to clone when inserting new records. If not provided, the controller will look for a direct <code>&lt;template&gt;</code> child or an existing empty record.
+				</td>
+			</tr>
+
+			<tr>
+				<td>add-position</td>
+				<td>
+					(controller/container)
+				</td>
+				<td>after</td>
+				<td>before, after</td>
+				<td>
+					Where to insert new records relative to the empty record or existing records. Default is <code>after</code>.
+				</td>
+			</tr>
+
+			<tr>
+				<td>defaults</td>
+				<td>
+					(record element)
+				</td>
+				<td></td>
+				<td>query-string</td>
+				<td>
+					Field defaults supplied as a query-string (for example: <code>foo=bar&amp;count=1</code>). Parsed and applied to fields when creating new records.
+				</td>
+			</tr>
+
+			<tr>
+				<td>names / ids</td>
+				<td>
+					(controller/container)
+				</td>
+				<td></td>
+				<td>pattern</td>
+				<td>
+					Patterns used to rewrite <code>name</code> and <code>id</code> attributes on inserted records. Patterns may include <code>[name]</code>, <code>[id]</code>, <code>[record-id]</code>, and <code>[num]</code>.
+				</td>
+			</tr>
+
+			<tr>
+				<td>sort-detection</td>
+				<td>
+					(controller/container)
+				</td>
+				<td></td>
+				<td>event</td>
+				<td>
+					When set to <code>event</code>, the controller listens for a global sort event and will broadcast a <code>record:ui:sort</code> when detected.
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Incoming events</h2>
+
+	<p>The controller listens for document-level data events to update its DOM from an external data source.</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>record:data:update</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					id: (string)<br>
+					record: (object)
+				</td>
+				<td>
+					Update an existing record's DOM fields from provided data.
+				</td>
+			</tr>
+			<tr>
+				<td>record:data:add</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					id: (string)<br>
+					record: (object)
+				</td>
+				<td>
+					Add (or find and convert) a record element for the given id and populate it with the provided data.
+				</td>
+			</tr>
+			<tr>
+				<td>record:data:delete</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					id: (string)
+				</td>
+				<td>
+					Remove a record element matching the given id.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Outgoing events</h2>
+
+	<p>These events are dispatched by the controller to signal UI changes. Most UI events are prefixed with <code>record:ui:</code>.</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>record:ui:dirty</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					id: (string)<br>
+					field: (string)<br>
+					before: (string)<br>
+					after: (string)
+				</td>
+				<td>
+					Emitted when a field value changes. Useful to update external save indicators.
+				</td>
+			</tr>
+			<tr>
+				<td>record:ui:update</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					id: (string)<br>
+					record: (object)<br>
+					form: (object)<br>
+					table, id, element
+				</td>
+				<td>
+					Emitted when an existing record is saved/updated; includes the collected record and form serialization.
+				</td>
+			</tr>
+			<tr>
+				<td>record:ui:add</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					record: (object)<br>
+					form: (object)<br>
+					table, id, element
+				</td>
+				<td>
+					Emitted when a new record is created (before the element receives an id).
+				</td>
+			</tr>
+			<tr>
+				<td>record:ui:delete</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					id: (string)<br>
+				</td>
+				<td>
+					Emitted when a record is deleted from the DOM.
+				</td>
+			</tr>
+			<tr>
+				<td>record:ui:added</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					record: (object)<br>
+					form: (object)<br>
+				</td>
+				<td>
+					Emitted after a new element is inserted into the DOM.
+				</td>
+			</tr>
+			<tr>
+				<td>record:disconnected</td>
+				<td></td>
+				<td>
+					Emitted when the controller is disconnected from the DOM (dispatched with prefix <code>record</code>).
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3>Element-scoped event</h3>
+
+	<p>The controller dispatches a custom event directly on a record element to allow augmenting gathered data:</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>record:gather-data</td>
+				<td>
+					channel: (string)<br>
+					table: (string)<br>
+					id: (string)<br>
+					record: (object)<br>
+					form: (object)<br>
+					element: (Element)
+				</td>
+				<td>
+					Fired on a record element when its data are collected. Listeners can augment <code>detail.record</code> or <code>detail.form</code> before it is returned by the controller.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<p>The controller exposes several methods that can be called from application code. Commonly used methods are listed below.</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th>Returns</th>
+				<th>Arguments</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>save</td>
+				<td></td>
+				<td>element (optional)</td>
+				<td>Mark record fields as sent and dispatch an add or update event depending on whether the record has an id.</td>
+			</tr>
+			<tr>
+				<td>delete</td>
+				<td></td>
+				<td>element (optional)</td>
+				<td>Broadcasts delete event and removes the record element from the DOM.</td>
+			</tr>
+			<tr>
+				<td>insertRecordElement</td>
+				<td>Element</td>
+				<td>record (optional), id (optional)</td>
+				<td>Insert a record element (from template or empty record) and optionally populate it with provided data and id.</td>
+			</tr>
+			<tr>
+				<td>load</td>
+				<td></td>
+				<td>array, clearExisting (optional)</td>
+				<td>Populate the controller from an array of {record, id} objects. Optionally clear existing records first.</td>
+			</tr>
+			<tr>
+				<td>getRecordData</td>
+				<td>Object</td>
+				<td>element (optional)</td>
+				<td>Collects record and form values from a record element and returns <code>{ record, form }</code>.</td>
+			</tr>
+			<tr>
+				<td>getRecordOrder</td>
+				<td>Array</td>
+				<td>element (optional)</td>
+				<td>Returns an array of record ids in DOM order for the controller's table scope.</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

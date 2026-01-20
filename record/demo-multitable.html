@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Record — Multiple Tables Demo</title>
+	<link rel="stylesheet" href="../theme.css">
+	<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+	<h1>Record — Multiple Tables Demo</h1>
+
+	<p>
+		A minimal demo that shows records in multiple tables using the <code>record</code> controller.
+		The first form is for editing a single department record in the <code>departments</code> table.
+		Below that is a table for editing multiple person records in the <code>people</code> table.
+	</p>
+
+	<div style="display:flex; gap:24px; align-items:flex-start;">
+
+		<div style="flex:1; min-width:480px;">
+			
+
+			<!-- Controller: manages multiple record rows for the `people` table -->
+			<div data-controller="record">
+				<h2>Department</h2>
+				<div
+					data-record-table="departments"
+					data-record-id="department_1"
+					style="display:grid; gap:8px;"
+				>
+					<label>Department Name<br>
+						<input type="text" name="name" data-record-field="name" value="Sales" />
+					</label>
+
+					<label>Notes<br>
+						<textarea name="notes" data-record-field="notes">Initial notes</textarea>
+					</label>
+
+					<div style="display:flex; gap:8px;">
+						<!-- Save button triggers the controller's save action (will dispatch update/add events) -->
+						<button type="button" data-action="record#saveRecord">Save</button>
+					</div>
+				</div>
+				
+				<h2>People</h2>
+				<div data-record-table="people">
+					<table class="simple-table" style="width:100%; border-collapse:collapse;">
+						<thead>
+							<tr>
+								<th style="text-align:left;">Name</th>
+								<th style="text-align:left;">Email</th>
+								<th style="text-align:left;">Notes</th>
+								<th style="text-align:left;">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Existing records: each row is a record element with data-record-id -->
+							<tr data-record-id="person_1">
+								<td><input type="text" name="name_1" data-record-field="name" value="Alice" /></td>
+								<td><input type="email" name="email_1" data-record-field="email" value="alice@example.org" /></td>
+								<td><input type="text" name="notes_1" data-record-field="notes" value="Initial notes" /></td>
+								<td>
+									<button type="button" data-action="record#saveRecord">Save</button>
+									<button type="button" data-action="record#deleteRecord">Delete</button>
+								</td>
+							</tr>
+
+							<tr data-record-id="person_2">
+								<td><input type="text" name="name_2" data-record-field="name" value="Bob" /></td>
+								<td><input type="email" name="email_2" data-record-field="email" value="bob@example.org" /></td>
+								<td><input type="text" name="notes_2" data-record-field="notes" value="" /></td>
+								<td>
+									<button type="button" data-action="record#saveRecord">Save</button>
+									<button type="button" data-action="record#deleteRecord">Delete</button>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div style="width:380px;">
+			<h2>Event Log</h2>
+			<!-- EventLog listens for a set of record-related events and prints them -->
+			<div
+				data-controller="eventlog"
+				data-eventlog-events="record:ui:added record:ui:add record:ui:update record:ui:updated record:ui:delete record:ui:deleted record:ui:dirty record:ui:loaded record:data:load record:data:add record:data:update record:data:delete"
+				data-eventlog-serialize-dom="element"
+				style="min-height:240px; background:white; border:1px solid #e0e0e0; padding:10px; overflow:auto;">
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Load Stimulus and the app bootstrap -->
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+
+	<!-- Load controllers used on this page -->
+	<script type="module" src="js/controllers/record_controller.js"></script>
+	<script type="module" src="../eventlog/js/controllers/eventlog_controller.js"></script>
+
+</body>
+</html>
