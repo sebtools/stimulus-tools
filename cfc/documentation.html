@@ -51,7 +51,7 @@
 
 			<tr>
 				<td>method</td>
-				<td>element that triggers the call (e.g. button, form)</td>
+				<td>(any)</td>
 				<td></td>
 				<td>(string)</td>
 				<td>
@@ -61,7 +61,7 @@
 
 			<tr>
 				<td>args</td>
-				<td>element that triggers the call</td>
+				<td>(element with method attribute)</td>
 				<td></td>
 				<td>query-string</td>
 				<td>
@@ -81,7 +81,7 @@
 
 			<tr>
 				<td>arg</td>
-				<td>child elements inside method element</td>
+				<td>(child elements inside method element)</td>
 				<td></td>
 				<td>(string)</td>
 				<td>
@@ -90,8 +90,18 @@
 			</tr>
 
 			<tr>
+				<td>channel</td>
+				<td>(root)</td>
+				<td>(new uuid)</td>
+				<td>(string)</td>
+				<td>
+					The unique channel for this CFC instance; used to identify events.
+				</td>
+			</tr>
+
+			<tr>
 				<td>target / receiver</td>
-				<td>elements</td>
+				<td>(child elements inside method element)</td>
 				<td></td>
 				<td>(string)</td>
 				<td>
@@ -122,6 +132,7 @@
 			<tr>
 				<td>calling</td>
 				<td>
+					<p>detail.channel: (string) — the unique channel for this CFC instance</p>
 					<p>detail.path: (string) — the URL path to the CFC</p>
 					<p>detail.method: (string) — the CFC method being invoked</p>
 					<p>detail.args: (object|FormData) — the arguments that will be sent</p>
@@ -133,6 +144,7 @@
 			<tr>
 				<td>called</td>
 				<td>
+					<p>detail.channel: (string) — the unique channel for this CFC instance</p>
 					<p>detail.path: (string)</p>
 					<p>detail.method: (string)</p>
 					<p>detail.args: (object|FormData)</p>

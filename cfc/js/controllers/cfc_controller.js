@@ -17,6 +17,12 @@ application.register('cfc', class extends Stimulus.Controller {
 		this.defaultName();
 		this.makePaths();
 
+		// We want to set up a unique "channel" for every cfc instance so that we can identify events
+		if ( !this.element.hasAttribute('data-cfc-channel') ) {
+			const randomStr = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+			this.element.setAttribute('data-cfc-channel', randomStr);
+		}
+
 	}
 
 	defaultName() {
@@ -165,6 +171,10 @@ application.register('cfc', class extends Stimulus.Controller {
 		return args;
 	}
 
+	getChannel() {
+		return this.element.getAttribute('data-cfc-channel');
+	}
+
 	// Collect form data from the current element
 	collectFormData(element) {
 		const params = {};
@@ -253,13 +263,14 @@ application.register('cfc', class extends Stimulus.Controller {
 	}
 
 	async runCfcMethod(path, method, args={}) {
+		const channel = this.getChannel();
 		const url = path + '?method=' + encodeURIComponent(method);
 
 		const { body, headers } = this.makeRequestBody(args);
 		let result;
 
 		this.dispatch('calling', {
-			detail: { path, method, args }
+			detail: { channel, path, method, args }
 		});
 
 		const response = await fetch(url, {
@@ -317,7 +328,7 @@ application.register('cfc', class extends Stimulus.Controller {
 		}
 
 		this.dispatch('called', {
-			detail: { path, method, args, response, result }
+			detail: { channel, path, method, args, response, result }
 		});
 
 		return result;
