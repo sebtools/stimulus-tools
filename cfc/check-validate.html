@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CFC Controller: Validate</title>
+</head>
+<body>
+
+<h1>CFC Controller: Validate</h1>
+
+<p>This example demonstrates using the CFC controller with a small custom JavaScript to set a custom validity message on the input field.</p>
+
+<p>A valid username is at least three characters long and isn't "admin" or "root".</p>
+
+<div
+	data-controller="cfc"
+	data-cfc-name="checker"
+	data-cfc-method="validateUsername"
+>
+	<input id="testfield" name="testfield" type="text" data-cfc-arg="username">
+	<button type="button" data-action="click->cfc#call">Check Username</button>
+</div>
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/cfc_controller.js"></script>
+<script>
+window.addEventListener("cfc:called", function(e) {
+	const detail = e.detail;
+	const input = document.getElementById("testfield");
+
+	// Only proceed for desired CFC method
+	if ( !(e.detail.path === "checker.cfc" && e.detail.method === "validateUsername") ) {
+		return;
+	}
+
+	if ( detail.result && detail.result.length ) {
+		input.setCustomValidity(detail.result);
+	} else {
+		// Clear any previous custom validity when there's no error
+		input.setCustomValidity("");
+	}
+
+	// Show the validation message immediately
+	if ( typeof input.reportValidity === "function" ) {
+		input.reportValidity();
+	}
+
+});
+</script>
+
+</body>
+</html>

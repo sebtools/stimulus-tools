@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CFC Controller: Show Response</title>
+</head>
+<body>
+
+<h1>CFC Controller: Show Response</h1>
+
+<p>This example demonstrates using the CFC controller with no other JavaScript to output the result directly on the page.</p>
+
+<p>A valid username is at least three characters long and isn't "admin" or "root".</p>
+
+<div
+	data-controller="cfc"
+	data-cfc-name="checker"
+	data-cfc-target="messageOutput"
+	data-cfc-method="getUsernameMessage"
+>
+	<input name="username" type="text" data-cfc-arg="username">
+	<button type="button" data-action="click->cfc#call">Check Username</button>
+
+	<pre data-cfc-receiver="messageOutput"></pre>
+
+</div>
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/cfc_controller.js"></script>
+
+</body>
+</html>

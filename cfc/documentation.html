@@ -1,198 +1,211 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>CFC Controller Documentation</title>
-    <link rel="stylesheet" type="text/css" href="../documentation.css">
+	<meta charset="utf-8">
+	<title>CFC Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
 </head>
 <body>
 
-    <h1>CFC Controller</h1>
+	<h1>CFC Controller</h1>
 
-    <p>The CFC Controller helps invoke ColdFusion Component (CFC) methods by building a path and POSTing form-like data. It supports declarative wiring via attributes such as <code>data-cfc-path</code>, <code>data-cfc-method</code>, and <code>data-cfc-args</code>. The controller normalizes default names and builds paths when needed.</p>
+	<p>The CFC Controller helps invoke ColdFusion Component (CFC) methods by building a path and POSTing form-like data. It supports declarative wiring via attributes such as <code>data-cfc-path</code>, <code>data-cfc-method</code>, and <code>data-cfc-args</code>. The controller normalizes default names and builds paths when needed.</p>
 
-    <h2>Attributes</h2>
+	<h2>Attributes</h2>
 
-    <h3><span class="attprefix">data-cfc-</span> Attributes</h3>
+	<h3><span class="attprefix">data-cfc-</span> Attributes</h3>
 
-    <p>All of the attributes below are prefixed with <code>data-cfc-</code>.</p>
+	<p>All of the attributes below are prefixed with <code>data-cfc-</code>.</p>
 
-    <table class="atts">
-        <thead>
-            <tr>
-                <th>Attribute</th>
-                <th>Element(s)</th>
-                <th>Default</th>
-                <th>Value(s)</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
 
-            <tr>
-                <td>path</td>
-                <td>any (container or element)</td>
-                <td>derived from <code>data-cfc-name</code> or current page</td>
-                <td>(string)</td>
-                <td>
-                    The URL path to the CFC. If omitted, the controller will generate one from <code>data-cfc-name</code> or the current page name and ensure it ends with <code>.cfc</code>.
-                </td>
-            </tr>
+			<tr>
+				<td>path</td>
+				<td>any (container or element)</td>
+				<td>derived from <code>data-cfc-name</code> or current page</td>
+				<td>(string)</td>
+				<td>
+					The URL path to the CFC. If omitted, the controller will generate one from <code>data-cfc-name</code> or the current page name and ensure it ends with <code>.cfc</code>.
+				</td>
+			</tr>
 
-            <tr>
-                <td>name</td>
-                <td>any</td>
-                <td>current page name</td>
-                <td>(string)</td>
-                <td>
-                    The logical CFC name; used to derive <code>data-cfc-path</code> when a full path is not provided.
-                </td>
-            </tr>
+			<tr>
+				<td>name</td>
+				<td>any</td>
+				<td>current page name</td>
+				<td>(string)</td>
+				<td>
+					The logical CFC name; used to derive <code>data-cfc-path</code> when a full path is not provided.
+				</td>
+			</tr>
 
-            <tr>
-                <td>method</td>
-                <td>element that triggers the call (e.g. button, form)</td>
-                <td></td>
-                <td>(string)</td>
-                <td>
-                    The CFC method name to call. Typically placed on the triggering element or a parent via <code>data-cfc-method</code>.
-                </td>
-            </tr>
+			<tr>
+				<td>method</td>
+				<td>element that triggers the call (e.g. button, form)</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					The CFC method name to call. Typically placed on the triggering element or a parent via <code>data-cfc-method</code>.
+				</td>
+			</tr>
 
-            <tr>
-                <td>args</td>
-                <td>element that triggers the call</td>
-                <td></td>
-                <td>query-string</td>
-                <td>
-                    A query-string of key=value pairs (for example <code>foo=bar&amp;count=1</code>) which will be parsed and merged with any runtime-collected args.
-                </td>
-            </tr>
+			<tr>
+				<td>args</td>
+				<td>element that triggers the call</td>
+				<td></td>
+				<td>query-string</td>
+				<td>
+					A query-string of key=value pairs (for example <code>foo=bar&amp;count=1</code>) which will be parsed and merged with any runtime-collected args.
+				</td>
+			</tr>
 
-            <tr>
-                <td>form</td>
-                <td>form element or container with inputs</td>
-                <td></td>
-                <td>(presence)</td>
-                <td>
-                    If the element with <code>data-cfc-method</code> is a <code>&lt;form&gt;</code> or has <code>data-cfc-form</code>, the controller will gather form data and include it in the request.
-                </td>
-            </tr>
+			<tr>
+				<td>form</td>
+				<td>form element or container with inputs</td>
+				<td></td>
+				<td>(presence)</td>
+				<td>
+					If the element with <code>data-cfc-method</code> is a <code>&lt;form&gt;</code> or has <code>data-cfc-form</code>, the controller will gather form data and include it in the request.
+				</td>
+			</tr>
 
-            <tr>
-                <td>arg</td>
-                <td>child elements inside method element</td>
-                <td></td>
-                <td>(string)</td>
-                <td>
-                    Use <code>data-cfc-arg="name"</code> on child elements to include additional named arguments; their values are read with the controller's value resolution logic.
-                </td>
-            </tr>
+			<tr>
+				<td>arg</td>
+				<td>child elements inside method element</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					Use <code>data-cfc-arg="name"</code> on child elements to include additional named arguments; their values are read with the controller's value resolution logic.
+				</td>
+			</tr>
 
-            <tr>
-                <td>target / receiver</td>
-                <td>elements</td>
-                <td></td>
-                <td>(string)</td>
-                <td>
-                    <code>data-cfc-target</code> on the triggering element indicates the logical receiver name; elements with <code>data-cfc-receiver="name"</code> will have their textContent replaced with the response.
-                </td>
-            </tr>
+			<tr>
+				<td>target / receiver</td>
+				<td>elements</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					<code>data-cfc-target</code> on the triggering element indicates the logical receiver name; elements with <code>data-cfc-receiver="name"</code> will have their textContent replaced with the response.
+				</td>
+			</tr>
 
-        </tbody>
-    </table>
+		</tbody>
+	</table>
 
-    <h2>Methods</h2>
+	<h2>Events</h2>
 
-    <p>These methods are available on the controller and can be called programmatically.</p>
+	<p>These are custom events that the controller will fire when it takes certain actions.</p>
 
-    <table class="evts">
-        <thead>
-            <tr>
-                <th>Method</th>
-                <th>Arguments</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>call</td>
-                <td>(Event) OR (path, method[, args])</td>
-                <td>Primary entry point. If called with an event, it will extract attributes from the event target. With a path and method it will call the specified CFC method directly.</td>
-            </tr>
-            <tr>
-                <td>callEvent</td>
-                <td>Event</td>
-                <td>Handles an event-triggered call: prevents default, sets busy flag, gathers args, calls CFC method, and passes the response to <code>handleResponse</code>.</td>
-            </tr>
-            <tr>
-                <td>callPathMethod</td>
-                <td>path, method, args</td>
-                <td>Helper that delegates to <code>runCfcMethod</code> and returns the result.</td>
-            </tr>
-            <tr>
-                <td>runCfcMethod</td>
-                <td>path, method, args</td>
-                <td>Performs a <code>fetch</code> to <code>path?method=&lt;method&gt;</code> using POST and returns parsed JSON or text. Throws on HTTP errors or ColdFusion error responses.</td>
-            </tr>
-            <tr>
-                <td>getArgs</td>
-                <td>element</td>
-                <td>Collects args from <code>data-cfc-args</code>, child <code>data-cfc-arg</code> elements, and optionally from form fields within the method element.</td>
-            </tr>
-            <tr>
-                <td>collectFormData</td>
-                <td>element</td>
-                <td>Collects input values from a form or container, handling checkboxes and radio groups appropriately.</td>
-            </tr>
-            <tr>
-                <td>getElementValue</td>
-                <td>element</td>
-                <td>Resolves a value using the hierarchy: <code>data-cfc-value</code>, <code>data-value</code>, element.value, or textContent.</td>
-            </tr>
-            <tr>
-                <td>handleResponse</td>
-                <td>response, event</td>
-                <td>Finds receiver elements matching <code>data-cfc-receiver</code> and places the response text into their <code>textContent</code>.</td>
-            </tr>
-            <tr>
-                <td>parseQueryString</td>
-                <td>qs</td>
-                <td>Parses a query-string into an object, supporting repeated keys as arrays.</td>
-            </tr>
-        </tbody>
-    </table>
+	<h3><span class="prefix">cfc:</span> Events</h3>
 
-    <h2>Usage examples</h2>
+	<p>All of these events are prefixed by "cfc:".</p>
 
-    <h3>Declarative (button triggers)</h3>
-    <pre>&lt;div data-controller="cfc" data-cfc-name="MyService"&gt;
-  &lt;button data-cfc-method="doSomething" data-cfc-args="foo=bar" data-cfc-target="result"&gt;Call&lt;/button&gt;
-  &lt;div data-cfc-receiver="result"&gt;&lt;/div&gt;
-&lt;/div&gt;</pre>
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>calling</td>
+				<td>
+					<p>detail.path: (string) — the URL path to the CFC</p>
+					<p>detail.method: (string) — the CFC method being invoked</p>
+					<p>detail.args: (object|FormData) — the arguments that will be sent</p>
+				</td>
+				<td>
+					Fired immediately before the controller performs the HTTP request. Useful for showing loading states or inspecting the outbound request.
+				</td>
+			</tr>
+			<tr>
+				<td>called</td>
+				<td>
+					<p>detail.path: (string)</p>
+					<p>detail.method: (string)</p>
+					<p>detail.args: (object|FormData)</p>
+					<p>detail.response: (Response) — the fetch Response object</p>
+					<p>detail.result: (any) — the parsed or normalized result (JSON/object or text)</p>
+				</td>
+				<td>
+					Fired after a response is received and processed (parsed/normalized). The <code>detail.result</code> contains the value returned by the controller.
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
-    <h3>Declarative (form submission)</h3>
-    <pre>&lt;form data-controller="cfc" data-cfc-method="submitForm" data-cfc-target="formResult"&gt;
-  &lt;input name="name" /&gt;
-  &lt;button type="submit"&gt;Send&lt;/button&gt;
-&lt;/form&gt;
-&lt;div data-cfc-receiver="formResult"&gt;&lt;/div&gt;</pre>
+	<h2>Methods</h2>
 
-    <h3>Programmatic</h3>
-    <pre>// Call directly
-const el = document.querySelector('[data-controller="cfc"]');
-const ctrl = window.application.getControllerForElementAndIdentifier(el, 'cfc');
-ctrl.call('/path/to/service.cfc', 'methodName', { foo: 'bar' }).then(result =&gt; {
-  console.log(result);
-});</pre>
+	<p>These methods are available on the controller and can be called programmatically.</p>
 
-    <h2>Notes</h2>
-
-    <ul>
-        <li>The controller expects the server to return JSON for structured responses; if not JSON it will return the response text. ColdFusion error responses with an <code>ERROR</code> key will be thrown as errors.</li>
-        <li>Requests are made with POST and the body contains form-like data. The controller does not set a Content-Type header so FormData is sent as intended.</li>
-        <li>Use <code>data-cfc-path</code> on ancestors or child elements to customize per-element endpoints.</li>
-    </ul>
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th>Arguments</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>call</td>
+				<td>(Event) OR (path, method[, args])</td>
+				<td>Primary entry point. If called with an event, it will extract attributes from the event target. With a path and method it will call the specified CFC method directly.</td>
+			</tr>
+			<tr>
+				<td>callEvent</td>
+				<td>Event</td>
+				<td>Handles an event-triggered call: prevents default, sets busy flag, gathers args, calls CFC method, and passes the response to <code>handleResponse</code>.</td>
+			</tr>
+			<tr>
+				<td>callPathMethod</td>
+				<td>path, method, args</td>
+				<td>Helper that delegates to <code>runCfcMethod</code> and returns the result.</td>
+			</tr>
+			<tr>
+				<td>runCfcMethod</td>
+				<td>path, method, args</td>
+				<td>Performs a <code>fetch</code> to <code>path?method=&lt;method&gt;</code> using POST and returns parsed JSON or text. Throws on HTTP errors or ColdFusion error responses.</td>
+			</tr>
+			<tr>
+				<td>getArgs</td>
+				<td>element</td>
+				<td>Collects args from <code>data-cfc-args</code>, child <code>data-cfc-arg</code> elements, and optionally from form fields within the method element.</td>
+			</tr>
+			<tr>
+				<td>collectFormData</td>
+				<td>element</td>
+				<td>Collects input values from a form or container, handling checkboxes and radio groups appropriately.</td>
+			</tr>
+			<tr>
+				<td>getElementValue</td>
+				<td>element</td>
+				<td>Resolves a value using the hierarchy: <code>data-cfc-value</code>, <code>data-value</code>, element.value, or textContent.</td>
+			</tr>
+			<tr>
+				<td>handleResponse</td>
+				<td>response, event</td>
+				<td>Finds receiver elements matching <code>data-cfc-receiver</code> and places the response text into their <code>textContent</code>.</td>
+			</tr>
+			<tr>
+				<td>parseQueryString</td>
+				<td>qs</td>
+				<td>Parses a query-string into an object, supporting repeated keys as arrays.</td>
+			</tr>
+		</tbody>
+	</table>
 
 </body>
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CFC Controller: Get Query</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+</head>
+<body>
+
+<h1>CFC Controller: Get Query</h1>
+
+<p>This example demonstrates how to use the CFC controller to retrieve a query from a CFC component.</p>
+
+<p>The controller will automatically convert the query result into an array of objects. If no information is provided about the columns then it will return them in lower-case.</p>
+
+<div
+	data-controller="cfc"
+	data-cfc-path="widgets.cfc"
+	data-cfc-method="getWidgets"
+	data-cfc-target="widgetsOutput"
+>
+	<button type="button" data-action="click->cfc#call">Load Widgets</button>
+
+	<pre data-cfc-receiver="widgetsOutput"></pre>
+
+</div>
+
+<script src="../js/stimulus.js"></script>
+<script src="../js/app.js"></script>
+<script src="js/controllers/cfc_controller.js"></script>
+
+</body>
+</html>

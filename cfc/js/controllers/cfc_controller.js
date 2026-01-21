@@ -123,10 +123,12 @@ application.register('cfc', class extends Stimulus.Controller {
 		this.busy(true, methodElement);
 
 		const result = await this.callPathMethod(path, method, args);
-
+		
 		this.handleResponse(result, event);
 
 		this.busy(false, methodElement);
+
+		return result;
 	}
 
 	async callPathMethod(path, method, args={}) {
@@ -256,7 +258,7 @@ application.register('cfc', class extends Stimulus.Controller {
 		const { body, headers } = this.makeRequestBody(args);
 		let result;
 
-		this.dispatch('fetching', {
+		this.dispatch('calling', {
 			detail: { path, method, args }
 		});
 
@@ -296,11 +298,14 @@ application.register('cfc', class extends Stimulus.Controller {
 
 			// Try to parse JSON-like text, otherwise return as text
 			const parsed = this.tryParseJson(text);
-			result = parsed;
+			if ( parsed !== null ) {
+				result = parsed;
+			}
+			
 			if ( parsed !== null ) {
 				try {
 					const normalized = this.normalizeIfConfigured(parsed);
-					console.log('Normalized:', normalized);
+
 					if ( normalized !== null ) {
 						result = normalized;
 					}
@@ -311,7 +316,7 @@ application.register('cfc', class extends Stimulus.Controller {
 
 		}
 
-		this.dispatch('fetched', {
+		this.dispatch('called', {
 			detail: { path, method, args, response, result }
 		});
 
@@ -338,14 +343,6 @@ application.register('cfc', class extends Stimulus.Controller {
 	// If the controller element has normalization attributes, build options and normalize parsed result.
 	// Returns normalized result array/object or null if no normalization configured on this.element.
 	normalizeIfConfigured(parsed) {
-		if ( !this.element ) return null;
-		const hasColumnsAttr = (
-			this.element.hasAttribute('data-cfc-columns') ||
-			this.element.hasAttribute('data-cfc-column-case') ||
-			this.element.hasAttribute('data-cfc-column-types')
-		);
-		if ( !hasColumnsAttr ) return null;
-
 		const columnsAttr = this.element.getAttribute('data-cfc-columns');
 		let columnsMap = null;
 		if ( columnsAttr ) {

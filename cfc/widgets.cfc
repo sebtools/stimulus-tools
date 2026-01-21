@@ -1,16 +1,10 @@
 <cfcomponent>
 
-<cfset Variables.DataMgr = CreateObject("component","com.sebtools.DataMgr").init("TestSQL")>
-
 <cfscript>
+Variables.DataMgr = CreateObject("component","com.sebtools.DataMgr").init("TestSQL");
+
 public function init() {
 	return This;
-}
-
-remote function testmethod(
-	string name = "World"
-) returnformat="plain" {
-	return "Hello, #name#!";
 }
 
 remote function getWidget(numeric WidgetID=0) returntype="query" output="false" returnformat="json" {
