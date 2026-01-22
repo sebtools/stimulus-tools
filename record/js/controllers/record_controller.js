@@ -693,8 +693,6 @@ application.register('record', class extends Stimulus.Controller {
 			}
 		});
 
-		console.log('Saving record:', recordElement, 'ID:', recordId);
-
 		if ( !recordId ) {
 			// This is a new record
 			this.broadcastAddEvent(recordElement);
@@ -794,7 +792,7 @@ application.register('record', class extends Stimulus.Controller {
 
 	handleDataUpdate(event) {
 		const { table, id, record } = event.detail;
-		
+
 		let targetElement;
 		if ( this.element.getAttribute('data-record-addmissing') === 'true' ) {
 			targetElement = this.findOrCreateRecordElement(table, id, record);
@@ -828,7 +826,7 @@ application.register('record', class extends Stimulus.Controller {
 		const { channel, table, records, record } = event.detail;
 
 		// Only handle if this is our channel
-		if (channel !== this.getChannel()) return;
+		if (channel && channel !== this.getChannel()) return;
 		
 		// Only handle if this is our table
 		if (table !== this.getTable()) return;
@@ -863,9 +861,19 @@ application.register('record', class extends Stimulus.Controller {
 	}
 
 	findRecordElement(table, id) {
+		
+		// Check if the controller's root element matches
+		if (
+			this.element.getAttribute('data-record-table') == table
+			&&
+			this.element.getAttribute('data-record-id') == id
+		) {
+			return this.element;
+		}
+		
 		// Find element with matching data-record-id within our table scope
 		const candidates = this.element.querySelectorAll(`[data-record-id="${id}"]`);
-		
+
 		for ( const candidate of candidates ) {
 			if ( this.getTable(candidate) === table ) {
 				return candidate;
@@ -931,17 +939,17 @@ application.register('record', class extends Stimulus.Controller {
 	updateRecordFromData(targetElement, record) {
 		const fields = targetElement.querySelectorAll('[data-record-field]');
 		let hasUnsentChanges = false;
-		
+
 		fields.forEach(field => {
 			const fieldName = field.getAttribute('data-record-field');
 			const ignoreType = field.getAttribute('data-record-ignore');
 			
 			// Skip if field is ignored for incoming updates
-			if (ignoreType === 'true' || ignoreType === 'in') {
+			if ( ignoreType === 'true' || ignoreType === 'in' ) {
 				return;
 			}
 			
-			if (record.hasOwnProperty(fieldName)) {
+			if ( record.hasOwnProperty(fieldName) ) {
 				const newValue = record[fieldName];
 				this.setFieldValue(field, newValue);
 				field.setAttribute('data-record-before', newValue);
@@ -956,7 +964,7 @@ application.register('record', class extends Stimulus.Controller {
 		});
 
 		// Clear record dirty state if no unsent changes remain
-		if (!hasUnsentChanges && targetElement.getAttribute('data-record-dirty') === 'sent') {
+		if ( !hasUnsentChanges && targetElement.getAttribute('data-record-dirty') === 'sent' ) {
 			targetElement.removeAttribute('data-record-dirty');
 		}
 	}
