@@ -21,9 +21,10 @@ application.register('record', class extends Stimulus.Controller {
 		this.ensureAddRecord();
 
 		// Request initial data load if configured
-		if (this.element.getAttribute('data-record-autoload') === 'true') {
+		if ( this.element.getAttribute('data-record-autoload') === 'true' ) {
 			this.requestInitialLoad();
 		}
+
 	}
 
 	disconnect() {
@@ -227,10 +228,10 @@ application.register('record', class extends Stimulus.Controller {
 			// per-table observers when table elements appear or disappear.
 			this.observers.container = new MutationObserver((mutations) => {
 				mutations.forEach((mutation) => {
-					if (mutation.type === 'childList') {
+					if ( mutation.type === 'childList' ) {
 						// Handle added nodes
 						mutation.addedNodes.forEach((node) => {
-							if (node.nodeType === Node.ELEMENT_NODE) {
+							if ( node.nodeType === Node.ELEMENT_NODE ) {
 								this.processNewElement(node);
 								// If a new element (or its descendants) has data-record-table, set up table observer(s)
 								if ( node.hasAttribute && node.hasAttribute('data-record-table') ) {
@@ -242,7 +243,7 @@ application.register('record', class extends Stimulus.Controller {
 						});
 						// Handle removed nodes to tear down any table observers
 						mutation.removedNodes.forEach((node) => {
-							if (node.nodeType === Node.ELEMENT_NODE) {
+							if ( node.nodeType === Node.ELEMENT_NODE ) {
 								if ( node.hasAttribute && node.hasAttribute('data-record-table') ) {
 									this.teardownTableMutationObserver(node);
 								}
@@ -268,7 +269,6 @@ application.register('record', class extends Stimulus.Controller {
 				tables.push(this.element);
 			}
 			this.element.querySelectorAll('[data-record-table]').forEach(el => tables.push(el));
-			console.log("Setting up table observers for", tables);
 			tables.forEach(el => this.setupTableMutationObserver(el));
 		}
 
@@ -304,9 +304,6 @@ application.register('record', class extends Stimulus.Controller {
 	handleRecordIdChange(element, oldValue) {
 		const detail = this.getEventDetail(element);
 		
-		console.log(element);
-		console.log("Record ID changed from", oldValue, "to", element.getAttribute('data-record-id'));
-
 		// Check if this was an empty record that just got assigned an ID
 		if ( oldValue === '' && element.getAttribute('data-record-id') !== '' ) {
 			// Ensure there is still an empty record
@@ -492,13 +489,15 @@ application.register('record', class extends Stimulus.Controller {
 	getDebounceTime() {
 		// Look for data-record-debounce in ancestors within this controller
 		let element = this.element;
-		while (element) {
+		
+		while ( element ) {
 			const debounce = element.getAttribute('data-record-debounce');
-			if (debounce) {
+			if ( debounce ) {
 				return parseInt(debounce, 10);
 			}
 			element = element.parentElement;
 		}
+
 		return 300; // Default debounce time
 	}
 
@@ -570,7 +569,7 @@ application.register('record', class extends Stimulus.Controller {
 	}
 
 	getTableElementByName(tableName) {
-		if (!tableName) return null;
+		if ( !tableName ) return null;
 		// Check controller root first
 		if ( this.element.getAttribute('data-record-table') === tableName ) return this.element;
 		// Then search descendants
@@ -885,7 +884,7 @@ application.register('record', class extends Stimulus.Controller {
 		} else {
 			targetElement = this.findRecordElement(table, id);
 		}
-		if (!targetElement) return;
+		if ( !targetElement ) return;
 
 		this.updateRecordFromData(targetElement, record);
 	}
@@ -896,7 +895,6 @@ application.register('record', class extends Stimulus.Controller {
 		const targetElement = this.findOrCreateRecordElement(table, id, record);
 
 		if ( targetElement ) {
-			console.log('Updating record element from data add:', targetElement, record);
 			this.updateRecordFromData(targetElement, record);
 			//this.ensureAddRecord();
 		}
@@ -906,7 +904,7 @@ application.register('record', class extends Stimulus.Controller {
 		const { table, id } = event.detail;
 		
 		const targetElement = this.findRecordElement(table, id);
-		if (targetElement) {
+		if ( targetElement ) {
 			targetElement.remove();
 		}
 	}
@@ -915,13 +913,13 @@ application.register('record', class extends Stimulus.Controller {
 		const { channel, table, records, record } = event.detail;
 
 		// Only handle if this is our channel
-		if (channel && channel !== this.getChannel()) return;
+		if ( channel && channel !== this.getChannel() ) return;
 		
 		// Only handle if this is our table
-		if (table !== this.getTable()) return;
+		if ( table !== this.getTable() ) return;
 		
 		// Priority 1: Array of records (bulk load, including empty arrays)
-		if (records && Array.isArray(records)) {
+		if ( records && Array.isArray(records) ) {
 			const recordArray = records.map(rec => ({
 				id: rec.id || '',
 				record: rec
@@ -1010,11 +1008,11 @@ application.register('record', class extends Stimulus.Controller {
 	recordMatches(element, record) {
 		const fields = element.querySelectorAll('[data-record-field]');
 		
-		for (const field of fields) {
+		for ( const field of fields ) {
 			const fieldName = field.getAttribute('data-record-field');
 			const fieldValue = this.getFieldValue(field);
 			
-			if (record[fieldName] !== fieldValue) {
+			if ( record[fieldName] !== fieldValue ) {
 				return false;
 			}
 		}
@@ -1052,9 +1050,9 @@ application.register('record', class extends Stimulus.Controller {
 				field.setAttribute('data-record-before', newValue);
 				
 				// Clear dirty state if it was sent
-				if (field.getAttribute('data-record-dirty') === 'sent') {
+				if ( field.getAttribute('data-record-dirty') === 'sent' ) {
 					field.removeAttribute('data-record-dirty');
-				} else if (field.getAttribute('data-record-dirty') === 'unsent') {
+				} else if ( field.getAttribute('data-record-dirty' ) === 'unsent') {
 					hasUnsentChanges = true;
 				}
 			}
@@ -1122,20 +1120,20 @@ application.register('record', class extends Stimulus.Controller {
 		const tableElement = this.getTableElement(elem);
 
 		const templateSelector = tableElement.getAttribute('data-record-template');
-		if (templateSelector) {
+		if ( templateSelector ) {
 			return document.querySelector(templateSelector);
 		}
 
 		// Look for direct template child
 		const directTemplate = tableElement.querySelector(':scope > template');
-		if (directTemplate) {
+		if ( directTemplate ) {
 			return directTemplate;
 		}
 
 		// Look for element with empty data-record-id (but not the excluded one)
 		const emptyRecords = tableElement.querySelectorAll('[data-record-id=""]');
-		for (const emptyRecord of emptyRecords) {
-			if (emptyRecord !== excludeElement) {
+		for ( const emptyRecord of emptyRecords ) {
+			if ( emptyRecord !== excludeElement ) {
 				return emptyRecord;
 			}
 		}
@@ -1174,7 +1172,7 @@ application.register('record', class extends Stimulus.Controller {
 		if ( recordData && typeof recordData === 'object' ) {
 			Object.entries(recordData).forEach(([fieldName, value]) => {
 				const field = newElement.querySelector(`[data-record-field="${fieldName}"]`);
-				if (field) {
+				if ( field ) {
 					this.setFieldValue(field, value);
 					field.setAttribute('data-record-before', value);
 				}
@@ -1232,9 +1230,9 @@ application.register('record', class extends Stimulus.Controller {
 	hasFieldValues(element) {
 		// Check if any fields have non-empty values
 		const fields = element.querySelectorAll('[data-record-field]');
-		for (const field of fields) {
+		for ( const field of fields ) {
 			const value = this.getFieldValue(field);
-			if (value && value.trim() !== '') {
+			if ( value && value.trim() !== '' ) {
 				return true;
 			}
 		}
@@ -1286,21 +1284,21 @@ application.register('record', class extends Stimulus.Controller {
 
 	// Helper methods for name and ID processing
 	deriveIdFromName(nameValue, idValue) {
-		if (!nameValue || !idValue) return null;
+		if ( !nameValue || !idValue ) return null;
 		
 		// Case 1: ID starts with name ("bob" -> "bob-verse")
-		if (idValue.startsWith(nameValue)) {
+		if ( idValue.startsWith(nameValue) ) {
 			return idValue.substring(nameValue.length); // Returns "-verse"
 		}
 		
 		// Case 2: ID ends with name ("prefix-bob" -> name is "bob")
-		if (idValue.endsWith(nameValue)) {
+		if ( idValue.endsWith(nameValue) ) {
 			return idValue.substring(0, idValue.length - nameValue.length); // Returns "prefix-"
 		}
 		
 		// Case 3: Name is contained within ID ("some-bob-thing" -> name is "bob")
 		const nameIndex = idValue.indexOf(nameValue);
-		if (nameIndex !== -1) {
+		if ( nameIndex !== -1 ) {
 			const prefix = idValue.substring(0, nameIndex);
 			const suffix = idValue.substring(nameIndex + nameValue.length);
 			return { prefix, suffix }; // More complex case
@@ -1314,11 +1312,11 @@ application.register('record', class extends Stimulus.Controller {
 		const allRecords = this.element.querySelectorAll('[data-record-id]');
 		let count = 0;
 		
-		for (const record of allRecords) {
+		for ( const record of allRecords ) {
 			const currentId = record.getAttribute('data-record-id');
-			if (currentId !== '') {
+			if ( currentId !== '' ) {
 				count++;
-				if (currentId === recordId) {
+				if ( currentId === recordId ) {
 					return count;
 				}
 			}
@@ -1337,7 +1335,7 @@ application.register('record', class extends Stimulus.Controller {
 		const namePattern = this.element.getAttribute('data-record-names');
 		const idPattern = this.element.getAttribute('data-record-ids');
 		
-		if (!namePattern && !idPattern) return;
+		if ( !namePattern && !idPattern ) return;
 		
 		const recordNum = this.getRecordNumber(recordId);
 		const nameFields = element.querySelectorAll('[name]');
@@ -1350,7 +1348,7 @@ application.register('record', class extends Stimulus.Controller {
 			let newId = originalId;
 			
 			// Process name if pattern exists
-			if (namePattern) {
+			if ( namePattern ) {
 				newName = namePattern
 					.replace(/\[name\]/g, originalName)
 					.replace(/\[id\]/g, recordId)
@@ -1360,29 +1358,29 @@ application.register('record', class extends Stimulus.Controller {
 			}
 			
 			// Process ID
-			if (originalId) {
-				if (idPattern) {
+			if ( originalId ) {
+				if ( idPattern ) {
 					// Explicit ID pattern provided
 					newId = idPattern
 						.replace(/\[name\]/g, originalName)
 						.replace(/\[id\]/g, recordId)
 						.replace(/\[record-id\]/g, recordId) 
 						.replace(/\[num\]/g, recordNum);
-				} else if (namePattern) {
+				} else if ( namePattern ) {
 					// Auto-detect ID relationship to name
 					const relationship = this.deriveIdFromName(originalName, originalId);
-					if (relationship) {
-						if (typeof relationship === 'string') {
+					if ( relationship ) {
+						if ( typeof relationship === 'string' ) {
 							// Simple suffix/prefix case
 							newId = newName + relationship;
-						} else if (relationship.prefix !== undefined) {
+						} else if ( relationship.prefix !== undefined ) {
 							// Complex case with prefix and suffix
 							newId = relationship.prefix + newName + relationship.suffix;
 						}
 					}
 				}
-				
-				if (newId !== originalId) {
+
+				if ( newId !== originalId ) {
 					field.setAttribute('id', newId);
 					this.updateLabelsForId(element, originalId, newId);
 				}
@@ -1390,7 +1388,7 @@ application.register('record', class extends Stimulus.Controller {
 		});
 		
 		// Also process elements that have ID but no name attribute
-		if (idPattern) {
+		if ( idPattern ) {
 			const idOnlyElements = element.querySelectorAll('[id]:not([name])');
 			idOnlyElements.forEach(field => {
 				const originalId = field.getAttribute('id');
@@ -1400,7 +1398,7 @@ application.register('record', class extends Stimulus.Controller {
 					.replace(/\[record-id\]/g, recordId)
 					.replace(/\[num\]/g, recordNum);
 				
-				if (newId !== originalId) {
+				if ( newId !== originalId ) {
 					field.setAttribute('id', newId);
 					this.updateLabelsForId(element, originalId, newId);
 				}
@@ -1426,7 +1424,7 @@ application.register('record', class extends Stimulus.Controller {
 		if ( newElement ) {
 			// Focus first field in new record
 			const firstField = newElement.querySelector('[data-record-field]');
-			if (firstField && firstField.focus) {
+			if ( firstField && firstField.focus ) {
 				firstField.focus();
 			}
 		}
@@ -1436,7 +1434,7 @@ application.register('record', class extends Stimulus.Controller {
 		const defaultsString = this.getAttributeElementValue('data-record-defaults', element);
 		let recordDefaults = {};
 		
-		if (defaultsString) {
+		if ( defaultsString ) {
 			const params = new URLSearchParams(defaultsString);
 			for ( const [key, value] of params ) {
 				recordDefaults[key] = value;
