@@ -1,0 +1,42 @@
+table.widgetTable {
+	width: fit-content;
+	min-width: 300px;
+}
+table.widgetTable td {
+	padding: 0;
+}
+
+/* Hide actions by default, JavaScript will make available. */
+.actions button {
+	display: none;
+}
+
+body {
+	/* Use a responsive grid: two columns on wider screens, single column stacking on narrow screens */
+	display: grid;
+	grid-template-columns: repeat(2, minmax(280px, 1fr));
+	gap: 1.5rem;
+	align-items: start; /* align items vertically at the top of each grid cell */
+	justify-items: center; /* center items horizontally within their grid cell */
+	min-height: 100vh;
+	margin: 0;
+	padding: 1.5rem; /* give some breathing room at edges */
+	box-sizing: border-box;
+	background-color: #f0f0f0;
+}
+
+/* Ensure all direct children of body size and box-model behave predictably */
+body > * {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Stack vertically on small viewports (mobile) */
+@media (max-width: 720px) {
+	body {
+		grid-template-columns: 1fr;
+		justify-items: stretch;
+		padding: 1rem;
+	}
+}

@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>RecordCFC Controller Documentation</title>
+	<link rel="stylesheet" type="text/css" href="../documentation.css">
+</head>
+<body>
+
+	<h1>RecordCFC Controller</h1>
+
+	<p>
+		The RecordCFC routes data from the record component to a CFC via the cfc component.
+		It wires a <code>record</code> UI controller to server-side CFC methods via the <code>cfc</code> controller.
+		It listens for record UI events (add/update/delete), translates those into CFC calls, and then fires data events back into the page when the server responds.
+	</p>
+
+	<h2>Prerequisites</h2>
+
+	<ul>
+		<li>This controller expects both a <code>record</code> controller and a <code>cfc</code> controller to be attached to the same element. It will throw an error on connect if either is missing.</li>
+	</ul>
+
+	<h2>Values</h2>
+
+	<p>The controller defines the following Stimulus value:</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Value</th>
+				<th>Attribute</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>idarg</td>
+				<td><code>data-recordcfc-idarg-value</code></td>
+				<td>The CFC parameter name used to pass the record ID to server methods.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Attributes</h2>
+
+	<p>The RecordCFC controller relies on a set of attributes (typically placed on the same element as the <code>record</code> controller) to configure which CFC methods to call for record actions.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><code>data-recordcfc-method-save</code></td>
+				<td>container / method element</td>
+				<td>Name of the CFC method to call when a record is saved/updated or used for add/save operations (controller reads per-action names).</td>
+			</tr>
+			<tr>
+				<td><code>data-recordcfc-method-add</code></td>
+				<td>container / method element</td>
+				<td>Name of the CFC method to call when creating a new record (optional if save covers both).</td>
+			</tr>
+			<tr>
+				<td><code>data-recordcfc-method-delete</code></td>
+				<td>container / method element</td>
+				<td>Name of the CFC method to call when deleting a record.</td>
+			</tr>
+			<tr>
+				<td><code>data-recordcfc-idarg</code></td>
+				<td>container / method element</td>
+				<td>Name of the parameter to use when sending the record ID to the CFC (e.g. <code>id</code> or <code>recordId</code>). The controller will throw if this is not configured where required.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Events handled</h2>
+
+	<p>The controller listens for these document-level UI events emitted by the <code>record</code> controller:</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><code>record:ui:update</code></td>
+				<td>detail: { table, id, record, element }</td>
+				<td>Triggers the configured CFC <code>save</code> method to update an existing record.</td>
+			</tr>
+			<tr>
+				<td><code>record:ui:add</code></td>
+				<td>detail: { table, record, element }</td>
+				<td>Triggers the configured CFC <code>save/add</code> method to create a new record. Expects the server to return an <code>id</code> for the new record.</td>
+			</tr>
+			<tr>
+				<td><code>record:ui:delete</code></td>
+				<td>detail: { table, id, element }</td>
+				<td>Triggers the configured CFC <code>delete</code> method to remove a record on the server.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Events emitted</h2>
+
+	<p>After performing CFC calls the controller will emit document-level data events that the <code>record</code> controller consumes:</p>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Event</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><code>record:data:update</code></td>
+				<td>detail: { table, id }</td>
+				<td>Fired after a successful update; includes the id (returned id preferred).</td>
+			</tr>
+			<tr>
+				<td><code>record:data:add</code></td>
+				<td>detail: { table, id, record }</td>
+				<td>Fired after a successful add. <strong>Note:</strong> server MUST return an <code>id</code> for new records.</td>
+			</tr>
+			<tr>
+				<td><code>record:data:delete</code></td>
+				<td>detail: { table, id }</td>
+				<td>Fired after a successful delete.</td>
+			</tr>
+			<tr>
+				<td><code>record:data:error:&lt;action&gt;</code></td>
+				<td>detail: { error, originalEvent, element }</td>
+				<td>Fired when a CFC call fails for an action (add/update/delete) with error details.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Behavior and sequence</h2>
+
+	<ol>
+		<li>On connect the controller finds the co-located <code>record</code> and <code>cfc</code> controllers.</li>
+		<li>It subscribes to document-level <code>record:ui</code> events and ignores events outside the element's scope.</li>
+		<li>When an event occurs it constructs parameters via <code>buildCfcParams</code>, sets a loading state (aria-busy), calls the CFC method using the <code>cfc</code> controller and then emits the appropriate <code>record:data:</code> event.</li>
+	</ol>
+
+	<h2>Methods</h2>
+
+	<table class="evts">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><code>getIdArgName(element)</code></td>
+				<td>Finds the configured ID argument name via <code>data-recordcfc-idarg</code> (throws if missing where required).</td>
+			</tr>
+			<tr>
+				<td><code>getMethodName(element, action)</code></td>
+				<td>Reads the configured method name for an action (e.g. <code>save</code>, <code>delete</code>) from <code>data-recordcfc-method-&lt;action&gt;</code>.</td>
+			</tr>
+			<tr>
+				<td><code>buildCfcParams(record, idArgName, id)</code></td>
+				<td>Returns the parameters object to send to the CFC; merges record fields and attaches the id under the configured id argument name when provided.</td>
+			</tr>
+			<tr>
+				<td><code>fireDataEvent(action, detail, element)</code></td>
+				<td>Dispatches <code>record:data:&lt;action&gt;</code> with the provided detail and element to inform the record controller of server-side changes.</td>
+			</tr>
+			<tr>
+				<td><code>fireErrorEvent(action, error, originalDetail)</code></td>
+				<td>Dispatches <code>record:data:error:&lt;action&gt;</code> with error information so callers can react to failures.</td>
+			</tr>
+			<tr>
+				<td><code>setLoadingState(isLoading)</code></td>
+				<td>Sets <code>aria-busy</code> on the element and optionally disables/enables form controls while the CFC call is in progress.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Usage example</h2>
+
+<pre>&lt;div data-controller="record recordcfc cfc" data-recordcfc-idarg-value="id" data-recordcfc-method-save="saveRecord" data-recordcfc-method-delete="deleteRecord"&gt;
+&lt;!-- inner record markup here --&gt;
+&lt;/div&gt;</pre>
+
+	<h2>Notes</h2>
+
+	<ul>
+		<li>The controller delegates the actual HTTP/CFC integration to the <code>cfc</code> controller via its <code>call</code> method.</li>
+		<li>Ensure your CFC save/add method returns an <code>id</code> when creating new records; the controller requires this to fire the add data event.</li>
+		<li>The controller intentionally scopes events to elements contained within its root element to avoid handling unrelated record events on the page.</li>
+	</ul>
+
+</body>
+</html>
