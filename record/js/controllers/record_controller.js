@@ -35,9 +35,14 @@ application.register('record', class extends Stimulus.Controller {
 
 		this.removeEventListeners();
 
-		// Clean up mutation observers
-		for ( const observer in this.observers ) {
-			this.observers[observer].disconnect();
+		// Clean up mutation observers (container + per-table)
+		if ( this.observers ) {
+			if ( this.observers.container ) {
+				this.observers.container.disconnect();
+			}
+			if ( this.observers.tableObservers ) {
+				this.observers.tableObservers.forEach((obs) => obs.disconnect());
+			}
 		}
 		this.observers = {};
 
@@ -79,7 +84,7 @@ application.register('record', class extends Stimulus.Controller {
 		}
 	
 	add() {
-		this.insertRecordElement();
+		this.insertRecordElement(this.element);
 	}
 
 	handleFieldEvent(event) {
@@ -207,43 +212,105 @@ application.register('record', class extends Stimulus.Controller {
 			}
 		}
 	
-	setupObservers() {
-		this.observers = {};
-		this.setupContainerMutationObserver();
-	}
-	setupContainerMutationObserver() {
-		this.observers.container = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (mutation.type === 'childList') {
-					// Check added nodes
-					mutation.addedNodes.forEach((node) => {
-						if (node.nodeType === Node.ELEMENT_NODE) {
-							this.processNewElement(node);
-						}
-					});
-				} else if (mutation.type === 'attributes' && mutation.attributeName === 'data-record-id') {
-					// Handle data-record-id changes for auto-add functionality
-					this.handleRecordIdChange(mutation.target, mutation.oldValue);
-				}
+		setupObservers() {
+			// this.observers will hold a container observer and a Map of per-table observers
+			this.observers = {
+				container: null,
+				tableObservers: new Map()
+			};
+			this.setupContainerMutationObserver();
+			this.setupTableObservers();
+		}
+
+		setupContainerMutationObserver() {
+			// Container observer watches for added/removed nodes so we can attach/detach
+			// per-table observers when table elements appear or disappear.
+			this.observers.container = new MutationObserver((mutations) => {
+				mutations.forEach((mutation) => {
+					if (mutation.type === 'childList') {
+						// Handle added nodes
+						mutation.addedNodes.forEach((node) => {
+							if (node.nodeType === Node.ELEMENT_NODE) {
+								this.processNewElement(node);
+								// If a new element (or its descendants) has data-record-table, set up table observer(s)
+								if ( node.hasAttribute && node.hasAttribute('data-record-table') ) {
+									this.setupTableMutationObserver(node);
+								}
+								const tables = node.querySelectorAll ? node.querySelectorAll('[data-record-table]') : [];
+								tables.forEach(tbl => this.setupTableMutationObserver(tbl));
+							}
+						});
+						// Handle removed nodes to tear down any table observers
+						mutation.removedNodes.forEach((node) => {
+							if (node.nodeType === Node.ELEMENT_NODE) {
+								if ( node.hasAttribute && node.hasAttribute('data-record-table') ) {
+									this.teardownTableMutationObserver(node);
+								}
+								const tables = node.querySelectorAll ? node.querySelectorAll('[data-record-table]') : [];
+								tables.forEach(tbl => this.teardownTableMutationObserver(tbl));
+							}
+						});
+					}
+				});
 			});
-		});
-		
-		this.observers.container.observe(this.element, {
-			childList: true,
-			subtree: true,
-			attributes: true,
-			attributeFilter: ['data-record-id'],
-			attributeOldValue: true
-		});
-	}
+
+			this.observers.container.observe(this.element, {
+				childList: true,
+				subtree: true
+			});
+		}
+
+		// Find existing table elements inside this controller and set up observers on them
+		setupTableObservers() {
+			// Include the controller root if it declares a table
+			const tables = [];
+			if ( this.element.hasAttribute('data-record-table') ) {
+				tables.push(this.element);
+			}
+			this.element.querySelectorAll('[data-record-table]').forEach(el => tables.push(el));
+			console.log("Setting up table observers for", tables);
+			tables.forEach(el => this.setupTableMutationObserver(el));
+		}
+
+		setupTableMutationObserver(tableElement) {
+			if ( !tableElement || this.observers.tableObservers.has(tableElement) ) return;
+			const observer = new MutationObserver((mutations) => {
+				mutations.forEach((mutation) => {
+					if ( mutation.type === 'attributes' && mutation.attributeName === 'data-record-id' ) {
+						this.handleRecordIdChange(mutation.target, mutation.oldValue);
+					}
+				});
+			});
+
+			observer.observe(tableElement, {
+				attributes: true,
+				subtree: true,
+				attributeFilter: ['data-record-id'],
+				attributeOldValue: true
+			});
+
+			this.observers.tableObservers.set(tableElement, observer);
+		}
+
+		teardownTableMutationObserver(tableElement) {
+			if ( !tableElement ) return;
+			const obs = this.observers.tableObservers.get(tableElement);
+			if ( obs ) {
+				obs.disconnect();
+				this.observers.tableObservers.delete(tableElement);
+			}
+		}
 	
 	handleRecordIdChange(element, oldValue) {
 		const detail = this.getEventDetail(element);
+		
+		console.log(element);
+		console.log("Record ID changed from", oldValue, "to", element.getAttribute('data-record-id'));
 
 		// Check if this was an empty record that just got assigned an ID
 		if ( oldValue === '' && element.getAttribute('data-record-id') !== '' ) {
 			// Ensure there is still an empty record
-			this.ensureAddRecord();
+			this.ensureAddRecord(element);
 		}
 
 		this.dispatch('updated', {
@@ -253,14 +320,21 @@ application.register('record', class extends Stimulus.Controller {
 
 	}
 
-	ensureAddRecord() {
+	ensureAddRecord(element = null) {
 		// Ensure there is always an empty record for adding new entries
-		if ( !this.shouldMaintainAddRecord() ) {
+		const elem = element || this.element;
+		const tableElement = this.getTableElement(elem);
+		if ( !this.shouldMaintainAddRecord(tableElement) ) {
 			return;
 		}
-		const emptyRecord = this.element.querySelector('[data-record-id=""]');
+		const emptyRecord = tableElement.querySelector('[data-record-id=""]');
 		if ( !emptyRecord ) {
-			this.insertRecordElement();
+			// Create a new record element (will by default be created relative to this.element)
+			const newEl = this.insertRecordElement(elem);
+			// If caller provided a different root/container, move the new element into it
+			if ( newEl && elem !== tableElement ) {
+				tableElement.appendChild(newEl);
+			}
 		}
 
 	}
@@ -493,6 +567,18 @@ application.register('record', class extends Stimulus.Controller {
 	getTableElement(element) {
 
 		return this.getAttributeElement('data-record-table', element);
+	}
+
+	getTableElementByName(tableName) {
+		if (!tableName) return null;
+		// Check controller root first
+		if ( this.element.getAttribute('data-record-table') === tableName ) return this.element;
+		// Then search descendants
+		const candidates = Array.from(this.element.querySelectorAll('[data-record-table]'));
+		for ( const cand of candidates ) {
+			if ( cand.getAttribute('data-record-table') === tableName ) return cand;
+		}
+		return null;
 	}
 
 	getRecordId(element) {
@@ -808,8 +894,11 @@ application.register('record', class extends Stimulus.Controller {
 		const { table, id, record } = event.detail;
 
 		const targetElement = this.findOrCreateRecordElement(table, id, record);
-		if (targetElement) {
+
+		if ( targetElement ) {
+			console.log('Updating record element from data add:', targetElement, record);
 			this.updateRecordFromData(targetElement, record);
+			//this.ensureAddRecord();
 		}
 	}
 
@@ -846,7 +935,8 @@ application.register('record', class extends Stimulus.Controller {
 		
 		// Priority 2: Single record (fallback)
 		if ( record && typeof record === 'object' ) {
-			this.insertRecordElement(record, record.id || '');
+			const tableEl = this.getTableElementByName(table) || this.element;
+			this.insertRecordElement(tableEl, record, record.id || '', null);
 			
 			this.dispatch('loaded', {
 				detail: { channel, table, id: record.id },
@@ -904,9 +994,12 @@ application.register('record', class extends Stimulus.Controller {
 			}
 		}
 
-		// Create new element from template
-		targetElement = this.insertRecordElement(record);
-		targetElement.setAttribute('data-record-id', id);
+		// Create new element from template and insert into the correct table container
+		const tableEl = this.getTableElementByName(table) || this.element;
+		targetElement = this.insertRecordElement(tableEl, record, '', null);
+		if ( targetElement ) {
+			targetElement.setAttribute('data-record-id', id);
+		}
 		if ( targetElement ) {
 			return targetElement;
 		}
@@ -929,11 +1022,15 @@ application.register('record', class extends Stimulus.Controller {
 		return true;
 	}
 
-	shouldMaintainAddRecord() {
-		// Check if the controller should always maintain an empty "Add" record
-		const result = this.element.hasAttribute('data-record-auto-add') || 
-			   this.element.getAttribute('data-record-auto-add') === 'true';
-		return result;
+	shouldMaintainAddRecord(element = null) {
+		// Check if the controller (or provided element) should always maintain an empty "Add" record
+		const elem = element || this.element;
+		const tableElement = this.getTableElement(elem);
+		if ( !tableElement ) {
+			return false;
+		}
+		const attr = tableElement.getAttribute('data-record-auto-add');
+		return tableElement.hasAttribute('data-record-auto-add') || attr === 'true';
 	}
 
 	updateRecordFromData(targetElement, record) {
@@ -969,8 +1066,11 @@ application.register('record', class extends Stimulus.Controller {
 		}
 	}
 
-	createRecordFromTemplate(excludeElement = null) {
-		const template = this.findTemplate(excludeElement);
+	createRecordFromTemplate(element = null,excludeElement = null) {
+		const elem = element || this.element;
+		const tableElement = this.getTableElement(elem);
+		// findTemplate now accepts an element first; use controller root for backward compatibility
+		const template = this.findTemplate(tableElement, excludeElement);
 		if ( !template ) {
 			console.error('No template found for creating new record');
 			return null;
@@ -1016,29 +1116,33 @@ application.register('record', class extends Stimulus.Controller {
 		});
 	}
 
-	findTemplate(excludeElement = null) {
+	findTemplate(element = null, excludeElement = null) {
 		// Priority: data-record-template selector, direct template child, empty record element
-		const templateSelector = this.element.getAttribute('data-record-template');
+		const elem = element || this.element;
+		const tableElement = this.getTableElement(elem);
+
+		const templateSelector = tableElement.getAttribute('data-record-template');
 		if (templateSelector) {
 			return document.querySelector(templateSelector);
 		}
 
 		// Look for direct template child
-		const directTemplate = this.element.querySelector(':scope > template');
+		const directTemplate = tableElement.querySelector(':scope > template');
 		if (directTemplate) {
 			return directTemplate;
 		}
 
 		// Look for element with empty data-record-id (but not the excluded one)
-		const emptyRecords = this.element.querySelectorAll('[data-record-id=""]');
+		const emptyRecords = tableElement.querySelectorAll('[data-record-id=""]');
 		for (const emptyRecord of emptyRecords) {
 			if (emptyRecord !== excludeElement) {
 				return emptyRecord;
 			}
 		}
 
-		const recordElement = this.element.querySelector('[data-record-id]').cloneNode(true);
-		if ( recordElement ) {
+		const firstRecord = tableElement.querySelector('[data-record-id]');
+		if ( firstRecord ) {
+			const recordElement = firstRecord.cloneNode(true);
 			recordElement.setAttribute('data-record-id', '');
 
 			const fields = recordElement.querySelectorAll('[data-record-field]');
@@ -1054,13 +1158,18 @@ application.register('record', class extends Stimulus.Controller {
 		return null;
 	}
 
-	insertRecordElement(recordData = null, id = '', excludeElement = null) {
-		const newElement = this.createRecordFromTemplate(excludeElement);
+	insertRecordElement(element = null, recordData = null, id = '', excludeElement = null) {
+		// element: element (or descendant) used to determine the table scope to insert into
+		const elem = element || this.element;
+
+		const newElement = this.createRecordFromTemplate(elem, excludeElement);
 
 		if ( !newElement ) return;
 
-		const position = this.element.getAttribute('data-record-add-position') || 'after';
-		let referenceRecord = this.element.querySelector('[data-record-id=""]');
+		// Determine the table element for the provided element (falls back to controller root)
+		const tableElement = this.getTableElement(elem) || this.element;
+		const position = tableElement.getAttribute('data-record-add-position') || 'after';
+		let referenceRecord = tableElement.querySelector('[data-record-id=""]');
 
 		if ( recordData && typeof recordData === 'object' ) {
 			Object.entries(recordData).forEach(([fieldName, value]) => {
@@ -1081,8 +1190,8 @@ application.register('record', class extends Stimulus.Controller {
 
 		// If no empty record found, determine reference record based on position
 		if ( !referenceRecord ) {
-			let recordElements = this.element.querySelectorAll('[data-record-id]');
-			if ( recordElements ) {
+			let recordElements = tableElement.querySelectorAll('[data-record-id]');
+			if ( recordElements && recordElements.length ) {
 				if ( position === 'before' ) {
 					referenceRecord = recordElements[0];
 				} else {
@@ -1090,14 +1199,14 @@ application.register('record', class extends Stimulus.Controller {
 				}
 			} else {
 				// No existing records, append to end
-				this.element.appendChild(newElement);
+				tableElement.appendChild(newElement);
 				return newElement;
 			}
 		}
 
 		if ( !referenceRecord ) {
 			// No reference record found, append to end
-			this.element.appendChild(newElement);
+			tableElement.appendChild(newElement);
 		} else {
 			if ( position === 'before' ) {
 				referenceRecord.parentNode.insertBefore(newElement, referenceRecord);
@@ -1132,9 +1241,9 @@ application.register('record', class extends Stimulus.Controller {
 		return false;
 	}
 
-	insertRecordElements(array = []) {
+	insertRecordElements(element = null, array = []) {
 		array.forEach(item => {
-			this.insertRecordElement(item.record, item.id);
+			this.insertRecordElement(element, item.record, item.id, null);
 		});
 	}
 
@@ -1157,7 +1266,8 @@ application.register('record', class extends Stimulus.Controller {
 			}
 		}
 
-		this.insertRecordElements(array.reverse());
+		// Determine container for insertion: keep default controller element
+		this.insertRecordElements(this.element, array.reverse());
 
 		if ( emptyRecord ) {
 			emptyRecord.remove();
@@ -1311,7 +1421,8 @@ application.register('record', class extends Stimulus.Controller {
 
 	addAction(event) {
 		event.preventDefault();
-		const newElement = this.insertRecordElement();
+		// Insert into the table container nearest the controller root by default
+		const newElement = this.insertRecordElement(this.element);
 		if ( newElement ) {
 			// Focus first field in new record
 			const firstField = newElement.querySelector('[data-record-field]');
