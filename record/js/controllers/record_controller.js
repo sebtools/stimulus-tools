@@ -589,12 +589,28 @@ application.register('record', class extends Stimulus.Controller {
 		return this.element.querySelectorAll('[data-record-field]');
 	}
 
+	getFields(element = null) {
+		const recordElement = this.getRecordElement(element || this.element);
+		let fields = recordElement.querySelectorAll('[data-record-field]');
+
+		// Limit to fields that are not ignored and that belong to the same
+		// [data-record-table] scope as the recordElement. This prevents fields
+		// from nested/adjacent tables from leaking into this record's field list.
+		const tableElement = this.getTableElement(recordElement);
+
+		fields = Array.from(fields).filter(field => {
+			return this.getTableElement(field) === tableElement;
+		});
+
+		return fields;
+	}
+
 	getRecordData(element = null) {
 		const channel = this.getChannel();
 		const table = this.getTable(element);
 		const recordElement = this.getRecordElement(element || this.element);
 		const defaults = this.parseDefaults(recordElement);
-		const fields = recordElement.querySelectorAll('[data-record-field]');
+		const fields = this.getFields(recordElement);
 		const record = {};
 		const form = {};
 
