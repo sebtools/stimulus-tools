@@ -454,14 +454,6 @@ application.register('record', class extends Stimulus.Controller {
 			recordElement.removeAttribute('data-record-dirty');
 		}
 	}
-	/*
-	busy(isBusy, element) {
-		const recordElement = this.getRecordElement(element);
-
-		recordElement.ariaBusy = isBusy;
-
-	}
-	*/
 
 	hasSaveButton(element) {
 		const recordElement = this.getRecordElement(element);
@@ -499,13 +491,10 @@ application.register('record', class extends Stimulus.Controller {
 	getDebounceTime() {
 		// Look for data-record-debounce in ancestors within this controller
 		let element = this.element;
-		
-		while ( element ) {
-			const debounce = element.getAttribute('data-record-debounce');
-			if ( debounce ) {
-				return parseInt(debounce, 10);
-			}
-			element = element.parentElement;
+		let debounce = this.getAttributeElementValue('data-record-debounce', element);
+
+		if ( debounce ) {
+			return parseInt(debounce, 10);
 		}
 
 		return 300; // Default debounce time
