@@ -22,7 +22,9 @@ application.register('record', class extends Stimulus.Controller {
 
 		// Request initial data load if configured
 		if ( this.element.getAttribute('data-record-autoload') === 'true' ) {
-			this.requestInitialLoad();
+			setTimeout(() => {
+				this.requestInitialLoad();
+			}, 0);
 		}
 
 	}
@@ -452,6 +454,14 @@ application.register('record', class extends Stimulus.Controller {
 			recordElement.removeAttribute('data-record-dirty');
 		}
 	}
+	/*
+	busy(isBusy, element) {
+		const recordElement = this.getRecordElement(element);
+
+		recordElement.ariaBusy = isBusy;
+
+	}
+	*/
 
 	hasSaveButton(element) {
 		const recordElement = this.getRecordElement(element);
@@ -608,11 +618,23 @@ application.register('record', class extends Stimulus.Controller {
 	getRecordData(element = null) {
 		const channel = this.getChannel();
 		const table = this.getTable(element);
+		const tableElement = this.getTableElement(element);
 		const recordElement = this.getRecordElement(element || this.element);
 		const defaults = this.parseDefaults(recordElement);
 		const fields = this.getFields(recordElement);
+		const filters = this.getTopLevelMatches(tableElement, '[data-record-filter]', '[data-record-table]');
 		const record = {};
 		const form = {};
+
+		Object.assign(
+			record,
+			this.getTableFilters(tableElement)
+		);
+
+		filters.forEach(filterElement => {
+			const fieldName = filterElement.getAttribute('data-record-filter');
+			form[fieldName] = this.getFieldValue(filterElement);
+		});
 
 		fields.forEach(field => {
 			const fieldName = field.getAttribute('data-record-field');
@@ -652,27 +674,122 @@ application.register('record', class extends Stimulus.Controller {
 		return { record, form };
 	}
 
-	// ToDo: Need to load each table in the controller separately
-	requestInitialLoad() {
-		const table = this.getTable();
-		const filter = this.getLoadFilter();
-		
-		this.dispatch('query', {
-			detail: { table, filter },
-			prefix: 'record:ui'
+	getTopLevelMatches(scope, selector, parentselector=selector) {
+		const all = Array.from(scope.querySelectorAll(selector));
+
+		return all.filter(el => {
+			let parent = el.parentElement;
+
+			// Walk up until scope, checking for same selector match
+			while ( parent && parent !== scope ) {
+				if ( parent.matches(parentselector) ) return false; // parent is also a match → not top-level
+				parent = parent.parentElement;
+			}
+
+			return true;
 		});
 	}
 
-	getLoadFilter() {
-		const filterAttr = this.element.getAttribute('data-record-filter');
-		if (!filterAttr) return {};
-		
-		try {
-			return JSON.parse(filterAttr);
-		} catch (error) {
-			console.warn('Invalid data-record-filter JSON:', filterAttr, error);
-			return {};
+	requestInitialLoad(element=this.element) {
+		//const tables = this.element.querySelectorAll('[data-record-table]');
+		const tables = this.getTopLevelMatches(element, '[data-record-table]');
+
+		tables.forEach(table => {
+			const filter = this.getLoadFilter(table);
+			this.dispatch('query', {
+				detail: { table, filter },
+				prefix: 'record:ui'
+			});
+		});
+		setTimeout(() => {
+			tables.forEach(table => {
+				this.requestInitialLoad(table);
+			});
+		}, 600);
+
+
+	}
+
+	getTableElements(element = null, root = this.element) {
+		const elem = element || this.element;
+		const tables = elem.querySelectorAll('[data-record-table]');
+		return Array.from(tables).filter(table => {
+			return table.closest('[data-record-table]') === root;
+		});
+	}
+
+	getLoadFilter(element = null) {
+		const elem = element || this.element;
+		const tableElement = this.getTableElement(elem);
+		const filterAttr = (tableElement).getAttribute('data-record-filter');
+		let filter = {};
+
+		if ( filterAttr ) {
+			try {
+				filter = JSON.parse(filterAttr);
+			} catch (error) {
+				console.warn('Invalid data-record-filter JSON:', filterAttr, error);
+			}
 		}
+
+		Object.assign(
+			filter,
+			this.getTableFilters(elem)
+		);
+
+		return filter;
+	}
+
+	getTableFilters(element = this.element) {
+		const tableElement = this.getTableElement(element);
+		const filters = this.getTopLevelMatches(tableElement, '[data-record-filter]', '[data-record-table]');
+		const filter = {};
+
+		filters.forEach(filterElement => {
+			const filterName = filterElement.getAttribute('data-record-filter');
+			// Check if filter is based on a record ID from an ancestor
+			if ( filterElement.hasAttribute('data-record-idtable') ) {
+				// Find the matching ancestor record
+				const recordAncestor = this.findMatchingRecordAncestor(filterElement);
+				if ( recordAncestor ) {
+					// Use the record ID from that ancestor
+					const filterValue = recordAncestor.getAttribute('data-record-id');
+					filter[filterName] = filterValue;
+				}
+			} else {
+				const filterValue = this.getFieldValue(filterElement);
+				filter[filterName] = filterValue;
+			}
+		});
+
+		return filter;
+	}
+
+	findMatchingRecordAncestor(filterElement) {
+		const targetTable = filterElement.getAttribute('data-record-idtable');
+		if (!targetTable) return null;
+
+		let el = filterElement;
+
+		while ( el ) {
+			// Stop before going above rootElement
+			if ( el === this.element.parentElement ) break;
+
+			if ( el.hasAttribute('data-record-id') ) {
+				const tableAncestor = el.closest('[data-record-table]');
+				if (
+					tableAncestor
+					&&
+					tableAncestor.getAttribute('data-record-table') === targetTable
+				) {
+					return el;
+				}
+			}
+
+			el = el.parentElement;
+		}
+
+		return null;
 	}
 
 	broadcastDirtyEvent(field, beforeValue, afterValue) {
@@ -926,24 +1043,60 @@ application.register('record', class extends Stimulus.Controller {
 	}
 
 	handleDataLoad(event) {
-		const { channel, table, records, record } = event.detail;
+		const { channel, table, records, record, origin } = event.detail;
+		let tableElement = null;
 
 		// Only handle if this is our channel
 		if ( channel && channel !== this.getChannel() ) return;
-		
-		// Only handle if this is our table
-		if ( table !== this.getTable() ) return;
+
+		if ( origin ) {
+			if ( this.element.contains(origin) ) {
+				tableElement = origin;
+			} else {
+				return;
+			}
+		} else {
+			const tableElements = this.element.querySelectorAll(`[data-record-table="${table}"]`);
+			if ( tableElements.length === 1 ) {
+				tableElement = tableElements[0];
+			} else {
+				// Ambiguous or missing origin - skip processing
+				return;
+			}
+		}
 		
 		// Priority 1: Array of records (bulk load, including empty arrays)
 		if ( records && Array.isArray(records) ) {
-			const recordArray = records.map(rec => ({
-				id: rec.id || '',
-				record: rec
-			}));
-			
+			// Allow table to specify which property on the returned record is the id
+			const idArg = tableElement.getAttribute('data-recordcfc-idarg');
+
+			const recordArray = records.map(rec => {
+				let id = '';
+
+				if ( idArg && rec && typeof rec === 'object' ) {
+					const target = idArg.toLowerCase();
+					for ( const key of Object.keys(rec) ) {
+						if ( key.toLowerCase() === target ) {
+							id = rec[key] == null ? '' : rec[key];
+							break;
+						}
+					}
+				}
+
+				// Fallback to rec.id when no idArg match found
+				if ( !id ) {
+					id = rec.id || '';
+				}
+
+				return {
+					id,
+					record: rec
+				};
+			});
+
 			// Use load() method which handles add row positioning
-			this.load(recordArray, true);
-			
+			this.load(recordArray, true, tableElement);
+
 			return;
 		}
 		
@@ -1060,8 +1213,8 @@ application.register('record', class extends Stimulus.Controller {
 				return;
 			}
 			
-			if ( record.hasOwnProperty(fieldName) ) {
-				const newValue = record[fieldName];
+			if ( record.hasOwnProperty(fieldName) || record.hasOwnProperty(fieldName.toLowerCase()) ) {
+				const newValue = record[fieldName] || record[fieldName.toLowerCase()];
 				this.setFieldValue(field, newValue);
 				field.setAttribute('data-record-before', newValue);
 				
@@ -1147,7 +1300,8 @@ application.register('record', class extends Stimulus.Controller {
 		}
 
 		// Look for element with empty data-record-id (but not the excluded one)
-		const emptyRecords = tableElement.querySelectorAll('[data-record-id=""]');
+		//const emptyRecords = tableElement.querySelectorAll('[data-record-id=""]');
+		const emptyRecords = this.getTopLevelMatches(tableElement, '[data-record-id=""]', '[data-record-table]');
 		for ( const emptyRecord of emptyRecords ) {
 			if ( emptyRecord !== excludeElement ) {
 				return emptyRecord;
@@ -1187,7 +1341,7 @@ application.register('record', class extends Stimulus.Controller {
 
 		if ( recordData && typeof recordData === 'object' ) {
 			Object.entries(recordData).forEach(([fieldName, value]) => {
-				const field = newElement.querySelector(`[data-record-field="${fieldName}"]`);
+				const field = newElement.querySelector(`[data-record-field="${fieldName}" i]`);
 				if ( field ) {
 					this.setFieldValue(field, value);
 					field.setAttribute('data-record-before', value);
@@ -1261,10 +1415,11 @@ application.register('record', class extends Stimulus.Controller {
 		});
 	}
 
-	load(array = [], clearExisting = true) {
-		const emptyRecord = this.element.querySelector('[data-record-id=""]');
+	load(array = [], clearExisting = true, element = null) {
+		element = element || this.element;
+		const emptyRecord = element.querySelector('[data-record-id=""]');
 		if ( clearExisting ) {
-			this.element.querySelectorAll('[data-record-id]').forEach(element => {
+			element.querySelectorAll('[data-record-id]').forEach(element => {
 				if ( element !== emptyRecord ) {
 					element.remove();
 				}
@@ -1279,9 +1434,21 @@ application.register('record', class extends Stimulus.Controller {
 				array.push(item);
 			}
 		}
+		
+		// First, update existing records
+		array.forEach((item, idx) => {
+			if ( !item.id ) return; // Skip new records
+
+			//const recordElement = element.getAttribute('data-record-id') === item.id ? element : element.querySelector(`[data-record-id="${item.id}"]`);
+			const recordElement = this.findRecordElement(this.getTable(element), item.id);
+			if ( recordElement ) {
+				// Existing record found, update it
+				this.updateRecordFromData(recordElement, item.record);
+			}
+		});
 
 		// Determine container for insertion: keep default controller element
-		this.insertRecordElements(this.element, array.reverse());
+		this.insertRecordElements(element, array.reverse());
 
 		if ( emptyRecord ) {
 			emptyRecord.remove();
