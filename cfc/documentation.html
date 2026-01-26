@@ -109,6 +109,58 @@
 				</td>
 			</tr>
 
+			<tr>
+				<td>usebusy</td>
+				<td>root</td>
+				<td>true</td>
+				<td>(boolean: "false" disables)</td>
+				<td>
+					Controls whether the controller toggles the busy state on the method element during a call.
+					By default the controller will set <code>aria-busy</code> on the element that has <code>data-cfc-method</code>.
+					To disable this behavior set <code>data-cfc-usebusy="false"</code> on the controller root element (the element with <code>data-controller="cfc"</code>), since the controller reads this attribute from its root element.
+				</td>
+			</tr>
+
+			<tr>
+				<td>data-cfc-value / data-value</td>
+				<td>(elements used as args)</td>
+				<td></td>
+				<td>(string)</td>
+				<td>
+					When collecting argument values, the controller will look for <code>data-cfc-value</code> first, then <code>data-value</code>, then typical input <code>value</code> or the element's <code>textContent</code>. Use these attributes to explicitly provide a value for <code>data-cfc-arg</code> elements.
+				</td>
+			</tr>
+
+			<tr>
+				<td>columns</td>
+				<td>(root)</td>
+				<td></td>
+				<td>(JSON object)</td>
+				<td>
+					JSON mapping used to rename/normalize columns when the controller parses CFC query results. Provide a JSON object mapping original column names to target names (a mapping value may be a string or an object with a <code>name</code> property). Example: <code>{"ID":"id","FullName":"name"}</code>.
+				</td>
+			</tr>
+
+			<tr>
+				<td>column-case</td>
+				<td>(root)</td>
+				<td>lower</td>
+				<td>(lower|upper|camel|preserve)</td>
+				<td>
+					Controls the case transformation applied to column names when no explicit mapping is provided. Default is <code>lower</code>. Other options: <code>upper</code>, <code>camel</code>, and <code>preserve</code>.
+				</td>
+			</tr>
+
+			<tr>
+				<td>column-types</td>
+				<td>(root)</td>
+				<td></td>
+				<td>(JSON object)</td>
+				<td>
+					JSON map of column names to desired types. Supported types: <code>int</code>/<code>integer</code>, <code>float</code>/<code>number</code>, <code>boolean</code>, <code>date</code>, and <code>string</code>. Example: <code>{"id":"int","active":"boolean"}</code>. The controller will coerce parsed values when possible.
+				</td>
+			</tr>
+
 		</tbody>
 	</table>
 

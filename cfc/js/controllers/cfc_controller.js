@@ -556,7 +556,9 @@ application.register('cfc', class extends Stimulus.Controller {
 	busy(isBusy, element) {
 		const methodElement = this.getAttributeElement('data-cfc-method', element);
 
-		methodElement.ariaBusy = isBusy;
+		if  ( !(this.element.hasAttribute('data-cfc-usebusy') && this.element.getAttribute('data-cfc-usebusy') === 'false') ) {
+			methodElement.ariaBusy = isBusy;
+		}
 
 	}
 
