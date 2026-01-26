@@ -169,16 +169,12 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			this.busy(true, element);
 			const result = await this.cfcController.call(path, methodName, params);
 
-			// ToDo: Handle result as simple string or JSON object
-			
 			// Fire the record:data:update event that the record controller expects
 			this.fireDataEvent('update', {
 				table,
 				id: result.id || id, // Use returned ID if available, fallback to original
 				record: result.record || record
 			});
-
-			// ToDo: Add element and have record controller use it.
 
 		} catch (error) {
 			console.error('RecordCFC update failed:', error);
@@ -236,8 +232,6 @@ application.register('recordcfc', class extends Stimulus.Controller {
 				throw new Error('CFC method must return an "id" field for new records');
 			}
 
-			// ToDo: Add element and have record controller use it.
-
 			this.fireDataEvent('add', {
 				table,
 				id: result.id,
@@ -274,8 +268,6 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			this.busy(true, element);
 			await this.cfcController.call(path, methodName, params);
 
-			// ToDo: Add element and have record controller use it.
-			
 			this.fireDataEvent('delete', {
 				table,
 				id
@@ -433,12 +425,8 @@ application.register('recordcfc', class extends Stimulus.Controller {
 
 	// Set loading state with aria-busy
 	setLoadingState(isLoading, element=this.element) {
-		// ToDo: Add/remove keys to data-busywith attribute to decide if busy or not
-		//this.element.setAttribute('aria-busy', isLoading.toString());
-		
-		// ToDo: Disabling should be drawn on actual value of aria-busy
 
-		// Optionally disable form elements during loading
+		// Disable form elements during loading
 		const formElements = element.querySelectorAll('input, button, select, textarea');
 		formElements.forEach(el => {
 			if ( isLoading ) {
