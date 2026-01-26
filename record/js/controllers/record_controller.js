@@ -1056,31 +1056,14 @@ application.register('record', class extends Stimulus.Controller {
 		
 		// Priority 1: Array of records (bulk load, including empty arrays)
 		if ( records && Array.isArray(records) ) {
-			// Allow table to specify which property on the returned record is the id
-			const idArg = tableElement.getAttribute('data-recordcfc-idarg');
-
-			const recordArray = records.map(rec => {
-				let id = '';
-
-				if ( idArg && rec && typeof rec === 'object' ) {
-					const target = idArg.toLowerCase();
-					for ( const key of Object.keys(rec) ) {
-						if ( key.toLowerCase() === target ) {
-							id = rec[key] == null ? '' : rec[key];
-							break;
-						}
-					}
+			// Expect items to be normalized as { id, record } by the source (e.g. recordcfc)
+			// But accept legacy arrays of raw record objects and normalize them here.
+			const recordArray = records.map(item => {
+				if ( item && typeof item === 'object' && ('id' in item) && ('record' in item) ) {
+					return item; // already normalized
 				}
-
-				// Fallback to rec.id when no idArg match found
-				if ( !id ) {
-					id = rec.id || '';
-				}
-
-				return {
-					id,
-					record: rec
-				};
+				// legacy raw record object -> wrap
+				return { id: item && item.id ? item.id : '', record: item };
 			});
 
 			// Use load() method which handles add row positioning

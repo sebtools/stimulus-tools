@@ -356,23 +356,30 @@ application.register('recordcfc', class extends Stimulus.Controller {
 				records = [ result ];
 			}
 
-			// Map id arg if configured
+			// Normalize records into the format the record controller expects:
+			// array of { id, record }
 			let idArg = null;
 			try {
 				idArg = this.getIdArgName(table);
 			} catch(e) {
-				// optional
-			}
-			if ( idArg ) {
-				records = records.map(r => {
-					if ( r && r[idArg] !== undefined && r.id === undefined ) {
-						r.id = r[idArg];
-					}
-					return r;
-				});
+				// optional - no idArg configured
 			}
 
-			this.fireDataEvent('load', { table: myTable, records, origin: table }, table);
+			const normalized = records.map(r => {
+				let id = '';
+				if ( r && typeof r === 'object' ) {
+					if ( idArg && r[idArg] !== undefined ) {
+						id = r[idArg];
+					} else if ( r.id !== undefined ) {
+						id = r.id;
+					}
+				}
+				// make sure id is a string (fallback to empty string)
+				if ( id === null || id === undefined ) id = '';
+				return { id, record: r };
+			});
+
+			this.fireDataEvent('load', { table: myTable, records: normalized, origin: table }, table);
 
 		} catch (error) {
 			console.error('RecordCFC load failed:', error);
