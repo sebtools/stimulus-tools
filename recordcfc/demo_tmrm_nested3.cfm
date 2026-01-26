@@ -26,56 +26,56 @@ URL.id = StructKeyExists(URL, "id") ? URL.id : 1;
 				data-controller="record cfc recordcfc"
 				data-record-autoload="true"
 			>
-			
-				<input type="hidden" name="DepartmentID" value="#DepartmentID#">
 				<div
 					data-record-table="departments"
-					data-record-id="1"
+					data-record-autoadd="false"
 					data-cfc-path="departments.cfc"
 					data-recordcfc-idarg="DepartmentID"
 					data-recordcfc-method-save="saveDepartment"
 					data-recordcfc-method-delete="removeDepartment"
-					data-recordcfc-method-get="getDepartment"
+					data-recordcfc-method-gets="getDepartments"
 				>
-					<h2>Department</h2>
+					<div data-record-id="">
+						<h2>Department</h2>
 
-					<label>
-						Department Name:<br>
-						<input type="text" name="DepartmentName" data-record-field="DepartmentName">
-					</label>
-					<button type="button" data-action="record#saveRecord">Save Department</button>
+						<label>
+							Department Name:<br>
+							<input type="text" name="DepartmentName" data-record-field="DepartmentName">
+						</label>
+						<button type="button" data-action="record#saveRecord">Save Department</button>
 
-					<table
-						data-record-table="employees"
-						data-record-auto-add="true"
-						data-record-autoload="true"
-						data-cfc-path="employees.cfc"
-						data-recordcfc-idarg="EmployeeID"
-						data-recordcfc-method-save="saveEmployee"
-						data-recordcfc-method-delete="removeEmployee"
-						data-recordcfc-method-gets="getEmployees"
-					>
-						<thead>
-							<tr>
-								<th>
-									Employee Name
-								</th>
-								<th>
-									Actions
-									<data data-record-filter="DepartmentID" data-record-idtable="departments" />
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr data-record-id="">
-								<td><input type="text" name="EmployeeName" data-record-field="EmployeeName" value="" /></td>
-								<td>
-									<button type="button" data-action="record#saveRecord">Save</button>
-									<button type="button" data-action="record#deleteRecord">Delete</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+						<table
+								data-record-table="employees"
+								data-record-auto-add="true"
+								data-record-autoload="true"
+								data-cfc-path="employees.cfc"
+								data-recordcfc-idarg="EmployeeID"
+								data-recordcfc-method-save="saveEmployee"
+								data-recordcfc-method-delete="removeEmployee"
+								data-recordcfc-method-gets="getEmployees"
+						>
+							<thead>
+								<tr>
+									<th>
+										Employee Name
+									</th>
+									<th>
+										Actions
+										<data data-record-filter="DepartmentID" data-record-idtable="departments" />
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-record-id="">
+									<td><input type="text" name="EmployeeName" data-record-field="EmployeeName" value="" /></td>
+									<td>
+										<button type="button" data-action="record#saveRecord">Save</button>
+										<button type="button" data-action="record#deleteRecord">Delete</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</form>
 		</div>

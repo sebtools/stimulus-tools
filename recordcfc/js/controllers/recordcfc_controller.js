@@ -24,25 +24,6 @@ application.register('recordcfc', class extends Stimulus.Controller {
 		// Set up event listeners for record UI events
 		this.setupEventListeners();
 		
-		// Defensive autoload: if the record controller requested an initial load
-		// before this controller connected, perform the load now. This avoids
-		// races where record dispatches requestInitialLoad() before listeners
-		// are attached. We check the controller element for data-record-autoload
-		// and the marker set by requestInitialLoad().
-		try {
-			const auto = this.element.getAttribute('data-record-autoload');
-			const initialRequested = this.element.dataset.recordInitialLoadRequested;
-			if ( (auto === 'true' || auto === true) && initialRequested ) {
-				// Synthesize a query event targeted at this table/element
-				setTimeout(() => {
-					this.handleQuery(new CustomEvent('record:ui:query', { detail: { table: this.recordController.getTable(this.element), element: this.element } }));
-				}, 0);
-			}
-		} catch(e) {
-			// ignore defensive autoload failures
-		}
-		
-		console.log('RecordCFC controller connected');
 	}
 
 	disconnect() {
@@ -264,8 +245,6 @@ application.register('recordcfc', class extends Stimulus.Controller {
 		const methodName = this.getMethodName(event.detail.element, "delete");
 		const idArgName = this.getIdArgName(event.detail.element);
 
-		console.log('RecordCFC handling delete event:', event.detail);
-
 		try {
 			const { table, id } = event.detail;
 
@@ -296,37 +275,43 @@ application.register('recordcfc', class extends Stimulus.Controller {
 	// Handle record:ui:query events to load records from CFC
 	async handleQuery(event) {
 		// Check if this event is for our element/table
-		console.log('RecordCFC handling query event:', event.detail);
 		const table = event.detail && event.detail.table ? event.detail.table : null;
-		const myTable = this.recordController.getTable(this.element);
-		console.log('RecordCFC handling query from table:', table);
-		console.log('RecordCFC handling query to table:', myTable);
-		if ( table && table !== myTable ) {
+		const myTable = this.recordController.getTable(table);
+		const table_from = table.getAttribute('data-record-table');
+		const table_to = myTable;// ? myTable.getAttribute('data-record-table') : null;
+		//const table_to = myTable.getAttribute('data-record-table');
+		if ( table_from && table_from !== table_to ) {
 			return;
 		}
-
-		console.log('RecordCFC handling query for table:', myTable);
 
 		// If event has an element, ensure it's inside our scope
 		if ( event.detail && event.detail.element && !this.element.contains(event.detail.element) ) {
 			return;
 		}
 
-		// Determine load method (prefer data-recordcfc-gets)
-		const method = this.element.getAttribute('data-recordcfc-gets') || this.element.getAttribute('data-recordcfc-method-load');
-		if ( !method ) {
-			console.warn('No data-recordcfc-gets configured for load');
-			return;
+		let attr = table.hasAttribute('data-record-id') ? "data-recordcfc-method-get" : "data-recordcfc-method-gets";
+		if ( !table.hasAttribute(attr) && table.hasAttribute("data-recordcfc-method-load") ) {
+			console.warn(`No ${attr} configured for load`);
 		}
 
-		console.log('RecordCFC loading records using method:', method);
+		// Determine load method (prefer data-recordcfc-gets)
+		const method = table.getAttribute(attr) || table.getAttribute('data-recordcfc-method-load');
 
 		// Build args (merge query filter and any static args)
 		let args = {};
 		if ( event.detail && event.detail.filter ) {
 			args = { ...args, ...event.detail.filter };
 		}
-		const argsAttr = this.element.getAttribute('data-recordcfc-args') || this.element.getAttribute('data-record-filter');
+		if (
+			table.hasAttribute('data-recordcfc-idarg')
+			&&
+			table.hasAttribute('data-record-id')
+		) {
+			const idArgName = table.getAttribute('data-recordcfc-idarg');
+			const recordId = table.getAttribute('data-record-id');
+			args[idArgName] = recordId;
+		}
+		const argsAttr = table.getAttribute('data-recordcfc-args') || table.getAttribute('data-record-filter');
 		if ( argsAttr ) {
 			try {
 				// Try JSON first, otherwise parse as querystring
@@ -341,10 +326,10 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			}
 		}
 
-		const path = this.cfcController.getPath(this.element);
+		const path = this.cfcController.getPath(table);
 
 		this.setLoadingState(true);
-		this.busy(true, this.element);
+		this.busy(true, table);
 
 		try {
 			const result = await this.cfcController.call(path, method, args);
@@ -364,7 +349,7 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			// Map id arg if configured
 			let idArg = null;
 			try {
-				idArg = this.getIdArgName(this.element);
+				idArg = this.getIdArgName(table);
 			} catch(e) {
 				// optional
 			}
@@ -377,13 +362,13 @@ application.register('recordcfc', class extends Stimulus.Controller {
 				});
 			}
 
-			this.fireDataEvent('load', { table: myTable, records }, this.element);
+			this.fireDataEvent('load', { table: myTable, records, origin: table }, table);
 
 		} catch (error) {
 			console.error('RecordCFC load failed:', error);
 			this.fireErrorEvent('load', error, event.detail);
 		} finally {
-			this.busy(false, this.element);
+			this.busy(false, table);
 			this.setLoadingState(false);
 		}
 	}
@@ -412,7 +397,6 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			bubbles: true
 		}));
 		
-		console.log(`Fired record:data:${action}`, detail);
 	}
 
 	// Fire error events
