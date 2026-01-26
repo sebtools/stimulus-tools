@@ -1,6 +1,5 @@
 <cfscript>
-oDepartments = CreateObject("component", "departments").init();
-qDepartments = oDepartments.getDepartmentsWithEmployees();
+URL.id = StructKeyExists(URL, "id") ? URL.id : 1;
 </cfscript>
 
 <!doctype html>
@@ -25,8 +24,8 @@ qDepartments = oDepartments.getDepartmentsWithEmployees();
 			<form
 				method="post"
 				data-controller="record cfc recordcfc"
+				data-record-autoload="true"
 			>
-			<cfoutput query="qDepartments" group="DepartmentID">
 				<div
 					data-record-table="departments"
 					data-record-autoadd="false"
@@ -36,14 +35,14 @@ qDepartments = oDepartments.getDepartmentsWithEmployees();
 					data-recordcfc-method-delete="removeDepartment"
 					data-recordcfc-method-gets="getDepartments"
 				>
-					<div data-record-id="#DepartmentID#">
+					<div data-record-id="">
 						<h2>Department</h2>
 
 						<label>
 							Department Name:<br>
-							<input type="text" name="DepartmentName" data-record-field="DepartmentName" value="#DepartmentName#">
+							<input type="text" name="DepartmentName" data-record-field="DepartmentName">
 						</label>
-						<button type="button" data-action="record##saveRecord">Save Department</button>
+						<button type="button" data-action="record#saveRecord">Save Department</button>
 
 						<table
 								data-record-table="employees"
@@ -62,42 +61,22 @@ qDepartments = oDepartments.getDepartmentsWithEmployees();
 									</th>
 									<th>
 										Actions
-										<!---
-										The data-record-filter element tells the record controller to include
-										the DepartmentID of the current department record when loading/saving.
-										This way, the correct DepartmentID is always associated with each employee record.
-										It is in the th because it has to be in a valid location within the table.
-										--->
 										<data data-record-filter="DepartmentID" data-record-idtable="departments" />
 									</th>
 								</tr>
 							</thead>
 							<tbody>
-							<cfoutput group="EmployeeID">
-								<cfif Val(EmployeeID)>
-								<tr data-record-id="#EmployeeID#">
-									<td><input type="text" name="EmployeeName_#CurrentRow#" data-record-field="EmployeeName" value="#EmployeeName#" /></td>
-									<td>
-										<!--- This input is *not* used by the record controller at all. The DepartmentID comes from the data-record-filter element. --->
-										<input type="hidden" name="DepartmentID_#CurrentRow#" value="#DepartmentID#">
-										<button type="button" data-action="record##saveRecord">Save</button>
-										<button type="button" data-action="record##deleteRecord">Delete</button>
-									</td>
-								</tr>
-								</cfif>
-							</cfoutput>
 								<tr data-record-id="">
 									<td><input type="text" name="EmployeeName" data-record-field="EmployeeName" value="" /></td>
 									<td>
-										<button type="button" data-action="record##saveRecord">Save</button>
-										<button type="button" data-action="record##deleteRecord">Delete</button>
+										<button type="button" data-action="record#saveRecord">Save</button>
+										<button type="button" data-action="record#deleteRecord">Delete</button>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
-			</cfoutput>
 			</form>
 		</div>
 

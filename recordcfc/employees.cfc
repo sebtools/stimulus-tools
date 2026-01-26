@@ -14,7 +14,11 @@ remote function getEmployee(numeric EmployeeID=0) returntype="query" output="fal
 }
 
 remote function getEmployees() returntype="query" output="false" returnformat="json" {
-	var qEmployees = Variables.DataMgr.getRecords("employees", Arguments);
+	var qEmployees = Variables.DataMgr.getRecords(
+		tablename="employees",
+		data=Arguments,
+		orderby="DepartmentID ASC, EmployeeID ASC"
+	);
 
 	return qEmployees;
 }
