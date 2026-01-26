@@ -21,6 +21,12 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			throw new Error('RecordCFC controller requires a "cfc" controller on the same element');
 		}
 		
+		// Unless specified, do not use busy indicator from CFC controller
+		// That will allow this controller to manage it in a more granular way
+		if ( !this.element.hasAttribute('data-cfc-usebusy') ) {
+			this.element.setAttribute('data-cfc-usebusy', 'false');
+		}
+		
 		// Set up event listeners for record UI events
 		this.setupEventListeners();
 		
@@ -98,13 +104,22 @@ application.register('recordcfc', class extends Stimulus.Controller {
 	}
 
 	// Indicate busy state similar to other controllers
-	busy(isBusy, element) {
-		const methodElement = element || this.element;
-		try {
-			//methodElement.ariaBusy = isBusy;
-		} catch (e) {
-			// ignore
+	busy(isBusy, element=this.element) {
+		const recordElement = this.recordController.getAttributeElement('data-record-id', element);
+		const elem = recordElement || element;
+
+		console.log(`RecordCFC busy(${isBusy}) on element:`, elem);
+
+		// Add or remove identifier from busywith attribute to indicate that the element is busy with this controller
+		if ( isBusy ) {
+			elem.dataset.busywith = (elem.dataset.busywith || '') + ' ' + this.identifier;
+		} else {
+			elem.dataset.busywith = (elem.dataset.busywith || '').replace(this.identifier, '').trim();
 		}
+
+		// Set aria-busy attribute to indicate that the element is doing anything
+		//elem.ariaBusy = ( elem.dataset.busywith.length > 0 );
+
 	}
 
 	// Handle cfc:called events
@@ -138,6 +153,7 @@ application.register('recordcfc', class extends Stimulus.Controller {
 
 		const methodName = this.getMethodName(event.detail.element, "save");
 		const idArgName = this.getIdArgName(event.detail.element);
+		const element = event.detail.element || this.element;
 
 		try {
 			const { table, id, record } = event.detail;
@@ -146,11 +162,11 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			const params = this.buildCfcParams(record, idArgName, id);
 			
 			// Set loading state
-			this.setLoadingState(true);
+			this.setLoadingState(true, element);
 
 			// Resolve path and call the CFC method through the cfc controller
 			const path = this.cfcController.getPath(event.detail.element || this.element);
-			this.busy(true, event.detail.element || this.element);
+			this.busy(true, element);
 			const result = await this.cfcController.call(path, methodName, params);
 
 			// ToDo: Handle result as simple string or JSON object
@@ -168,8 +184,8 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			console.error('RecordCFC update failed:', error);
 			this.fireErrorEvent('update', error, event.detail);
 		} finally {
-			this.busy(false, event.detail.element || this.element);
-			this.setLoadingState(false);
+			this.busy(false, element);
+			this.setLoadingState(false, element);
 		}
 	}
 
@@ -180,6 +196,7 @@ application.register('recordcfc', class extends Stimulus.Controller {
 		}
 
 		const methodName = this.getMethodName(event.detail.element, "save");
+		const element = event.detail.element || this.element;
 
 		try {
 			const { table, record } = event.detail;
@@ -187,9 +204,9 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			// Build parameters for CFC method (no ID for new records)
 			const params = this.buildCfcParams(record);
 			
-			this.setLoadingState(true);
+			this.setLoadingState(true, element);
 			const path = this.cfcController.getPath(event.detail.element || this.element);
-			this.busy(true, event.detail.element || this.element);
+			this.busy(true, element);
 			let result = await this.cfcController.call(path, methodName, params);
 
 			// Handle result as simple string or JSON object
@@ -231,8 +248,8 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			console.error('RecordCFC add failed:', error);
 			this.fireErrorEvent('add', error, event.detail);
 		} finally {
-			this.busy(false, event.detail.element || this.element);
-			this.setLoadingState(false);
+			this.busy(false, element);
+			this.setLoadingState(false, element);
 		}
 	}
 
@@ -244,6 +261,7 @@ application.register('recordcfc', class extends Stimulus.Controller {
 
 		const methodName = this.getMethodName(event.detail.element, "delete");
 		const idArgName = this.getIdArgName(event.detail.element);
+		const element = event.detail.element || this.element;
 
 		try {
 			const { table, id } = event.detail;
@@ -251,9 +269,9 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			// For deletes, typically just need the ID
 			const params = this.buildCfcParams({}, idArgName, id);
 			
-			this.setLoadingState(true);
+			this.setLoadingState(true, element);
 			const path = this.cfcController.getPath(event.detail.element || this.element);
-			this.busy(true, event.detail.element || this.element);
+			this.busy(true, element);
 			await this.cfcController.call(path, methodName, params);
 
 			// ToDo: Add element and have record controller use it.
@@ -267,8 +285,8 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			console.error('RecordCFC delete failed:', error);
 			this.fireErrorEvent('delete', error, event.detail);
 		} finally {
-			this.busy(false, event.detail.element || this.element);
-			this.setLoadingState(false);
+			this.busy(false, element);
+			this.setLoadingState(false, element);
 		}
 	}
 
@@ -328,7 +346,7 @@ application.register('recordcfc', class extends Stimulus.Controller {
 
 		const path = this.cfcController.getPath(table);
 
-		this.setLoadingState(true);
+		this.setLoadingState(true, table);
 		this.busy(true, table);
 
 		try {
@@ -369,7 +387,7 @@ application.register('recordcfc', class extends Stimulus.Controller {
 			this.fireErrorEvent('load', error, event.detail);
 		} finally {
 			this.busy(false, table);
-			this.setLoadingState(false);
+			this.setLoadingState(false, table);
 		}
 	}
 
@@ -414,14 +432,14 @@ application.register('recordcfc', class extends Stimulus.Controller {
 	}
 
 	// Set loading state with aria-busy
-	setLoadingState(isLoading) {
+	setLoadingState(isLoading, element=this.element) {
 		// ToDo: Add/remove keys to data-busywith attribute to decide if busy or not
 		//this.element.setAttribute('aria-busy', isLoading.toString());
 		
 		// ToDo: Disabling should be drawn on actual value of aria-busy
 
 		// Optionally disable form elements during loading
-		const formElements = this.element.querySelectorAll('input, button, select, textarea');
+		const formElements = element.querySelectorAll('input, button, select, textarea');
 		formElements.forEach(el => {
 			if ( isLoading ) {
 				el.setAttribute('data-recordcfc-disabled', el.disabled);
