@@ -13,7 +13,71 @@
 
 	<h2>Attributes</h2>
 
-	<h3><span class="attprefix">data-cfc-</span> Attributes</h3>
+	<h3>HTML Attributes</h3>
+
+	<p>These are standard HTML attributes (with no prefix) used by Table Sort.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>aria-busy</td>
+				<td>
+					table<br>
+				</td>
+				<td>false</td>
+				<td>
+					true<br>
+					false<br>
+				</td>
+				<td>
+					The controller will set this to true any time it is sorting the table.<br>
+					You can use the value in your CSS to indicate that work is in progress.<br>
+					Note that if <code>data-cfc-usebusy="false"</code> is set, the controller will not toggle this attribute.
+				</td>
+			</tr>
+	</table>
+
+
+	<h3><span class="prefix">data-</span> Attributes</h3>
+
+	<p>All of these attributes are prefixed with "data-" in the attribute name.</p>
+
+	<table class="atts">
+		<thead>
+			<tr>
+				<th>Attribute</th>
+				<th>Element(s)</th>
+				<th>Default</th>
+				<th>Value(s)</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>controller</td>
+				<td>
+					table<br>
+				</td>
+				<td></td>
+				<td>cfc</td>
+				<td>
+					This attribute (on either element) provides the controller functionality.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<h3><span class="prefix">data-cfc-</span> Attributes</h3>
 
 	<p>All of the attributes below are prefixed with <code>data-cfc-</code>.</p>
 
@@ -31,10 +95,11 @@
 
 			<tr>
 				<td>path</td>
-				<td>any (container or element)</td>
+				<td>(root)</td>
 				<td>derived from <code>data-cfc-name</code> or current page</td>
 				<td>(string)</td>
 				<td>
+					<p><b>required</b></p>
 					The URL path to the CFC. If omitted, the controller will generate one from <code>data-cfc-name</code> or the current page name and ensure it ends with <code>.cfc</code>.
 				</td>
 			</tr>
@@ -55,7 +120,8 @@
 				<td></td>
 				<td>(string)</td>
 				<td>
-					The CFC method name to call. Typically placed on the triggering element or a parent via <code>data-cfc-method</code>.
+					<p>The CFC method name to call. This could be placed on the root element or on the triggering element (for example, a button).</p>
+					<p>The controller could also have multiple child elements each with a different value for this so that buttons in that element use the specific method.</p>
 				</td>
 			</tr>
 
@@ -75,7 +141,7 @@
 				<td></td>
 				<td>(presence)</td>
 				<td>
-					If the element with <code>data-cfc-method</code> is a <code>&lt;form&gt;</code> or has <code>data-cfc-form</code>, the controller will gather form data and include it in the request.
+					Indicates that form elements inside the specified element should be collected as arguments to send to the CFC method.
 				</td>
 			</tr>
 
@@ -95,7 +161,8 @@
 				<td>(new uuid)</td>
 				<td>(string)</td>
 				<td>
-					The unique channel for this CFC instance; used to identify events.
+					<p>The unique channel for this CFC instance; used to identify events.</p>
+					<p>Each CFC instance will have its own channel, allowing for external code to respond to events specific to that instance.</p>
 				</td>
 			</tr>
 
@@ -110,24 +177,39 @@
 			</tr>
 
 			<tr>
-				<td>usebusy</td>
-				<td>root</td>
+				<td rowspan="3">usebusy</td>
+				<td rowspan="3">root</td>
+				<td rowspan="3"></td>
+				<td></td>
+				<td rowspan="2">
+					<p>Controls whether the controller toggles the busy state on the method element during a call.</p>
+					<p>By default the controller will set <code>aria-busy</code> on the element that has <code>data-cfc-method</code>.</p>
+				</td>
+			</tr>
+			<tr>
 				<td>true</td>
-				<td>(boolean: "false" disables)</td>
+			</tr>
+			<tr>
+				<td>false</td>
 				<td>
-					Controls whether the controller toggles the busy state on the method element during a call.
-					By default the controller will set <code>aria-busy</code> on the element that has <code>data-cfc-method</code>.
-					To disable this behavior set <code>data-cfc-usebusy="false"</code> on the controller root element (the element with <code>data-controller="cfc"</code>), since the controller reads this attribute from its root element.
+					Disables busy state toggling.
 				</td>
 			</tr>
 
 			<tr>
-				<td>data-cfc-value / data-value</td>
+				<td>value</td>
 				<td>(elements used as args)</td>
 				<td></td>
 				<td>(string)</td>
 				<td>
-					When collecting argument values, the controller will look for <code>data-cfc-value</code> first, then <code>data-value</code>, then typical input <code>value</code> or the element's <code>textContent</code>. Use these attributes to explicitly provide a value for <code>data-cfc-arg</code> elements.
+					<p>Specifies the value to use for the argument.</p>
+					<p>Order of precedence:</p>
+					<ul>
+						<li><code>data-cfc-value</code></li>
+						<li><code>data-value</code></li>
+						<li><code>value</code></li>
+						<li><code>textContent</code></li>
+					</ul>
 				</td>
 			</tr>
 
