@@ -323,6 +323,7 @@ application.register('record', class extends Stimulus.Controller {
 		// Ensure there is always an empty record for adding new entries
 		const elem = element || this.element;
 		const tableElement = this.getTableElement(elem);
+
 		if ( !this.shouldMaintainAddRecord(tableElement) ) {
 			return;
 		}
@@ -885,11 +886,27 @@ application.register('record', class extends Stimulus.Controller {
 		return recordIds;
 	}
 
+	reportValidityForRecord(recordElement) {
+		const candidates = recordElement.querySelectorAll("input, select, textarea");
+		
+		for ( const elem of candidates ) {
+			if ( elem.willValidate && !elem.checkValidity() ) {
+				elem.reportValidity();
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	save(element = null) {
 		// If no element provided, try to use the first field or the controller element
 		const triggerElement = element || this.getAllFields()[0] || this.element;
 		const recordElement = this.getRecordElement(triggerElement);
 		const recordId = this.getRecordId(triggerElement);
+
+		// Validate record before saving
+		if ( !this.reportValidityForRecord(recordElement) ) return;
 		
 		// Mark as sent
 		recordElement.setAttribute('data-record-dirty', 'sent');
@@ -914,6 +931,9 @@ application.register('record', class extends Stimulus.Controller {
 	saveRecord(event) {
 		// When called from data-action, event.target is the button that was clicked
 		const button = event.target;
+
+		event.preventDefault();
+
 		this.save(button);
 	}
 
@@ -1169,7 +1189,7 @@ application.register('record', class extends Stimulus.Controller {
 			return false;
 		}
 		const attr = tableElement.getAttribute('data-record-auto-add');
-		return tableElement.hasAttribute('data-record-auto-add') || attr === 'true';
+		return tableElement.hasAttribute('data-record-auto-add')?  attr === 'true' : false;
 	}
 
 	updateRecordFromData(targetElement, record) {
@@ -1186,7 +1206,7 @@ application.register('record', class extends Stimulus.Controller {
 			}
 			
 			if ( record.hasOwnProperty(fieldName) || record.hasOwnProperty(fieldName.toLowerCase()) ) {
-				const newValue = record[fieldName] || record[fieldName.toLowerCase()];
+				const newValue = record[fieldName] || record[fieldName.toLowerCase()] || '';
 				this.setFieldValue(field, newValue);
 				field.setAttribute('data-record-before', newValue);
 				
