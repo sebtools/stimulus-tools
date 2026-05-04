@@ -20,12 +20,9 @@ application.register('record', class extends Stimulus.Controller {
 
 		this.ensureAddRecord();
 
-		// Request initial data load if configured
-		if ( this.element.getAttribute('data-record-autoload') === 'true' ) {
-			setTimeout(() => {
-				this.requestInitialLoad();
-			}, 0);
-		}
+		setTimeout(() => {
+			this.runAutoLoads();
+		}, 0);
 
 	}
 
@@ -158,6 +155,30 @@ application.register('record', class extends Stimulus.Controller {
 
 	}
 
+	handleRecordIdChange(element, oldValue) {
+		const detail = this.getEventDetail(element);
+		
+		// Check if this was an empty record that just got assigned an ID
+		if ( oldValue === '' && element.getAttribute('data-record-id') !== '' ) {
+			// Ensure there is still an empty record
+			this.ensureAddRecord(element);
+		}
+
+		this.dispatch('updated', {
+			detail,
+			prefix: 'record:ui'
+		});
+
+		// If id was just assigned, and autoload is enabled for this element/table/controller,
+		// trigger a single-record load so the record's fields can be reconciled with the backend.
+		if ( oldValue === '' && element.getAttribute('data-record-id') !== '' ) {
+			if ( this.isAutoloadEnabledForElement(element) ) {
+				this.requestRecordLoad(element);
+			}
+		}
+
+	}
+	
 	handleSortComplete(event) {
 		const element = event.detail.element || this.element;
 
@@ -302,22 +323,6 @@ application.register('record', class extends Stimulus.Controller {
 				this.observers.tableObservers.delete(tableElement);
 			}
 		}
-	
-	handleRecordIdChange(element, oldValue) {
-		const detail = this.getEventDetail(element);
-		
-		// Check if this was an empty record that just got assigned an ID
-		if ( oldValue === '' && element.getAttribute('data-record-id') !== '' ) {
-			// Ensure there is still an empty record
-			this.ensureAddRecord(element);
-		}
-
-		this.dispatch('updated', {
-			detail,
-			prefix: 'record:ui'
-		});
-
-	}
 
 	ensureAddRecord(element = null) {
 		// Ensure there is always an empty record for adding new entries
@@ -664,7 +669,12 @@ application.register('record', class extends Stimulus.Controller {
 		return { record, form };
 	}
 
+	// Helper to find top-level matches for a selector within a scope, ignoring nested matches
 	getTopLevelMatches(scope, selector, parentselector=selector) {
+		// If the provided scope itself matches the selector, treat it as the sole top-level match
+		if ( scope instanceof Element && scope.matches(selector) ) {
+			return [scope];
+		}
 		const all = Array.from(scope.querySelectorAll(selector));
 
 		return all.filter(el => {
@@ -681,22 +691,66 @@ application.register('record', class extends Stimulus.Controller {
 	}
 
 	requestInitialLoad(element=this.element) {
-		//const tables = this.element.querySelectorAll('[data-record-table]');
+		// Otherwise treat element as a scope and find top-level tables under it
 		const tables = this.getTopLevelMatches(element, '[data-record-table]');
 
 		tables.forEach(table => {
-			const filter = this.getLoadFilter(table);
-			this.dispatch('query', {
-				detail: { table, filter },
-				prefix: 'record:ui'
-			});
+			this.runTableElementQuery(table);
 		});
-		setTimeout(() => {
-			tables.forEach(table => {
-				this.requestInitialLoad(table);
-			});
-		}, 600);
+	}
+    
+	isAutoloadEnabledForElement(element) {
+        // direct on element
+        if ( element && element.getAttribute && element.getAttribute('data-record-autoload') === 'true' ) return true;
+        // on table ancestor
+        const tableElement = this.getTableElement(element);
+        if ( tableElement && tableElement.getAttribute('data-record-autoload') === 'true' ) return true;
+        // controller root
+        if ( this.element.getAttribute('data-record-autoload') === 'true' ) return true;
+        return false;
+    }
 
+	runTableElementQuery(tableElement) {
+		const filter = this.getLoadFilter(tableElement);
+		this.dispatch('query', {
+			detail: {
+				channel: this.getChannel(),
+				table: this.getTable(tableElement),
+				filter,
+				origin: tableElement
+			},
+			prefix: 'record:ui'
+		});
+	}
+
+	// New helper to request a single-record load (keeps connect small)
+	requestRecordLoad(recordElement) {
+		const id = recordElement.getAttribute('data-record-id');
+		if ( !id ) return;
+		this.dispatch('load', {
+			detail: {
+				channel: this.getChannel(),
+				table: this.getTable(recordElement),
+				id,
+				origin: recordElement
+			},
+			prefix: 'record:ui'
+		});
+	}
+
+	runAutoLoads() {
+		const autos = this.getTopLevelMatches(this.element, '[data-record-autoload="true"]', '[data-record-table]');
+
+		autos.forEach(elem => {
+			if (
+				this.element.hasAttribute('data-record-table')
+				||
+				this.element.querySelector('[data-record-id]') !== null
+			) {
+				// reuse canonical bulk load
+				this.requestInitialLoad(elem);
+			}
+		});
 
 	}
 
