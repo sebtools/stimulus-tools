@@ -1,0 +1,55 @@
+// ...new file...
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Filter / data-record-idtable Demo</title>
+  <link rel="stylesheet" href="./demo.css" />
+</head>
+<body>
+	<h1>Filter Demo — data-record-idtable resolution</h1>
+
+	<!-- Outer "people" table that has an ID -->
+	<div
+		data-controller="record"
+		data-record-table="people"
+	>
+		<div class="record-row" data-record-id="42">
+			<input data-record-field="name" value="Owner" />
+
+			<!-- Inner filter area that references the outer table's ID via data-record-idtable -->
+			<div class="filters" data-record-table="filters" id="wayne">
+				<!-- This filter wants the 'people' table's current record id -->
+				<div data-record-filter="owner_id" data-record-idtable="people" id="ownerFilter">owner_id: (resolved from ancestor)</div>
+
+				<!-- Regular filter sourcing its own value -->
+				<input data-record-filter="status" value="active" id="statusFilter" />
+			</div>
+
+		</div>
+
+		<div style="margin-top:12px;">
+			<button id="showFilters">Show Resolved Filters</button>
+		</div>
+	</div>
+
+	<!-- Load Stimulus and the app bootstrap -->
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+
+	<!-- Load controllers used on this page -->
+	<script type="module" src="js/controllers/record_controller.js"></script>
+	<script type="module" src="../eventlog/js/controllers/eventlog_controller.js"></script>
+
+<script>
+    const btn = document.getElementById('showFilters');
+    btn.addEventListener('click', () => {
+      const root = document.querySelector('[data-controller="record"]');
+      const tableEl = document.getElementById('wayne'); // same root is both people + contains filters in this demo
+      const filters = root.recordController.getTableFilters(tableEl);
+      console.log('Resolved filters:', filters);
+      alert('Resolved filters: ' + JSON.stringify(filters));
+    });
+  </script>
+</body>
+</html>
