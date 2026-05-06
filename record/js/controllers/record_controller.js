@@ -522,6 +522,22 @@ application.register('record', class extends Stimulus.Controller {
 		return field.textContent.trim();
 	}
 
+	getFilterValue(filterElement) {
+		// If the filter references a record ID from an ancestor table, use that ID
+		if ( filterElement.hasAttribute('data-record-idtable') ) {
+			const recordAncestor = this.findMatchingRecordAncestor(filterElement);
+			console.log('Found ancestor for filter:', recordAncestor);
+			if ( recordAncestor ) {
+				return recordAncestor.getAttribute('data-record-id') || '';
+			}
+			// No matching ancestor found → empty string
+			return '';
+		}
+
+		// Otherwise use the standard field value resolution
+		return this.getFieldValue(filterElement);
+	}
+
 	setFieldValue(field, value) {
 		
 		// Set value using the same hierarchy
@@ -628,7 +644,7 @@ application.register('record', class extends Stimulus.Controller {
 
 		filters.forEach(filterElement => {
 			const fieldName = filterElement.getAttribute('data-record-filter');
-			form[fieldName] = this.getFieldValue(filterElement);
+			form[fieldName] = this.getFilterValue(filterElement);
 		});
 
 		fields.forEach(field => {
@@ -791,19 +807,7 @@ application.register('record', class extends Stimulus.Controller {
 
 		filters.forEach(filterElement => {
 			const filterName = filterElement.getAttribute('data-record-filter');
-			// Check if filter is based on a record ID from an ancestor
-			if ( filterElement.hasAttribute('data-record-idtable') ) {
-				// Find the matching ancestor record
-				const recordAncestor = this.findMatchingRecordAncestor(filterElement);
-				if ( recordAncestor ) {
-					// Use the record ID from that ancestor
-					const filterValue = recordAncestor.getAttribute('data-record-id');
-					filter[filterName] = filterValue;
-				}
-			} else {
-				const filterValue = this.getFieldValue(filterElement);
-				filter[filterName] = filterValue;
-			}
+			filter[filterName] = this.getFilterValue(filterElement);
 		});
 
 		return filter;
