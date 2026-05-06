@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Record — Row-level Autoload Demo</title>
+	<link rel="stylesheet" href="../theme.css">
+	<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+	<h1>Record — Row-level Autoload Demo</h1>
+
+	<div
+		data-controller="record"
+		data-record-table="people"
+	>
+		<table class="simple-table" style="width:100%; border-collapse:collapse;">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- This row requests autoload for just this record -->
+				<tr data-record-id="person_123" data-record-autoload="true">
+					<td><input data-record-field="name" value="Loading…" /></td>
+					<td><input data-record-field="email" value="loading@example.org" /></td>
+					<td><button type="button" data-action="record#saveRecord">Save</button></td>
+				</tr>
+
+				<!-- Non-autoload rows remain untouched -->
+				<tr data-record-id="person_456">
+					<td><input data-record-field="name" value="Existing" /></td>
+					<td><input data-record-field="email" value="existing@example.org" /></td>
+					<td><button type="button" data-action="record#saveRecord">Save</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Event log -->
+	<div data-controller="eventlog" data-eventlog-events="record:ui:load record:ui:loaded record:data:load" style="min-height:200px; background:white; border:1px solid #ddd; padding:10px;"></div>
+
+	<script src="../js/stimulus.js"></script>
+	<script src="../js/app.js"></script>
+
+	<!-- Mock bridge/store for demos -->
+	<script type="module" src="js/mock/mock-data-bridge.js"></script>
+
+	<script type="module" src="js/controllers/record_controller.js"></script>
+	<script type="module" src="../eventlog/js/controllers/eventlog_controller.js"></script>
+</body>
+</html>
