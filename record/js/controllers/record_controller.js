@@ -526,12 +526,28 @@ application.register('record', class extends Stimulus.Controller {
 		// If the filter references a record ID from an ancestor table, use that ID
 		if ( filterElement.hasAttribute('data-record-idtable') ) {
 			const recordAncestor = this.findMatchingRecordAncestor(filterElement);
-			console.log('Found ancestor for filter:', recordAncestor);
 			if ( recordAncestor ) {
 				return recordAncestor.getAttribute('data-record-id') || '';
 			}
 			// No matching ancestor found → empty string
 			return '';
+		}
+		
+		// If the filter has a data-record-urlparam attribute, use the corresponding URL parameter value
+		if ( filterElement.hasAttribute('data-record-urlparam') ) {
+			const urlParam = filterElement.getAttribute('data-record-urlparam');
+			const urlParams = new URLSearchParams(window.location.search);
+			if ( urlParams.has(urlParam) ) {
+				return urlParams.get(urlParam) || '';
+			} else {
+				//If a value is provided, then use that as the default. This allows filters to specify a default value that can be overridden by the URL parameter.
+				const value = this.getFieldValue(filterElement);
+				if ( value ) {
+					return value;
+				} else {
+					return;
+				}
+			}
 		}
 
 		// Otherwise use the standard field value resolution

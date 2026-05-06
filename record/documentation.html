@@ -541,20 +541,47 @@
 	<h3>Where filters come from</h3>
 	<ul>
 		<li>
-			<strong>Table-level static filter</strong> — set on the table container via
-			<code>data-record-filter='{"key":"value"}</code>. Parsed as JSON and used as the base filter.
+			<strong>Table-level static filter</strong>
+			<ul>
+				<li>Set on the table container via <code>data-record-filter='{"key":"value"}</code>.</li>
+				<li>Parsed as JSON and used as the base filter.</li>
+			</ul>
 		</li>
 		<li>
-			<strong>Dynamic filter elements</strong> — any element inside the table with
-			<code>data-record-filter="fieldName"</code> contributes a key/value pair where the value is read from the element.
-			Values are read using the same field-value precedence as other fields:
-			<code>data-record-value</code>, <code>data-value</code>, the element's <code>value</code>, then <code>textContent</code>.
-		</li>
-		<li>
-			<strong>Ancestor-record based filter</strong> — a filter element may include
-			<code>data-record-idtable="tableName"</code>. In that case the controller finds the nearest ancestor record
-			for the named table and uses that ancestor's <code>data-record-id</code> as the filter value. This is useful
-			for master/detail flows.
+			<strong>Dynamic filter elements</strong>
+			<ul>
+				<li>
+					Any element inside the table scope with a <code>data-record-filter</code> attribute is considered a dynamic filter input.<br>
+					Note that while any element can be a filter, the <code>data</code> element would be the canonical choice for a filter element since it is not used for field inputs or display and is semantically appropriate for holding data.
+				</li>
+				<li>
+					Each filter element contributes a key/value pair to the filter object, where the key is the value of the <code>data-record-filter</code> attribute and the value is read from the element.
+				</li>
+				<li>
+					Key: the value of the <code>data-record-filter</code> attribute on the element.
+				</li>
+				<ul>
+					<li>
+						<code>data-record-idtable</code>:
+						If present, the controller finds the nearest ancestor record for the named table and uses that ancestor's <code>data-record-id</code> as the filter value. This is useful for master/detail flows.
+					</li>
+					<li>
+						<code>data-record-urlparam</code>:
+						If present, the value is read from the URL query parameter with the given name instead of the element. This allows you to use a hidden element as a proxy for a URL-based filter.
+					</li>
+					<li>
+						<code>data-record-filter-value</code>:
+						If present, this attribute's value is used directly as the filter value instead of reading from the element. This allows you to use an element as a proxy for a static filter value.
+					</li>
+					<li>
+						<code>data-value</code>:
+						If present, this attribute's value is used as the filter value instead of the element's <code>value</code> or <code>textContent</code>. This allows you to use a display element as a proxy for a filter value.
+					</li>
+					<li>
+						Otherwise, the controller reads the element's <code>value</code> property (for inputs) or <code>textContent</code> (for display elements) as the filter value.
+					</li>
+				</ul>
+			</ul>
 		</li>
 	</ul>
 
