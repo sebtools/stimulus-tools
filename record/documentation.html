@@ -532,5 +532,70 @@
 		</tbody>
 	</table>
 
+	<!-- New section: Filtering and autoload -->
+	<h2>Filtering and Autoload</h2>
+
+	<p>The controller supports declarative filters that are merged into load/ query requests. Filters are evaluated
+		per-table and are used by the controller's load/query flow (see <code>requestInitialLoad</code> / <code>getLoadFilter</code>).</p>
+
+	<h3>Where filters come from</h3>
+	<ul>
+		<li>
+			<strong>Table-level static filter</strong> — set on the table container via
+			<code>data-record-filter='{"key":"value"}</code>. Parsed as JSON and used as the base filter.
+		</li>
+		<li>
+			<strong>Dynamic filter elements</strong> — any element inside the table with
+			<code>data-record-filter="fieldName"</code> contributes a key/value pair where the value is read from the element.
+			Values are read using the same field-value precedence as other fields:
+			<code>data-record-value</code>, <code>data-value</code>, the element's <code>value</code>, then <code>textContent</code>.
+		</li>
+		<li>
+			<strong>Ancestor-record based filter</strong> — a filter element may include
+			<code>data-record-idtable="tableName"</code>. In that case the controller finds the nearest ancestor record
+			for the named table and uses that ancestor's <code>data-record-id</code> as the filter value. This is useful
+			for master/detail flows.
+		</li>
+	</ul>
+
+	<h3>Top-level matching</h3>
+	<p>The controller uses a "top-level" match algorithm (see <code>getTopLevelMatches</code>) when collecting
+		filter elements so filters inside nested tables or nested scopes are ignored. This prevents accidental leakage
+		of filter inputs from nested table components. Only the nearest matching filter elements under the table container
+		are considered.</p>
+
+	<h3>How filters are applied</h3>
+	<ul>
+		<li><strong>Merging</strong> — the controller merges table-level JSON and dynamic filter inputs; dynamic inputs override keys from JSON.</li>
+		<li><strong>Used for initial load</strong> — <code>requestInitialLoad</code> calls <code>getLoadFilter</code> and dispatches a
+			<code>record:ui:query</code> (detail: { table, filter }). The data bridge or application should accept this filter
+			and return matching records.</li>
+		<li><strong>Bulk vs per-row</strong> — table-level filters are intended for bulk queries. Per-row loads (by id) are supported
+			separately; they typically do not use the table-level filter object unless your bridge expects it.</li>
+	</ul>
+
+	<h3>Examples</h3>
+	<p>Static JSON filter on the table:</p>
+	<pre><code>&lt;div data-controller="record" data-record-table="people" data-record-autoload="true"
+		data-record-filter='{"active":true,"group":"admins"}'&gt; ... &lt;/div&gt;
+	</code></pre>
+
+	<p>Dynamic filters inside the table scope:</p>
+	<pre><code>&lt;input data-record-filter="status" value="active" /&gt;
+&lt;select data-record-filter="group"&gt;...&lt;/select&gt;
+	</code></pre>
+
+	<p>Filter that uses an ancestor record id from another table:</p>
+	<pre><code>&lt;input data-record-filter="org_id" data-record-idtable="orgs" /&gt;
+	</code></pre>
+
+	<p>Notes:
+	<ul>
+		<li>Table-level <code>data-record-filter</code> must be valid JSON. Invalid JSON will be ignored with a console warning.</li>
+		<li>When a table-level autoload is enabled (for example <code>data-record-autoload="true"</code> on the controller or table),
+			the merged filter object is dispatched with the load/query event so the data layer can return only matching records.</li>
+	</ul>
+	</p>
+
 </body>
 </html>
